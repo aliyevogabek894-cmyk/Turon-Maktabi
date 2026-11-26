@@ -295,23 +295,97 @@ export function createTextures() {
     tex.kidsDecal = asTex(c, 1, 1);
   }
 
-  // Taekwondo 1x1m red-blue tatami checkerboard
+  // Taekwondo sky-blue EVA court with 2 pink/coral training lanes (Image 15)
   {
-    const [c, g] = makeCanvas(256, 256);
-    g.fillStyle = '#2563eb'; g.fillRect(0, 0, 128, 128); g.fillRect(128, 128, 128, 128);
-    g.fillStyle = '#dc2626'; g.fillRect(128, 0, 128, 128); g.fillRect(0, 128, 128, 128);
-    tex.tatami = asTex(c, 11, 5);
+    const [c, g] = makeCanvas(512, 256);
+    g.fillStyle = '#5bb7db';
+    g.fillRect(0, 0, 512, 256);
+    g.fillStyle = '#e07b8e';
+    g.fillRect(0, 52, 512, 42);
+    g.fillRect(0, 162, 512, 42);
+    g.strokeStyle = 'rgba(255,255,255,0.28)';
+    g.lineWidth = 2;
+    for (let x = 0; x <= 512; x += 32) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, 256); g.stroke(); }
+    for (let y = 0; y <= 256; y += 32) { g.beginPath(); g.moveTo(0, y); g.lineTo(512, y); g.stroke(); }
+    tex.tatami = asTex(c, 3, 2);
   }
 
-  // Oshxona pink-mint-white checkerboard wall
+  // Oshxona sage-green / pink / yellow / white walls (Image 14)
+  {
+    const [c, g] = makeCanvas(512, 256);
+    g.fillStyle = '#d1d5db'; g.fillRect(0, 0, 512, 256);
+    g.fillStyle = '#7ea670'; g.fillRect(0, 0, 160, 210);
+    g.fillStyle = '#e58aa8'; g.fillRect(160, 0, 90, 210);
+    g.fillStyle = '#e5a93c'; g.fillRect(250, 0, 110, 210);
+    g.fillStyle = '#6f9c64'; g.fillRect(360, 0, 152, 210);
+    g.fillStyle = '#f8fafc'; g.fillRect(0, 210, 512, 46);
+    tex.oshxonaWall = asTex(c, 2, 1);
+  }
+
+  // Oshxona far-end golden hourglass / diamond wall mural (Image 14)
+  {
+    const [c, g] = makeCanvas(512, 256);
+    g.fillStyle = '#474c52';
+    g.fillRect(0, 0, 512, 256);
+    g.fillStyle = '#e0ab2b';
+    g.beginPath(); g.moveTo(0, 0); g.lineTo(256, 128); g.lineTo(0, 256); g.closePath(); g.fill();
+    g.beginPath(); g.moveTo(512, 0); g.lineTo(256, 128); g.lineTo(512, 256); g.closePath(); g.fill();
+    tex.oshxonaBackMural = asTex(c, 1, 1);
+  }
+
+  // Taekwondo Club end wall banner mural (Image 15)
+  {
+    const [c, g] = makeCanvas(512, 256);
+    g.fillStyle = '#f1f5f9'; g.fillRect(0, 0, 512, 256);
+    g.fillStyle = '#dc2626'; g.fillRect(0, 0, 512, 22);
+    g.fillStyle = '#1e3a8a'; g.fillRect(0, 234, 512, 22);
+    g.fillStyle = '#1e3a8a'; g.font = '900 44px Arial, sans-serif'; g.textAlign = 'center';
+    g.fillText('TAEKWONDO CLUB', 256, 95);
+    g.fillStyle = '#dc2626'; g.font = 'bold 24px Arial, sans-serif';
+    g.fillText('TURON ODOB-ILM · 태권도', 256, 148);
+    g.fillStyle = '#2563eb'; g.beginPath(); g.arc(110, 195, 22, 0, Math.PI * 2); g.fill();
+    g.fillStyle = '#ef4444'; g.beginPath(); g.arc(402, 195, 22, 0, Math.PI * 2); g.fill();
+    tex.taekwondoMural = asTex(c, 1, 1);
+  }
+
+  // Stairwell diagonal mint/white/steel-blue geometric wall (Image 7)
+  {
+    const [c, g] = makeCanvas(512, 512);
+    g.fillStyle = '#f1f5f9'; g.fillRect(0, 0, 512, 512);
+    g.fillStyle = '#2eb88a';
+    g.beginPath(); g.moveTo(0, 0); g.lineTo(230, 0); g.lineTo(0, 310); g.closePath(); g.fill();
+    g.fillStyle = '#4a88b5';
+    g.beginPath(); g.moveTo(512, 180); g.lineTo(512, 512); g.lineTo(250, 512); g.closePath(); g.fill();
+    tex.stairWall = asTex(c, 1, 1);
+  }
+
+  // 2F/3F Origami Geometric Corridor Wallpaper (Image 11)
   {
     const [c, g] = makeCanvas(256, 256);
-    const sq = ['#86efac', '#f8fafc', '#ec4899', '#86efac'];
-    for (let y = 0; y < 2; y++) for (let x = 0; x < 2; x++) {
-      g.fillStyle = sq[(y * 2 + x) % 4];
-      g.fillRect(x * 128, y * 128, 128, 128);
+    g.fillStyle = '#f3f4f6'; g.fillRect(0, 0, 256, 256);
+    for (let y = 0; y < 256; y += 64) {
+      for (let x = 0; x < 256; x += 64) {
+        g.fillStyle = '#e5e7eb';
+        g.beginPath(); g.moveTo(x, y); g.lineTo(x + 64, y); g.lineTo(x + 32, y + 48); g.closePath(); g.fill();
+        g.fillStyle = '#d1d5db';
+        g.beginPath(); g.moveTo(x, y); g.lineTo(x + 32, y + 48); g.lineTo(x, y + 64); g.closePath(); g.fill();
+        g.strokeStyle = '#cbd5e1'; g.lineWidth = 1.5;
+        g.strokeRect(x, y, 64, 64);
+      }
     }
-    tex.oshxonaWall = asTex(c, 4, 2);
+    tex.corridorOrigami = asTex(c, 10, 2);
+  }
+
+  // Podvol / Oshxona Checkered Black-and-White Marble Floor (Image 12 & 14)
+  {
+    const [c, g] = makeCanvas(256, 256);
+    for (let y = 0; y < 4; y++) {
+      for (let x = 0; x < 4; x++) {
+        g.fillStyle = (x + y) % 2 === 0 ? '#f1f5f9' : '#26292e';
+        g.fillRect(x * 64, y * 64, 64, 64);
+      }
+    }
+    tex.podvolFloor = asTex(c, 7, 5);
   }
 
   // Dormitory Uzbek Carpet texture (tg_7058_5.jpg)
@@ -362,26 +436,27 @@ export function createTextures() {
   tex.macWall = signTex(512, 256, '#16a34a', '#ffffff', 'Apple macOS', 'IT LABORATORIYA #1');
   tex.gptWall = signTex(512, 256, '#eab308', '#1e293b', 'ChatGPT · SMM', 'IT LABORATORIYA #2');
 
-  // --- REAR CAMPUS TEXTURES (From Videos 1-4) ---
-  // 12. Shirin Kulcha Bufet Bakery Glass Panel (Video 2 00:13 & Video 4 00:00)
+  // --- REAR CAMPUS TEXTURES (From Videos + Image 1, 5, 6) ---
+  // 12. Shirin Kulcha Bufet Bakery Glass Panel (Image 5!)
   {
     const [c, g] = makeCanvas(512, 512);
     g.fillStyle = '#e7dfd3';
     g.fillRect(0, 0, 512, 512);
     g.strokeStyle = '#334155'; g.lineWidth = 10; g.strokeRect(10, 10, 492, 492);
-    // Decorative swirling kulcha / patir bread sketches
     g.fillStyle = '#d4b483'; g.strokeStyle = '#6b4f2a'; g.lineWidth = 4;
-    [[165, 165, 72], [350, 185, 65], [190, 315, 62]].forEach(([bx, by, br]) => {
+    [[140, 130, 62], [350, 140, 68], [160, 280, 58], [360, 285, 58]].forEach(([bx, by, br]) => {
       g.beginPath(); g.arc(bx, by, br, 0, Math.PI * 2); g.fill(); g.stroke();
       g.beginPath(); g.arc(bx, by, br * 0.45, 0, Math.PI * 2); g.stroke();
     });
-    g.fillStyle = '#1f2937';
-    g.fillRect(24, 385, 290, 96);
     g.fillStyle = '#f8fafc';
-    g.font = '900 36px Arial, sans-serif';
+    g.fillRect(20, 365, 310, 125);
+    g.fillStyle = '#111827';
+    g.font = '900 40px Arial, sans-serif';
     g.textAlign = 'left';
-    g.fillText('SHIRIN', 42, 428);
-    g.fillText('KULCHA', 42, 468);
+    g.fillText('SHIRIN', 36, 412);
+    g.fillText('KULCHA', 36, 452);
+    g.font = 'bold 16px Arial, sans-serif';
+    g.fillText('(97) 811-10-59 · (97) 820-10-59', 36, 478);
     tex.shirinKulcha = asTex(c, 1, 1);
   }
 

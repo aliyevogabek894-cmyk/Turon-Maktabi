@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Turon Odob-Ilm (Furqat) — 1:1 Old va Orqa Majmua 3D Loyihasi v2.4</title>
+<title>Turon Odob-Ilm (Furqat) — 1:1 Old, Ichki va Orqa 3D Loyihasi v2.5</title>
 <script type="importmap">
 {
   "imports": {
@@ -31,7 +31,7 @@
   .brand h1 { font-size: 16px; font-weight: 700; color: #fff; }
   .brand p { font-size: 11.5px; color: #94a3b8; margin-top: 2px; }
   .controls-col {
-    position: fixed; left: 14px; top: 96px; bottom: 14px; width: 296px;
+    position: fixed; left: 14px; top: 96px; bottom: 14px; width: 300px;
     overflow-y: auto; z-index: 10; display: flex; flex-direction: column; gap: 10px;
     pointer-events: none;
   }
@@ -41,7 +41,7 @@
   .btn-col { display: flex; flex-direction: column; gap: 5px; }
   button, a.btn-link {
     background: #1e293b; color: #e2e8f0; border: 1px solid #334155;
-    padding: 6.5px 9px; border-radius: 7px; font-size: 11.8px; font-weight: 600;
+    padding: 6px 9px; border-radius: 7px; font-size: 11.6px; font-weight: 600;
     cursor: pointer; text-align: left; text-decoration: none; transition: all 0.14s;
   }
   button:hover, a.btn-link:hover { border-color: #38bdf8; background: #263549; }
@@ -58,7 +58,7 @@
   a.btn-link.primary { background: #0ea5e9; color: #06131f; border-color: #0ea5e9; text-align: center; }
 
   #walk-hud {
-    display: none; position: fixed; top: 96px; right: 14px; width: 335px; z-index: 15;
+    display: none; position: fixed; top: 96px; right: 14px; width: 340px; z-index: 15;
     max-height: calc(100vh - 200px); overflow-y: auto;
   }
   #walk-hud.visible { display: block; }
@@ -85,8 +85,8 @@
 
 <div class="hud-top">
   <div class="panel brand">
-    <h1>TURON ODOB-ILM (FURQAT) — 1:1 TO‘LIQ 3D MAJMUAVIY MODEL</h1>
-    <p>B blok + Hub (ko‘chaga qarab) · 2 ta Yotoqxona (o‘rta gulzor bilan) + 2-yotoqxonagacha kelgan 2 ta yonma-yon Bolalar Yotoqxonasi (o‘rtasida gulzor)</p>
+    <h1>TURON ODOB-ILM (FURQAT) — 1:1 FOTO-MOS 3D MODEL (v2.5)</h1>
+    <p>Old fasad + Ichki qavatlar (Podvol Oshxona/Taekwondo, 2F Koridor/Sinflar, Zinapoya) + Orqa majmua (Turnik, Shirin Kulcha, 4 Yotoqxona)</p>
   </div>
   <div class="panel top-actions">
     <button id="btn-walk" onclick="toggleWalk()">🚶 Ichkarida yurish (WASD)</button>
@@ -104,28 +104,27 @@
       <button class="slice-btn" onclick="setSlice('noroof', this)">Tomlarni yechish</button>
       <button class="slice-btn" onclick="setSlice('floor2', this)">2-qavat (+5.60m)</button>
       <button class="slice-btn" onclick="setSlice('floor1', this)">1-qavat (+1.50m)</button>
-      <button class="slice-btn" onclick="setSlice('tsokol', this)">Tsokol (-1.52m)</button>
+      <button class="slice-btn" onclick="setSlice('tsokol', this)">Podvol (-1.52m)</button>
       <button class="slice-btn" onclick="setSlice('hub', this)">Innovation Hub</button>
       <button class="slice-btn" style="grid-column: span 2;" onclick="setSlice('dorm', this)">🛏️ Yotoqxonalar kesimi (4 qanot)</button>
     </div>
   </div>
 
   <div class="panel">
-    <div class="sec-title">Kamera nuqtalari</div>
+    <div class="sec-title">Kamera nuqtalari (Foto-mos rakurslar)</div>
     <div class="btn-col">
       <button onclick="goCam('overview')">1. Umumiy ko‘rinish (Old + Orqa majmua)</button>
-      <button onclick="goCam('front')">2. B blok old fasad (1-rasm)</button>
-      <button onclick="goCam('east')">3. Sharqiy yon: Tashna &amp; 1F qanot (2-rasm)</button>
-      <button onclick="goCam('west')">4. G‘arbiy darvoza &amp; Bannerlar (4–5-rasm)</button>
-      <button onclick="goCam('hubExt')">5. Innovation Hub tashqi, ko‘chaga qarab (6-rasm)</button>
-      <button onclick="goCam('hubInt')">6. Innovation Hub ichki zal &amp; 2F (7-rasm)</button>
-      <button onclick="goCam('lobby')">7. 1-qavat Foye, Kema &amp; Resepshn (10-rasm)</button>
-      <button onclick="goCam('corridor')">8. 1-qavat Koridor &amp; Vitraj Sinflar (11-rasm)</button>
-      <button onclick="goCam('tsokol')">9. Tsokol: Taekwondo &amp; Oshxona</button>
-      <button onclick="goCam('rearFacade')">10. Orqa fasad: 3 qator oyna, 3 Besedka &amp; O‘tish yo‘li</button>
-      <button onclick="goCam('boiler')">11. Qozonxona, Qizil shit &amp; Turnik (chetaroqda)</button>
-      <button onclick="goCam('alley')">12. 1-juftlik Yotoqxona (Damas &amp; Gulzor)</button>
-      <button onclick="goCam('boysDorm')">13. Bolalar Yotoqxonasi (2 ta yonma-yon + O‘rta gulzor)</button>
+      <button onclick="goCam('front')">2. B blok old fasad</button>
+      <button onclick="goCam('hubExt')">3. Innovation Hub (ko‘chaga qarab)</button>
+      <button onclick="goCam('lobby')">4. 1F Foye, Kema &amp; Resepshn</button>
+      <button onclick="goCam('stairs')">5. Qavat zinapoyasi (7-rasm: yashil-ko‘k devor)</button>
+      <button onclick="goCam('floor2Class')">6. 2-qavat Sinf &amp; Origami koridor (9–13-rasm)</button>
+      <button onclick="goCam('podvolCorr')">7. Podvol Karidori: chap Oshxona, o‘ng Zal (14–15-rasm)</button>
+      <button onclick="goCam('oshxona')">8. Podvol Oshxona &amp; Razdacha (16–17-rasm)</button>
+      <button onclick="goCam('sportzal')">9. Podvol Taekwondo Sport zali (18–19-rasm)</button>
+      <button onclick="goCam('rearFacade')">10. Orqa fasad: 11-bay, 3 Besedka &amp; Turnik (1–5-rasm)</button>
+      <button onclick="goCam('alley')">11. Qizil lentali Gulzor &amp; Yotoqxona kotejlari (2,6-rasm)</button>
+      <button onclick="goCam('boysDorm')">12. Bolalar Yotoqxonasi (2 ta yonma-yon + Gulzor)</button>
     </div>
   </div>
 
@@ -136,7 +135,7 @@
       <button class="light-btn" onclick="setLight('golden', this)">🌅 Oqshom</button>
       <button class="light-btn" onclick="setLight('night', this)">🌙 Tungi LED</button>
     </div>
-    <p class="hint">Orbit: Chap tugma — aylantirish · O‘ng tugma — siljitish · Binoga bosing — o‘lchamlarni ko‘rish.</p>
+    <p class="hint">Orbit: Chap tugma — aylantirish · Binoga bosing — xona haqida ma’lumot.</p>
   </div>
 </div>
 
@@ -146,26 +145,24 @@
   <div class="tp-grid">
     <button onclick="tpWalk(0, 0.0, 22.5, 0, 'B blok oldi')">🏛️ B blok oldi</button>
     <button onclick="tpWalk(0, 1.50, 11.0, 0, '1-qavat Foye')">🚢 Foye &amp; Kema</button>
-    <button onclick="tpWalk(2.0, 1.50, 0.0, Math.PI/2, '1-qavat G‘arbiy koridor')">🚪 1F Sinflar</button>
-    <button onclick="tpWalk(12.0, 5.60, 0.0, 0, '2-qavat IT &amp; Kutubxona')">💻 2F IT/Kutubxona</button>
-    <button onclick="tpWalk(0, -1.52, -4.0, Math.PI, 'Tsokol (Sport/Oshxona)')">🥋 Tsokol (-1.52m)</button>
-    <button onclick="tpWalk(41.6, 0.22, 34.5, 0, 'Innovation Hub kirish')">🚀 Innovation Hub</button>
-    <button onclick="tpWalk(42.5, 3.65, 22.8, Math.PI, 'Hub 2F Antresol')">🖥️ Hub 2-qavat</button>
-    <button onclick="tpWalk(25.5, 0.0, -25.0, 0, 'Orqa darvoza keng yo‘lagi')">🚪 Keng o‘tish yo‘li</button>
-    <button onclick="tpWalk(10.0, 0.0, -27.5, Math.PI, 'Turnik &amp; Besedkalar')">💪 Turnik &amp; Besedka</button>
-    <button onclick="tpWalk(10.0, 0.0, -32.5, -Math.PI/2, 'Shirin Kulcha Bufeti')">🥐 Shirin Kulcha</button>
-    <button onclick="tpWalk(28.2, 0.0, -28.0, 0, '1-juftlik Yotoqxona gulzori')">🚐 Damas gulzori</button>
-    <button onclick="tpWalk(20.5, 0.25, -40.0, 0, 'Yotoqxona #1 ichi')">🛏️ Yotoqxona #1</button>
-    <button onclick="tpWalk(6.0, 0.0, -76.5, Math.PI/2, 'Bolalar Yotoqxonasi gulzori')">🌿 Bolalar gulzori</button>
-    <button onclick="tpWalk(6.0, 0.25, -85.5, 0, 'Bolalar Yotoqxonasi #2 ichi')">🛌 Bolalar #2 ichi</button>
+    <button onclick="tpWalk(21.8, 1.50, 1.5, Math.PI, 'Zinapoya (7-rasm)')">🪜 Zinapoya (7-rasm)</button>
+    <button onclick="tpWalk(-5.0, 5.60, 0.0, Math.PI/2, '2F Koridor va Partalar')">📚 2F Koridor</button>
+    <button onclick="tpWalk(14.5, 5.60, -2.5, 0, '2F Olovrang-Yashil Sinf')">🧑‍🏫 2F Sinf (9-rasm)</button>
+    <button onclick="tpWalk(0, -1.52, 6.0, 0, 'Podvol Karidori (14-rasm)')">🏢 Podvol karidor</button>
+    <button onclick="tpWalk(-11.0, -1.52, 2.0, Math.PI/2, 'Oshxona Razdacha &amp; Zal')">🍽️ Oshxona (16-rasm)</button>
+    <button onclick="tpWalk(11.0, -1.52, 2.0, -Math.PI/2, 'Taekwondo Sport zali')">🥋 Sportzal (18-rasm)</button>
+    <button onclick="tpWalk(41.6, 0.22, 34.5, 0, 'Innovation Hub')">🚀 Innovation Hub</button>
+    <button onclick="tpWalk(10.0, 0.0, -27.5, Math.PI, 'Turnik &amp; Shirin Kulcha')">💪 Turnik &amp; Bufet</button>
+    <button onclick="tpWalk(28.2, 0.0, -28.0, 0, 'Yotoqxona Gulzori')">🌿 1-Gulzor</button>
+    <button onclick="tpWalk(6.0, 0.0, -76.5, Math.PI/2, 'Bolalar Yotoqxona Gulzori')">🛏️ Bolalar gulzori</button>
   </div>
   <p class="hint"><b>W/A/S/D</b> — yurish · <b>Shift</b> — tez yugurish · Ekranga bosing — erkin qarash (<b>Esc</b> — chiqish).</p>
 </div>
 
 <div class="panel info-box" id="info-box">
-  <h3 id="info-title">Turon Odob-Ilm Majmuasi (v2.4)</h3>
-  <div class="dims" id="info-dims">2×(36×7 m) + 2×(66.7×7 m) Yotoqxona · 2 ta gulzor yo‘lagi · Tekis ochiq yer maydoni</div>
-  <p id="info-desc">Bolalar yotoqxonasi 2-yotoqxonaning chekkasigacha (X = +39.5 m) yetkazildi va nargi yotoqxonaga o‘xshab o‘rtasida yashil gulzori bor 2 ta yonma-yon bino qilib qurildi.</p>
+  <h3 id="info-title">Turon Odob-Ilm Majmuasi (1:1 Foto-Mos v2.5)</h3>
+  <div class="dims" id="info-dims">B blok: 48×21×12.3m | Podvol: Oshxona + Taekwondo | 4 ta Yotoqxona qanoti</div>
+  <p id="info-desc">Taqdim etilgan 15+ tashqi va ichki rasmlar asosida 1:1 bezatildi: diagonal chiziqli zinapoya, olovrang-yashil 2F sinfxonalar, origami koridor, podvol shaxmat polli koridori, chapda nerjaveyka razdachali Oshxona va o‘ngda havorang-pushti Taekwondo sport zali.</p>
 </div>
 
 <script type="module">
@@ -194,10 +191,10 @@ camera.position.set(58, 44, 34);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.07;
-controls.target.set(6, 2, -38);
+controls.target.set(6, 2, -40);
 controls.maxPolarAngle = Math.PI / 2 + 0.06;
 
-const hemiLight = new THREE.HemisphereLight(0xeef6ff, 0x4b5563, 0.80);
+const hemiLight = new THREE.HemisphereLight(0xeef6ff, 0x4b5563, 0.82);
 scene.add(hemiLight);
 const sunLight = new THREE.DirectionalLight(0xfff7e6, 1.9);
 sunLight.position.set(-55, 68, 48);
@@ -225,7 +222,6 @@ addDimLine([-24.0, 12.8, 10.5], [24.0, 12.8, 10.5], 0x38bdf8);
 addDimLine([6.5, 0, 15.1], [6.5, 12.3, 15.1], 0xef4444);
 addDimLine([34.0, 8.2, 32.6], [52.0, 8.2, 32.6], 0x38bdf8);
 addDimLine([-27.2, 4.5, -66.5], [39.5, 4.5, -66.5], 0x10b981);
-addDimLine([17.0, 4.5, -30.5], [17.0, 4.5, -66.5], 0xf59e0b);
 
 window.setSlice = (mode, btn) => {
   document.querySelectorAll('.slice-btn').forEach((b) => b.classList.remove('active'));
@@ -242,10 +238,10 @@ window.setSlice = (mode, btn) => {
     g.hubRoof.visible = false; g.hubFloor2.visible = false; g.dormRoof.visible = false; g.dormFloor2.visible = false;
   } else if (mode === 'tsokol') {
     g.bRoof.visible = false; g.bFloor2.visible = false; g.bFloor1.visible = false; g.bExterior.visible = false;
-    goCam('tsokol');
+    goCam('podvolCorr');
   } else if (mode === 'hub') {
     g.hubRoof.visible = false; g.hubShell.visible = false;
-    goCam('hubInt');
+    goCam('hubExt');
   } else if (mode === 'dorm') {
     g.dormRoof.visible = false; g.dormExterior.visible = false;
     goCam('boysDorm');
@@ -253,19 +249,18 @@ window.setSlice = (mode, btn) => {
 };
 
 const PRESETS = {
-  overview:   { pos: [58, 44, 34], target: [6, 2, -40] },
-  front:      { pos: [0.5, 2.4, 34.5], target: [0, 5.2, 10] },
-  east:       { pos: [-26.0, 2.6, 28.0], target: [-6.0, 4.0, 10.0] },
-  west:       { pos: [33.5, 2.4, 37.5], target: [16.0, 4.5, 16.0] },
-  hubExt:     { pos: [30.5, 2.5, 42.5], target: [43.5, 4.0, 29.0] },
-  hubInt:     { pos: [41.5, 2.2, 31.2], target: [44.0, 2.8, 21.5] },
-  lobby:      { pos: [0, 3.2, 13.8], target: [0, 3.1, 2.5] },
-  corridor:   { pos: [3.0, 3.2, 0.0], target: [20.5, 3.1, 0.0] },
-  tsokol:     { pos: [-11.5, 8.5, 16.0], target: [0, -1.0, -4.0] },
-  rearFacade: { pos: [8.0, 3.8, -32.0], target: [-2.0, 5.2, -10.5] },
-  boiler:     { pos: [29.0, 2.6, -26.0], target: [16.0, 2.2, -15.5] },
-  alley:      { pos: [28.2, 3.4, -20.5], target: [28.2, 1.8, -50.0] },
-  boysDorm:   { pos: [48.0, 18.0, -56.0], target: [-2.0, 2.0, -78.0] },
+  overview:    { pos: [58, 44, 34], target: [6, 2, -40] },
+  front:       { pos: [0.5, 2.4, 34.5], target: [0, 5.2, 10] },
+  hubExt:      { pos: [30.5, 2.5, 42.5], target: [43.5, 4.0, 29.0] },
+  lobby:       { pos: [0, 3.2, 13.8], target: [0, 3.1, 2.5] },
+  stairs:      { pos: [21.8, 3.2, 1.5], target: [21.8, 4.2, 7.5] },
+  floor2Class: { pos: [-16.0, 7.3, 0.0], target: [16.0, 7.3, 0.0] },
+  podvolCorr:  { pos: [0.0, 0.2, 7.5], target: [0.0, 0.0, -4.0] },
+  oshxona:     { pos: [-5.5, 0.2, 4.0], target: [-18.0, -0.2, -5.0] },
+  sportzal:    { pos: [5.5, 0.2, 4.0], target: [18.0, -0.2, -5.0] },
+  rearFacade:  { pos: [14.0, 3.4, -34.0], target: [-2.0, 4.5, -10.5] },
+  alley:       { pos: [28.2, 3.4, -20.5], target: [28.2, 1.8, -55.0] },
+  boysDorm:    { pos: [48.0, 18.0, -56.0], target: [-2.0, 2.0, -78.0] },
 };
 
 let camTween = null;
@@ -288,15 +283,15 @@ window.setLight = (mode, btn) => {
   if (mode === 'day') {
     scene.background.set(0xcce2f2); scene.fog.color.set(0xcce2f2);
     sunLight.color.set(0xfff7e6); sunLight.intensity = 1.9; sunLight.position.set(-55, 68, 48);
-    hemiLight.intensity = 0.80; interiorLights.forEach((l) => (l.intensity = 0.9));
+    hemiLight.intensity = 0.82; interiorLights.forEach((l) => (l.intensity = 1.0));
   } else if (mode === 'golden') {
     scene.background.set(0xf5c89e); scene.fog.color.set(0xf5c89e);
     sunLight.color.set(0xff9b42); sunLight.intensity = 2.1; sunLight.position.set(-65, 18, 25);
-    hemiLight.intensity = 0.56; interiorLights.forEach((l) => (l.intensity = 1.9));
+    hemiLight.intensity = 0.56; interiorLights.forEach((l) => (l.intensity = 2.0));
   } else {
     scene.background.set(0x0b1220); scene.fog.color.set(0x0b1220);
     sunLight.color.set(0x64748b); sunLight.intensity = 0.35;
-    hemiLight.intensity = 0.28; interiorLights.forEach((l) => (l.intensity = 3.4));
+    hemiLight.intensity = 0.28; interiorLights.forEach((l) => (l.intensity = 3.5));
   }
 };
 
@@ -438,24 +433,27 @@ function computeWalkFloorHeight(x, z, curFloor) {
     const onStairX = Math.abs(x) >= 20.2 && Math.abs(x) <= 23.4;
     if (onStairX && z >= 2.0 && z <= 8.8 && curFloor > 0.2) {
       const t = Math.max(0, Math.min(1, (z - 2.2) / 6.4));
-      return { floorY: 1.50 + t * (5.60 - 1.50), label: 'Ichki zina (1F ↔ 2F)' };
+      return { floorY: 1.50 + t * (5.60 - 1.50), label: 'Zinapoya (1F ↔ 2F)' };
     }
     if (onStairX && z >= -7.6 && z <= -2.0 && curFloor < 3.5) {
       const t = Math.max(0, Math.min(1, (-2.2 - z) / 5.2));
-      return { floorY: 1.50 - t * (1.50 - (-1.52)), label: 'Ichki zina (1F ↔ Tsokol)' };
+      return { floorY: 1.50 - t * (1.50 - (-1.52)), label: 'Zinapoya (1F ↔ Podvol)' };
     }
-    if (curFloor > 3.6) return { floorY: 5.60, label: 'B blok 2-qavat (IT / Kutubxona)' };
-    if (curFloor < 0.0) return { floorY: -1.52, label: x >= 0 ? 'Tsokol: Taekwondo zali' : 'Tsokol: Oshxona' };
+    if (curFloor > 3.6) return { floorY: 5.60, label: x < 0 ? '2F Koridor / Sinf (Sharq)' : '2F Origami Koridor / IT (G‘arb)' };
+    if (curFloor < 0.0) {
+      if (Math.abs(x) <= 2.4) return { floorY: -1.52, label: 'Podvol Markaziy Karidori' };
+      return { floorY: -1.52, label: x < 0 ? 'Podvol: Oshxona & Razdacha' : 'Podvol: Taekwondo Sport Zali' };
+    }
     if (z > 4.0) return { floorY: 1.50, label: 'B blok 1-qavat Foye (Kema & Resepshn)' };
-    if (z >= -1.6) return { floorY: 1.50, label: 'B blok 1-qavat Markaziy koridor' };
+    if (z >= -1.6) return { floorY: 1.50, label: 'B blok 1-qavat Koridor' };
     return { floorY: 1.50, label: 'B blok 1-qavat Sinf xonasi' };
   }
 
-  if (x >= 14.8 && x <= 22.0 && z >= -18.0 && z <= -12.0) return { floorY: 0.0, label: 'Qozonxona & Qizil shit oldi' };
+  if (x >= 14.8 && x <= 22.0 && z >= -18.0 && z <= -12.0) return { floorY: 0.0, label: 'Qozonxona & Qizil shit' };
   if (z <= -12.0 && z >= -18.0 && x < 14.8) return { floorY: 0.0, label: '3 ta Yashil Besedka bog‘i' };
-  if (x >= 6.5 && x <= 13.0 && z >= -24.0 && z <= -19.2) return { floorY: 0.03, label: 'Turnik & Brusya (Chetroqda)' };
+  if (x >= 6.5 && x <= 13.0 && z >= -24.0 && z <= -19.2) return { floorY: 0.03, label: 'Turnik & Shved narvoni' };
   if (z <= -21.0 && z >= -30.5 && x >= -10.0 && x <= 33.0) return { floorY: 0.0, label: 'Keng o‘tish yo‘lagi' };
-  if (x >= 24.0 && x <= 32.5 && z <= -21.0 && z >= -66.5) return { floorY: 0.0, label: '1-juftlik Yotoqxona gulzori (Damas)' };
+  if (x >= 24.0 && x <= 32.5 && z <= -21.0 && z >= -66.5) return { floorY: 0.0, label: '1-juftlik Yotoqxona gulzori' };
   if (x >= -27.5 && x <= 16.8 && z <= -18.0 && z >= -66.0) return { floorY: 0.01, label: 'Ochiq tekis tuproq maydon' };
   if (z > 33.0) return { floorY: 0.0, label: 'A-376 ko‘cha bo‘yi' };
   return { floorY: 0.0, label: 'Maktab hovlisi' };

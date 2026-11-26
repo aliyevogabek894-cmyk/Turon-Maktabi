@@ -1,14 +1,10 @@
-# “Turon Odob-Ilm” Xususiy Maktabi (Furqat) — 1:1 Old & Orqa 3D Loyihasi (v2.4)
+# “Turon Odob-Ilm” Xususiy Maktabi (Furqat) — 1:1 Foto-Mos 3D Loyihasi (v2.5)
 
-Farg‘ona viloyati, Furqat tumani (**A-376** magistrali) da joylashgan **“Turon odob-ilm” xususiy maktabi** majmuasining old va orqa qismlari 1:1 aniqlikda qurilgan interaktiv 3D modeli hamda 2D chizmalari.
+Farg‘ona viloyati, Furqat tumani (**A-376** magistrali) da joylashgan **“Turon odob-ilm” xususiy maktabi** majmuasining tashqi va ichki dizayni real fotosuratlarga 1:1 mos qilib qurilgan interaktiv 3D modeli.
 
-## v2.4 yangilanishlari
-- **Bolalar Yotoqxonasi kengaytirildi (`2 × 66.7 × 7.0 m`):** 2-yotoqxonaning tashqi chekkasigacha (`X = +39.5 m`) yetkazildi va nargi yotoqxonaga o‘xshab **2 ta yonma-yon ketgan bino + o‘rtasida yashil gulzori** bilan qurildi.
-- **Z-fighting bartaraf etildi:** Ochiq tekis tuproq maydoni va beton yo‘lak sathlari ajratilib, yer sathi silliq qilindi.
+## v2.5 foto-mos yangilanishlari
+- **Podvol (`Tsokol`):** Shaxmat polli kulrang-yashil karidor; chapda nerjaveyka razdachali **Oshxona**, o‘ngda havorang-pushti **Taekwondo Sport Zali**.
+- **2-qavat & Zinapoya:** Diagonal yashil-oq-ko‘k chiziqli zina devori, olovrang-yashil uchburchak shiftli sinfxona, origami va partali koridorlar.
+- **Orqa Yotoqxonalar & Turnik:** Tilla-sariq 4 ta yotoqxona koteji, 4 ta tom fonari, qizil lentali 2 ta gulzor yo‘lagi, `SHIRIN KULCHA` bufeti hamda shved narvonli Turnik majmuasi.
 
-## Ishga tushirish
-Windows’da `ISHGA_TUSHIRISH.bat` faylini oching yoki:
-```bash
-python -m http.server 8765
-```
 Jonli sayt: https://aliyevogabek894-cmyk.github.io/Turon-Maktabi/

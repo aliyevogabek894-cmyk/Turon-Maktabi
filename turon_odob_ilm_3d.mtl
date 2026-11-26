@@ -73,15 +73,25 @@ Kd 0.820 0.850 0.880
 d 1.000
 Ns 150
 
-newmtl Dorm_Cream
-Kd 0.940 0.880 0.730
+newmtl Golden_Ochre
+Kd 0.870 0.660 0.310
 d 1.000
-Ns 50
+Ns 56
 
-newmtl Bunk_Teal
-Kd 0.170 0.480 0.560
+newmtl Royal_Blue
+Kd 0.120 0.250 0.690
 d 1.000
-Ns 80
+Ns 110
+
+newmtl Tk_Lime
+Kd 0.520 0.800 0.090
+d 1.000
+Ns 110
+
+newmtl Tk_Mat_Blue
+Kd 0.360 0.720 0.860
+d 1.000
+Ns 70
 
 newmtl Slate_Roof
 Kd 0.440 0.470 0.510
@@ -92,11 +102,6 @@ newmtl Orange_Metal
 Kd 0.920 0.350 0.050
 d 1.000
 Ns 124
-
-newmtl Soft_Ochre
-Kd 0.910 0.810 0.480
-d 1.000
-Ns 43
 
 newmtl Gazebo_Green
 Kd 0.080 0.330 0.180
