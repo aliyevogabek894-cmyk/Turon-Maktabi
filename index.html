@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Turon Odob-Ilm (Furqat) — 1:1 Interaktiv 3D Loyiha</title>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./lib/three.module.min.js"
+  }
+}
+</script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { overflow: hidden; font-family: 'Segoe UI', system-ui, sans-serif; background: #0b1117; color: #f1f5f9; }
+  #canvas-wrap { position: fixed; inset: 0; }
+  .hud-top {
+    position: fixed; top: 14px; left: 14px; right: 14px;
+    display: flex; justify-content: space-between; align-items: flex-start; pointer-events: none; z-index: 10; gap: 12px;
+  }
+  .panel {
+    pointer-events: auto;
+    background: rgba(15, 23, 34, 0.86);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 12px;
+    padding: 12px 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+  .brand h1 { font-size: 16px; font-weight: 700; color: #fff; }
+  .brand p { font-size: 11.5px; color: #94a3b8; margin-top: 2px; }
+  .controls-col {
+    position: fixed; left: 14px; top: 96px; bottom: 14px; width: 270px;
+    overflow-y: auto; z-index: 10; display: flex; flex-direction: column; gap: 10px;
+    pointer-events: none;
+  }
+  .controls-col .panel { pointer-events: auto; }
+  .sec-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.7px; color: #38bdf8; font-weight: 700; margin-bottom: 8px; }
+  .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .btn-col { display: flex; flex-direction: column; gap: 5px; }
+  button, a.btn-link {
+    background: #1e293b; color: #e2e8f0; border: 1px solid #334155;
+    padding: 7px 9px; border-radius: 7px; font-size: 12px; font-weight: 600;
+    cursor: pointer; text-align: left; text-decoration: none; transition: all 0.14s;
+  }
+  button:hover, a.btn-link:hover { border-color: #38bdf8; background: #263549; }
+  button.active { background: #38bdf8; color: #08121c; border-color: #38bdf8; }
+  button.walk-on { background: #10b981; color: #052e16; border-color: #10b981; }
+  .info-box {
+    position: fixed; right: 14px; bottom: 14px; width: 320px; z-index: 10;
+  }
+  .info-box h3 { font-size: 14px; color: #fff; margin-bottom: 4px; }
+  .info-box .dims { font-size: 12px; color: #fbbf24; font-weight: 700; margin-bottom: 6px; }
+  .info-box p { font-size: 12px; color: #cbd5e1; line-height: 1.45; }
+  .hint { font-size: 11px; color: #94a3b8; margin-top: 6px; }
+  .top-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  a.btn-link.primary { background: #0ea5e9; color: #06131f; border-color: #0ea5e9; text-align: center; }
+  @media (max-width: 780px) {
+    .controls-col { width: 220px; }
+    .info-box { width: 240px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="canvas-wrap"></div>
+
+<div class="hud-top">
+  <div class="panel brand">
+    <h1>TURON ODOB-ILM (FURQAT) — 1:1 3D ARXITEKTURA</h1>
+    <p>1 birlik = 1 metr · B blok (43.37×18.94×11.35 m) + Innovation Hub (16.2×11.0×7.2 m)</p>
+  </div>
+  <div class="panel top-actions">
+    <button id="btn-walk" onclick="toggleWalk()">🚶 Ichkarida yurish (WASD)</button>
+    <button id="btn-guides" class="active" onclick="toggleGuides()">📏 O‘lchovlar</button>
+    <button id="btn-cars" class="active" onclick="toggleCars()">🚗 Avto etalon</button>
+    <a class="btn-link primary" href="qavat_rejalari.html" target="_blank">📐 2D Chizmalar</a>
+  </div>
+</div>
+
+<div class="controls-col">
+  <div class="panel">
+    <div class="sec-title">Qavatlar kesimi (Cutaway)</div>
+    <div class="btn-grid">
+      <button class="slice-btn active" onclick="setSlice('all', this)">To‘liq majmua</button>
+      <button class="slice-btn" onclick="setSlice('noroof', this)">Tomni yechish</button>
+      <button class="slice-btn" onclick="setSlice('floor2', this)">2-qavat (+5.25m)</button>
+      <button class="slice-btn" onclick="setSlice('floor1', this)">1-qavat (+1.45m)</button>
+      <button class="slice-btn" onclick="setSlice('tsokol', this)">Tsokol (-1.70m)</button>
+      <button class="slice-btn" onclick="setSlice('hub', this)">Innovation Hub</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="sec-title">Kamera nuqtalari</div>
+    <div class="btn-col">
+      <button onclick="goCam('overview')">1. Umumiy ko‘rinish (Qush parvozi)</button>
+      <button onclick="goCam('front')">2. Old fasad (1-rasm rakursi)</button>
+      <button onclick="goCam('west')">3. G‘arbiy yon va 3 bayroq (5-rasm)</button>
+      <button onclick="goCam('hubExt')">4. Innovation Hub tashqi (6-rasm)</button>
+      <button onclick="goCam('hubInt')">5. Innovation Hub zal (7-rasm)</button>
+      <button onclick="goCam('lobby')">6. 1-qavat Foye va Kema (10-rasm)</button>
+      <button onclick="goCam('corridor')">7. 1-qavat Koridor va Sinflar (11-rasm)</button>
+      <button onclick="goCam('tsokol')">8. Tsokol: Taekwondo &amp; Oshxona</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="sec-title">Yoritish rejimi</div>
+    <div class="btn-grid">
+      <button class="light-btn active" onclick="setLight('day', this)">☀️ Kunduzi</button>
+      <button class="light-btn" onclick="setLight('golden', this)">🌅 Oqshom</button>
+      <button class="light-btn" onclick="setLight('night', this)">🌙 Tungi LED</button>
+    </div>
+    <p class="hint">Boshqaruv: Chap tugma — aylantirish · O‘ng tugma — siljitish · G‘ildirak — yaqinlashtirish · Binoga bosing — o‘lchamlarni ko‘rish.</p>
+  </div>
+</div>
+
+<div class="panel info-box" id="info-box">
+  <h3 id="info-title">Asosiy majmua (1:1 Masshtab)</h3>
+  <div class="dims" id="info-dims">B blok: 43.37 × 18.94 × 11.35 m | Hub: 16.2 × 11.0 × 7.2 m</div>
+  <p id="info-desc">Xona yoki binoni ustiga bosing — aniq o‘lchami, maydoni va rasmiy manbalarga asoslangan tavsifi chiqadi. “Ichkarida yurish” tugmasini bossangiz W/A/S/D bilan zinadan chiqib foye va koridorda yurishingiz mumkin.</p>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from './lib/OrbitControls.js';
+import { createTextures } from './js/textures.js';
+import { buildTuronCampus } from './js/scene_builder.js';
+
+const container = document.getElementById('canvas-wrap');
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+container.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xcce2f2);
+scene.fog = new THREE.FogExp2(0xcce2f2, 0.0038);
+
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.2, 400);
+camera.position.set(-28, 22, 52);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.07;
+controls.target.set(-4, 4, 8);
+controls.maxPolarAngle = Math.PI / 2 + 0.06;
+
+// Lights
+const hemiLight = new THREE.HemisphereLight(0xeef6ff, 0x4b5563, 0.78);
+scene.add(hemiLight);
+const sunLight = new THREE.DirectionalLight(0xfff7e6, 1.9);
+sunLight.position.set(-38, 48, 42);
+sunLight.castShadow = true;
+sunLight.shadow.mapSize.set(2048, 2048);
+sunLight.shadow.camera.near = 5;
+sunLight.shadow.camera.far = 160;
+sunLight.shadow.camera.left = -55;
+sunLight.shadow.camera.right = 55;
+sunLight.shadow.camera.top = 55;
+sunLight.shadow.camera.bottom = -55;
+scene.add(sunLight);
+
+const tex = createTextures();
+const { groups, interactiveZones, animatedFlags, interiorLights } = buildTuronCampus(scene, tex);
+
+// 3D Dimension Guides
+const guidesGroup = new THREE.Group();
+scene.add(guidesGroup);
+function addDimLine(p1, p2, col = 0x38bdf8) {
+  const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...p1), new THREE.Vector3(...p2)]);
+  const mat = new THREE.LineBasicMaterial({ color: col });
+  guidesGroup.add(new THREE.Line(geo, mat));
+}
+addDimLine([-21.685, 12.2, 9.47], [21.685, 12.2, 9.47], 0x38bdf8);   // 43.37 m width
+addDimLine([23.0, 0, -9.47], [23.0, 0, 9.47], 0xf59e0b);             // 18.94 m depth
+addDimLine([5.6, 0, 13.8], [5.6, 11.35, 13.8], 0xef4444);           // 11.35 m height
+addDimLine([-26.5, 0, 13.4], [-26.5, 7.2, 13.4], 0xef4444);         // 7.2 m Hub height
+
+// Slicer logic
+window.setSlice = (mode, btn) => {
+  document.querySelectorAll('.slice-btn').forEach((b) => b.classList.remove('active'));
+  btn.classList.add('active');
+  const g = groups;
+  g.site.visible = true;
+  g.bExterior.visible = true;
+  g.bTsokol.visible = true;
+  g.bFloor1.visible = true;
+  g.bFloor2.visible = true;
+  g.bRoof.visible = true;
+  g.hubShell.visible = true;
+  g.hubFloor1.visible = true;
+  g.hubFloor2.visible = true;
+  g.hubRoof.visible = true;
+
+  if (mode === 'noroof') {
+    g.bRoof.visible = false;
+    g.hubRoof.visible = false;
+  } else if (mode === 'floor2') {
+    g.bRoof.visible = false;
+    g.bExterior.visible = false;
+    g.hubRoof.visible = false;
+  } else if (mode === 'floor1') {
+    g.bRoof.visible = false;
+    g.bFloor2.visible = false;
+    g.bExterior.visible = false;
+    g.hubRoof.visible = false;
+    g.hubFloor2.visible = false;
+  } else if (mode === 'tsokol') {
+    g.bRoof.visible = false;
+    g.bFloor2.visible = false;
+    g.bFloor1.visible = false;
+    g.bExterior.visible = false;
+    goCam('tsokol');
+  } else if (mode === 'hub') {
+    g.hubRoof.visible = false;
+    g.hubShell.visible = false;
+    goCam('hubInt');
+  }
+};
+
+// Camera presets matching user's 12 uploaded photos!
+const PRESETS = {
+  overview: { pos: [-28, 22, 52], target: [-4, 4, 8] },
+  front: { pos: [0.5, 2.2, 34.5], target: [0, 5.2, 8] },
+  west: { pos: [-34, 2.2, 26], target: [-4, 4.5, 6] },
+  hubExt: { pos: [-19, 2.2, 32], target: [-31.5, 3.6, 22] },
+  hubInt: { pos: [-29.5, 2.1, 28.0], target: [-32.5, 2.6, 15.5] },
+  lobby: { pos: [0, 3.1, 13.2], target: [0, 3.1, 2.5] },
+  corridor: { pos: [-4.0, 3.1, 0.0], target: [-20.0, 3.0, 0.0] },
+  tsokol: { pos: [-11.5, 8.5, 16], target: [0, -1.0, -3.5] },
+};
+
+let camTween = null;
+window.goCam = (name) => {
+  const p = PRESETS[name];
+  if (!p) return;
+  if (walkMode) toggleWalk();
+  camTween = {
+    fromPos: camera.position.clone(),
+    toPos: new THREE.Vector3(...p.pos),
+    fromTar: controls.target.clone(),
+    toTar: new THREE.Vector3(...p.target),
+    t: 0,
+  };
+};
+
+// Day / Golden / Night lighting
+window.setLight = (mode, btn) => {
+  document.querySelectorAll('.light-btn').forEach((b) => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (mode === 'day') {
+    scene.background.set(0xcce2f2); scene.fog.color.set(0xcce2f2);
+    sunLight.color.set(0xfff7e6); sunLight.intensity = 1.9; sunLight.position.set(-38, 48, 42);
+    hemiLight.intensity = 0.78;
+    interiorLights.forEach((l) => (l.intensity = 0.8));
+  } else if (mode === 'golden') {
+    scene.background.set(0xf5c89e); scene.fog.color.set(0xf5c89e);
+    sunLight.color.set(0xff9b42); sunLight.intensity = 2.1; sunLight.position.set(-55, 14, 30);
+    hemiLight.intensity = 0.55;
+    interiorLights.forEach((l) => (l.intensity = 1.8));
+  } else {
+    scene.background.set(0x0b1220); scene.fog.color.set(0x0b1220);
+    sunLight.color.set(0x64748b); sunLight.intensity = 0.35;
+    hemiLight.intensity = 0.25;
+    interiorLights.forEach((l) => (l.intensity = 3.2));
+  }
+};
+
+window.toggleGuides = () => {
+  guidesGroup.visible = !guidesGroup.visible;
+  document.getElementById('btn-guides').classList.toggle('active', guidesGroup.visible);
+};
+window.toggleCars = () => {
+  groups.cars.visible = !groups.cars.visible;
+  document.getElementById('btn-cars').classList.toggle('active', groups.cars.visible);
+};
+
+// Walkthrough Mode (WASD + Mouse drag look)
+let walkMode = false;
+const keys = {};
+let yaw = Math.PI, pitch = 0;
+let draggingWalk = false, lastMX = 0, lastMY = 0;
+
+window.toggleWalk = () => {
+  walkMode = !walkMode;
+  const btn = document.getElementById('btn-walk');
+  btn.classList.toggle('walk-on', walkMode);
+  controls.enabled = !walkMode;
+  if (walkMode) {
+    camera.position.set(0, 1.75, 22.0);
+    yaw = 0; pitch = 0;
+    btn.textContent = '🛑 Yurishdan chiqish';
+  } else {
+    btn.textContent = '🚶 Ichkarida yurish (WASD)';
+  }
+};
+
+window.addEventListener('keydown', (e) => { keys[e.code] = true; });
+window.addEventListener('keyup', (e) => { keys[e.code] = false; });
+renderer.domElement.addEventListener('mousedown', (e) => {
+  if (walkMode) { draggingWalk = true; lastMX = e.clientX; lastMY = e.clientY; }
+});
+window.addEventListener('mouseup', () => { draggingWalk = false; });
+window.addEventListener('mousemove', (e) => {
+  if (!walkMode || !draggingWalk) return;
+  yaw -= (e.clientX - lastMX) * 0.004;
+  pitch = Math.max(-1.2, Math.min(1.2, pitch - (e.clientY - lastMY) * 0.004));
+  lastMX = e.clientX; lastMY = e.clientY;
+});
+
+// Click Raycast Zone Inspector
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+renderer.domElement.addEventListener('click', (e) => {
+  if (walkMode) return;
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(interactiveZones, false);
+  if (hits.length > 0) {
+    const ud = hits[0].object.userData;
+    document.getElementById('info-title').textContent = ud.title;
+    document.getElementById('info-dims').textContent = ud.dims;
+    document.getElementById('info-desc').textContent = ud.desc;
+  }
+});
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  const elapsed = clock.elapsedTime;
+
+  // Gentle flag animation
+  animatedFlags.forEach((f, idx) => {
+    const pos = f.geometry.attributes.position;
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i);
+      const wave = Math.sin(elapsed * 3.5 + x * 2.5 + idx) * 0.08 * ((x + 0.95) / 1.9);
+      pos.setZ(i, wave);
+    }
+    pos.needsUpdate = true;
+  });
+
+  if (camTween) {
+    camTween.t = Math.min(1, camTween.t + dt * 2.4);
+    const s = camTween.t * camTween.t * (3 - 2 * camTween.t);
+    camera.position.lerpVectors(camTween.fromPos, camTween.toPos, s);
+    controls.target.lerpVectors(camTween.fromTar, camTween.toTar, s);
+    if (camTween.t >= 1) camTween = null;
+  }
+
+  if (walkMode) {
+    const fwd = new THREE.Vector3(-Math.sin(yaw), 0, -Math.cos(yaw));
+    const right = new THREE.Vector3(Math.cos(yaw), 0, -Math.sin(yaw));
+    const spd = (keys['ShiftLeft'] ? 9.0 : 4.5) * dt;
+    if (keys['KeyW'] || keys['ArrowUp']) camera.position.addScaledVector(fwd, spd);
+    if (keys['KeyS'] || keys['ArrowDown']) camera.position.addScaledVector(fwd, -spd);
+    if (keys['KeyA'] || keys['ArrowLeft']) camera.position.addScaledVector(right, -spd);
+    if (keys['KeyD'] || keys['ArrowRight']) camera.position.addScaledVector(right, spd);
+    // Auto climb stairs into B blok!
+    const z = camera.position.z, x = camera.position.x;
+    let targetY = 1.75;
+    if (Math.abs(x) < 6 && z <= 19.6 && z >= 16.8) {
+      targetY = 1.75 + ((19.6 - z) / 2.8) * 1.45;
+    } else if (Math.abs(x) < 22 && z < 16.8 && z > -9.5) {
+      targetY = 3.20;
+    }
+    camera.position.y += (targetY - camera.position.y) * 0.15;
+    const lookDir = new THREE.Vector3(
+      -Math.sin(yaw) * Math.cos(pitch),
+      Math.sin(pitch),
+      -Math.cos(yaw) * Math.cos(pitch)
+    );
+    camera.lookAt(camera.position.clone().add(lookDir));
+  } else {
+    controls.update();
+  }
+
+  renderer.render(scene, camera);
+}
+animate();
+</script>
+</body>
+</html>
