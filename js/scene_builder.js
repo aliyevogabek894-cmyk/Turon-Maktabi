@@ -3,9 +3,9 @@ import * as THREE from 'three';
 /**
  * Corrected Non-Mirrored Campus Coordinate System (1 unit = 1 meter):
  *   +Z = North (A-376 Highway, Front of BOTH B blok and Innovation Hub)
- *   -Z = South (Back Garden, Qozonxona, 3 Gazebos, Open Walkway, Turnik, 2 Parallel Yotoqxona Wings + Connected Boys' Yotoqxona, Plain Dirt Field)
+ *   -Z = South (Back Garden, Qozonxona, 3 Gazebos, Open Walkway, Turnik, 2 N-S Yotoqxona Wings + 2 E-W Twin Boys' Yotoqxona Wings with Gulzor, Plain Dirt Field)
  *   -X = East (Screen LEFT facing school: 37-maktab, Evrozabor, Bare Field, Tashna, Orange Lada, 1F East Annex, Foye Ship)
- *   +X = West (Screen RIGHT facing school: Ramp, 3 Flagpoles, Reception, Open Gate, Innovation Hub, West Driveway, Twin Yotoqxona Wings)
+ *   +X = West (Screen RIGHT facing school: Ramp, 3 Flagpoles, Reception, Open Gate, Innovation Hub, West Driveway, Yotoqxona Complex)
  */
 export function buildTuronCampus(scene, tex) {
   const groups = {
@@ -66,6 +66,8 @@ export function buildTuronCampus(scene, tex) {
     bunkTeal: new THREE.MeshStandardMaterial({ color: 0x0891b2, roughness: 0.4, metalness: 0.4 }),
     carpet: new THREE.MeshStandardMaterial({ map: tex.carpet, roughness: 0.9 }),
     grass: new THREE.MeshStandardMaterial({ color: 0x2d6b2d, roughness: 0.92 }),
+    flowerPink: new THREE.MeshStandardMaterial({ color: 0xf43f5e, roughness: 0.75 }),
+    flowerGold: new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.75 }),
     tree: new THREE.MeshStandardMaterial({ color: 0x1f4f24, roughness: 0.88 }),
     trunk: new THREE.MeshStandardMaterial({ color: 0x5c4033, roughness: 0.9 }),
     cinder: new THREE.MeshStandardMaterial({ color: 0x8e9399, roughness: 0.9 }),
@@ -98,20 +100,20 @@ export function buildTuronCampus(scene, tex) {
   }
 
   // =========================================================
-  // 1. SITE & SURROUNDINGS
+  // 1. SITE & SURROUNDINGS (Zero Z-fighting ground heights)
   // =========================================================
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(310, 310), new THREE.MeshStandardMaterial({ color: 0x3b4439, roughness: 0.95 }));
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(320, 320), new THREE.MeshStandardMaterial({ color: 0x3b4439, roughness: 0.95 }));
   ground.rotation.x = -Math.PI / 2;
-  ground.position.set(8, -0.05, -22);
+  ground.position.set(8, -0.05, -28);
   ground.receiveShadow = true;
   groups.site.add(ground);
 
   const paveMat = new THREE.MeshStandardMaterial({ map: tex.bruschatka, roughness: 0.85 });
   box(groups.site, 65, 0.08, 45.5, paveMat, -1.0, -0.02, 10.25, 0, 0, 0, false);
 
-  // West Driveway + Wide Open Rear Plaza between Gate/Fence (Z=-18) and Dorm Wings (Z=-30.5)
-  box(groups.site, 8.8, 0.06, 54.0, M.concretePath, 28.4, -0.01, 6.0, 0, 0, 0, false);
-  box(groups.site, 61.5, 0.06, 12.6, M.concretePath, 6.5, -0.01, -24.2, 0, 0, 0, false);
+  // Concrete West Driveway + Wide Open Rear Plaza (top Y = +0.025, clearly above dirtField Y_top = +0.012!)
+  box(groups.site, 8.8, 0.05, 54.0, M.concretePath, 28.4, 0.0, 6.0, 0, 0, 0, false);
+  box(groups.site, 36.5, 0.05, 12.6, M.concretePath, 21.0, 0.0, -24.2, 0, 0, 0, false);
 
   // Sidewalk, Parking & A-376
   box(groups.site, 110, 0.06, 7.2, new THREE.MeshStandardMaterial({ color: 0x4b525a, roughness: 0.9 }), 10, -0.01, 36.6, 0, 0, 0, false);
@@ -145,18 +147,18 @@ export function buildTuronCampus(scene, tex) {
   box(groups.site, 0.48, 2.5, 0.48, M.stucco, 32.8, 1.25, 33.0);
   box(groups.site, 0.12, 2.2, 4.2, M.charcoal, 32.8, 1.1, 30.8);
 
-  // Side perimeter walls & East Evrozabor down to Z = -76!
+  // Side perimeter walls & East Evrozabor down to Z = -91!
   box(groups.site, 0.38, 2.4, 44, M.cinder, -33.0, 1.2, 11.0);
-  box(groups.site, 0.32, 2.4, 65, M.evrozabor, -27.5, 1.2, -43.0);
+  box(groups.site, 0.32, 2.4, 82, M.evrozabor, -27.5, 1.2, -50.5);
   box(groups.site, 0.38, 2.4, 14, M.cinder, 32.8, 1.2, 13.0);
-  box(groups.site, 0.38, 2.4, 72, M.cinder, 40.4, 1.2, -31.0);
+  box(groups.site, 0.38, 2.4, 88, M.cinder, 40.4, 1.2, -40.0);
 
-  // Neighboring 37-maktab 3-story building & Poplars beyond East Evrozabor
+  // Neighboring 37-maktab & Poplars beyond East Evrozabor
   box(groups.site, 10.0, 9.8, 22.0, M.dormCream, -41.0, 4.9, -24.0);
   for (let nbz = -31; nbz <= -16; nbz += 4.5) {
     [2.2, 5.2, 8.0].forEach((nby) => box(groups.site, 0.25, 1.6, 2.0, M.bronzeGlass, -35.95, nby, nbz));
   }
-  for (let tz = -74; tz <= 5; tz += 5.5) {
+  for (let tz = -88; tz <= 5; tz += 5.5) {
     box(groups.site, 0.35, 3.2, 0.35, M.trunk, -29.2, 1.6, tz);
     const crown = new THREE.Mesh(new THREE.ConeGeometry(1.7, 11.5, 8), M.tree);
     crown.position.set(-29.2, 8.6, tz);
@@ -164,7 +166,7 @@ export function buildTuronCampus(scene, tex) {
     groups.site.add(crown);
   }
 
-  // Front Grass Lawns & 3 Flagpoles & Tashna
+  // Front Grass Lawns, 3 Flagpoles & Tashna
   [-16.8, 16.8].forEach((lx) => {
     box(groups.site, 13.6, 0.1, 4.5, M.grass, lx, 0.03, 14.2, 0, 0, 0, false);
     for (let px = lx - 6.4; px <= lx + 6.4; px += 4.2) {
@@ -367,7 +369,7 @@ export function buildTuronCampus(scene, tex) {
   }
   box(groups.bFloor2, 4.0, 0.06, 1.5, M.woodCol, 0, 6.45, 11.4);
 
-  // ---- B BLOK EXTERIOR FRONT + SIDE + REAR ----
+  // ---- B BLOK EXTERIOR ----
   function buildWingFacade(startX, dir) {
     const isWest = dir > 0;
     for (let b = 0; b < 4; b++) {
@@ -405,7 +407,6 @@ export function buildTuronCampus(scene, tex) {
   box(groups.bExterior, 5.0, 0.65, 0.24, M.charcoal, 0, 4.35, 14.90);
   box(groups.bExterior, 1.1, 1.5, 0.08, M.whiteTrim, -2.15, 3.0, 15.15);
   box(groups.bExterior, 1.1, 1.5, 0.08, M.whiteTrim, 2.15, 3.0, 15.15);
-
   box(groups.bExterior, 3.6, 2.9, 0.25, M.bronzeGlass, 0, 7.85, 14.94);
   box(groups.bExterior, 0.08, 2.9, 0.30, M.charcoal, -0.60, 7.85, 14.96);
   box(groups.bExterior, 0.08, 2.9, 0.30, M.charcoal, 0.60, 7.85, 14.96);
@@ -448,7 +449,7 @@ export function buildTuronCampus(scene, tex) {
     box(groups.bExterior, 0.42, 0.72, 0.42, M.blackSteel, rx, 0.36, 21.4);
   });
 
-  // West (+X) Side Wall + SW Vestibule + Exterior Black Steel Stairs
+  // West (+X) Side Wall + Exterior Black Steel Stairs
   box(groups.bExterior, 0.44, 9.15, 9.4, M.stucco, 23.78, 5.12, 5.8);
   box(groups.bExterior, 0.44, 9.15, 9.4, M.stucco, 23.78, 5.12, -5.8);
   box(groups.bExterior, 0.44, 1.2, 21.0, M.charcoal, 23.78, 9.1, 0);
@@ -557,8 +558,9 @@ export function buildTuronCampus(scene, tex) {
   // 4. REAR CAMPUS:
   //    - Qozonxona + 3 Gazebos
   //    - Wide Open Passage + Corner Turnik
-  //    - 2 Parallel Yotoqxona Wings + Connected Boys' Yotoqxona Wing at South end (Ulanib ketgan!)
-  //    - Plain Empty Dirt Ground Field (Nothing on field!)
+  //    - Twin N-S Yotoqxona Wings + Gulzor Alley
+  //    - Twin E-W Boys' Yotoqxona Wings (2 ta yonma-yon, o'rtasida Gulzor, spanning all the way to 2nd Dorm Wing X=+39.5!)
+  //    - Plain Empty Dirt Ground Field
   // =========================================================
   box(groups.site, 51.5, 0.05, 2.2, M.concretePath, -1.2, 0.01, -11.4, 0, 0, 0, false);
 
@@ -604,7 +606,7 @@ export function buildTuronCampus(scene, tex) {
     }
   });
 
-  // Rear Steel Arch Gate + Cleanly Separated Utility Building on far West edge
+  // Rear Steel Arch Gate + Utility House on far West edge
   box(groups.site, 0.16, 3.9, 0.16, M.blackSteel, 24.2, 1.95, -21.0);
   box(groups.site, 0.16, 3.9, 0.16, M.blackSteel, 31.2, 1.95, -21.0);
   box(groups.site, 7.2, 0.12, 0.14, M.blackSteel, 27.7, 3.9, -21.0);
@@ -613,7 +615,7 @@ export function buildTuronCampus(scene, tex) {
   const utilHouse = box(groups.dormExterior, 4.8, 2.55, 3.6, M.softOchre, 37.2, 1.275, -20.8);
   tagZone(utilHouse, 'Sariq Xo‘jalik Xonasi', '4.8 × 3.6 × 2.55 m', 'Orqa darvoza g‘arbiy chetidagi och sariq yordamchi bino.');
 
-  // Orange Street-Gym Workout Bars (Chetroqda, wide open walkway around!)
+  // Turnik off to the corner beside the garden & path
   box(groups.site, 6.8, 0.06, 5.0, M.cinder, 9.75, 0.02, -21.6, 0, 0, 0, false);
   const gymBase = box(groups.site, 0.10, 2.45, 0.10, M.orangeBars, 7.2, 1.22, -23.4);
   tagZone(gymBase, 'Turnik & Brusya (Chetroqda, keng o‘tish yo‘li bilan)', '~6.5 × 4.8 m', 'Zarg‘aldoq metall turnik va narvon — chetroqda, atrofida keng yurish yo‘lagi qoldirilgan.');
@@ -625,16 +627,20 @@ export function buildTuronCampus(scene, tex) {
   box(groups.site, 5.5, 0.08, 0.08, M.orangeBars, 9.9, 2.42, -19.8);
   box(groups.site, 1.9, 0.10, 0.65, M.orangeBars, 8.8, 0.72, -19.1, 0, 0, -0.35);
 
-  // Central Damas Alley & Shirin Kulcha Bufet
-  box(groups.site, 8.6, 0.06, 46.5, M.concretePath, 28.25, -0.01, -43.5, 0, 0, 0, false);
-  box(groups.site, 1.6, 0.08, 33.5, M.grass, 28.25, 0.03, -48.5, 0, 0, 0, false);
+  // Pair 1 (North-South): Twin Parallel Yotoqxona Wings + Gulzor Median Alley (Z in [-30.5, -66.0])
+  box(groups.site, 8.6, 0.05, 36.0, M.concretePath, 28.25, 0.0, -48.5, 0, 0, 0, false);
+  box(groups.site, 1.6, 0.08, 33.0, M.grass, 28.25, 0.03, -48.5, 0, 0, 0, false);
   for (let az = -63; az <= -33; az += 5.0) {
     box(groups.site, 0.12, 1.5, 0.12, M.trunk, 28.25, 0.75, az);
     const sCrown = new THREE.Mesh(new THREE.ConeGeometry(0.65, 2.2, 7), M.tree);
     sCrown.position.set(28.25, 2.1, az);
     groups.site.add(sCrown);
+    const fl = new THREE.Mesh(new THREE.SphereGeometry(0.28, 8, 6), az % 10 === 0 ? M.flowerPink : M.flowerGold);
+    fl.position.set(28.25, 0.25, az + 2.5);
+    groups.site.add(fl);
   }
 
+  // "SHIRIN KULCHA" Bufet
   const bufetBase = box(groups.dormFloor1, 4.4, 0.22, 4.5, M.whiteMarble, 14.8, 0.11, -32.75, 0, 0, 0, false);
   tagZone(bufetBase, '“SHIRIN KULCHA” Maktab Bufeti', '4.4 × 4.5 × 3.0 m', '2- va 4-videolardagi oq romli vitraj bufet pavilyoni.');
   box(groups.dormExterior, 4.4, 1.15, 0.12, M.whiteTrim, 14.8, 0.65, -30.55);
@@ -648,19 +654,16 @@ export function buildTuronCampus(scene, tex) {
   bufetRoof.position.set(14.8, 3.25, -32.75);
   groups.dormRoof.add(bufetRoof);
 
-  // Two Parallel Yotoqxona Wings (East X=20.5, West X=36.0, Z in [-66.5, -30.5])
-  function buildTwinDormWing(cx, width, isEastWing) {
+  // Pair 1 Twin N-S Yotoqxona Wings (ending flush at Z = -66.5 where Horizontal Boys' Wing #1 starts!)
+  function buildTwinNSWing(cx, width, isEastWing) {
     const len = 36.0, cz = -48.5;
     const hw = width / 2;
     const slab = box(groups.dormFloor1, width, 0.25, len, M.whiteMarble, cx, 0.125, cz, 0, 0, 0, false);
     if (isEastWing) {
-      tagZone(slab, '2 ta Parallel Yotoqxona Qanoti (Bir xil dizayn)', 'Har biri 36.0 × 7.0 m', 'Ko‘kalamzor Damas yo‘lagi ikki chetidagi 1-qavatli yotoq/o‘quv korpuslari; ichida 4 o‘rinli firuza xonalar.');
+      tagZone(slab, '1-juftlik Yotoqxona (2 ta parallel qanot + Gulzor)', 'Har biri 36.0 × 7.0 m', 'Markaziy gulzor va Damas yo‘lagi ikki chetidagi 2 ta yotoqxona qanoti.');
     }
     box(groups.dormExterior, width + 0.08, 0.42, len + 0.08, M.granite, cx, 0.21, cz);
     box(groups.dormExterior, width, 2.9, 0.24, M.dormCream, cx, 1.80, -30.62);
-    if (!isEastWing) {
-      box(groups.dormExterior, width, 2.9, 0.24, M.dormCream, cx, 1.80, -66.38);
-    }
     box(groups.dormExterior, 2.2, 1.45, 0.28, M.whiteTrim, cx, 1.85, -30.60);
     box(groups.dormExterior, 1.9, 1.25, 0.30, M.clearGlass, cx, 1.85, -30.60);
 
@@ -689,65 +692,96 @@ export function buildTuronCampus(scene, tex) {
       box(groups.dormFloor1, 0.84, 0.16, 1.80, M.whiteTrim, cx - bedOff * 0.9, 1.68, rz - 0.8);
     }
 
+    // Roof trimmed flush at -66.5 so zero poke-through at South corner!
     const pitchAng = 0.28;
     const slopeW = (width + 1.1) / 2 / Math.cos(pitchAng);
-    box(groups.dormRoof, slopeW, 0.14, len + 0.9, M.slateRoof, cx - width * 0.26, 3.68, cz, 0, 0, pitchAng);
-    box(groups.dormRoof, slopeW, 0.14, len + 0.9, M.slateRoof, cx + width * 0.26, 3.68, cz, 0, 0, -pitchAng);
-    box(groups.dormRoof, 0.30, 0.22, len + 0.9, M.grayTrim, cx, 4.20, cz);
+    box(groups.dormRoof, slopeW, 0.14, len, M.slateRoof, cx - width * 0.26, 3.68, cz, 0, 0, pitchAng);
+    box(groups.dormRoof, slopeW, 0.14, len, M.slateRoof, cx + width * 0.26, 3.68, cz, 0, 0, -pitchAng);
+    box(groups.dormRoof, 0.30, 0.22, len, M.grayTrim, cx, 4.20, cz);
   }
-  buildTwinDormWing(20.5, 7.0, true);
-  buildTwinDormWing(36.0, 7.0, false);
+  buildTwinNSWing(20.5, 7.0, true);
+  buildTwinNSWing(36.0, 7.0, false);
 
-  // CONNECTED SOUTH BOYS' DORMITORY WING ("O'g'il Bolalar Yotoqxonasi", ulanib ketgan, XUDDI SHUNAQA DIZAYNDA!)
-  // Replaces dark box & seamlessly joins East Dorm Wing at X = +17..+24, Z = -66.5..-73.5!
-  const boysLen = 50.5, boysCx = -1.25, boysCz = -70.0, boysW = 7.0;
-  const boysSlab = box(groups.dormFloor1, boysLen, 0.25, boysW, M.whiteMarble, boysCx, 0.125, boysCz, 0, 0, 0, false);
-  tagZone(boysSlab, 'O‘g‘il Bolalar Yotoqxonasi (To‘rida ulanib ketgan)', '50.5 × 7.0 m', '2 ta yotoqxona qanoti to‘riga xuddi shunaqa dizaynda ulanib ketgan bolalar yotoqxonasi; ichida 4 o‘rinli xonalar va tashqarida suv minorasi.');
-  box(groups.dormExterior, boysLen + 0.08, 0.42, boysW + 0.08, M.granite, boysCx, 0.21, boysCz);
-  box(groups.dormExterior, boysLen, 2.9, 0.24, M.dormCream, boysCx, 1.80, -73.38); // South back wall
-  box(groups.dormExterior, 0.24, 2.9, boysW, M.dormCream, -26.38, 1.80, boysCz);   // East end wall
-  box(groups.dormExterior, 0.24, 2.9, boysW, M.dormCream, 23.88, 1.80, boysCz);    // West corner joining East wing
-  // Field-facing concrete veranda along North front (Z = -66.0..-67.1)
-  box(groups.site, boysLen, 0.14, 1.3, M.concretePath, boysCx, 0.07, -65.9, 0, 0, 0, false);
-  for (let bx = -23.5; bx <= 18.5; bx += 6.0) {
-    // North front wall with 1.3m open walkable doorway into each Boys' room
-    box(groups.dormExterior, 4.6, 2.9, 0.22, M.dormCream, bx + 0.7, 1.80, -66.62);
-    box(groups.dormExterior, 1.85, 1.45, 0.28, M.whiteTrim, bx + 1.1, 1.85, -66.62);
-    box(groups.dormExterior, 1.65, 1.25, 0.30, M.clearGlass, bx + 1.1, 1.85, -66.62);
-    box(groups.dormExterior, 1.85, 1.45, 0.28, M.whiteTrim, bx, 1.85, -73.38);
-    box(groups.dormExterior, 1.65, 1.25, 0.30, M.clearGlass, bx, 1.85, -73.38);
-    box(groups.dormExterior, 0.72, 0.48, 0.35, M.acWhite, bx - 1.4, 2.55, -66.35);
+  // PAIR 2 (East-West Twin Boys' Yotoqxona Wings — spanning ALL THE WAY from -27.2 to +39.5 "2-chi yotoqxonani boshigacha"!)
+  // With Paved Alley & Central Green Gulzor Garden Strip right between them (Z = -73.5..-82.0)!
+  const boysLen = 66.7, boysCx = 6.15, boysW = 7.0; // [-27.2, +39.5]
 
-    // Furnished 4-bed Boys' Dormitory room interior
-    box(groups.dormFloor1, 0.14, 2.9, boysW - 0.6, M.dormMint, bx - 2.9, 1.65, boysCz);
-    box(groups.dormFloor1, 3.2, 0.03, 2.8, M.carpet, bx, 0.27, boysCz, 0, 0, 0, false);
-    box(groups.dormFloor1, 1.95, 1.75, 0.92, M.bunkTeal, bx - 1.5, 1.12, boysCz - 1.9);
-    box(groups.dormFloor1, 1.80, 0.16, 0.84, M.whiteTrim, bx - 1.5, 0.78, boysCz - 1.9);
-    box(groups.dormFloor1, 1.80, 0.16, 0.84, M.whiteTrim, bx - 1.5, 1.68, boysCz - 1.9);
-    box(groups.dormFloor1, 0.92, 1.75, 1.95, M.bunkTeal, bx + 1.5, 1.12, boysCz - 1.0);
-    box(groups.dormFloor1, 0.84, 0.16, 1.80, M.whiteTrim, bx + 1.5, 0.78, boysCz - 1.0);
-    box(groups.dormFloor1, 0.84, 0.16, 1.80, M.whiteTrim, bx + 1.5, 1.68, boysCz - 1.0);
+  // Central Paved Alley + Gulzor Garden between Boys' Wing #1 (Z=-70.0) & Boys' Wing #2 (Z=-85.5)!
+  const gulzorAlley = box(groups.site, boysLen, 0.05, 8.6, M.concretePath, boysCx, 0.0, -77.75, 0, 0, 0, false);
+  tagZone(gulzorAlley, 'Bolalar Yotoqxonasi O‘rta Gulzori', '66.7 × 8.5 m', 'Ikkita yonma-yon Bolalar yotoqxonasi orasidagi ko‘kalamzor gulzor va yurish yo‘lagi.');
+  box(groups.site, 61.0, 0.08, 1.65, M.grass, boysCx, 0.03, -77.75, 0, 0, 0, false);
+  for (let gx = -22.5; gx <= 34.5; gx += 5.2) {
+    box(groups.site, 0.12, 1.5, 0.12, M.trunk, gx, 0.75, -77.75);
+    const sCrown = new THREE.Mesh(new THREE.ConeGeometry(0.65, 2.2, 7), M.tree);
+    sCrown.position.set(gx, 2.1, -77.75);
+    groups.site.add(sCrown);
+    const fl = new THREE.Mesh(new THREE.SphereGeometry(0.30, 8, 6), Math.abs(Math.round(gx)) % 2 === 0 ? M.flowerPink : M.flowerGold);
+    fl.position.set(gx + 2.6, 0.25, -77.75);
+    groups.site.add(fl);
   }
-  // Identical Pitched Gray Slate Roof seamlessly meeting the East Dormitory Wing!
-  {
+
+  function buildBoysEWWing(cz, isNorthWing) {
+    const slab = box(groups.dormFloor1, boysLen, 0.25, boysW, M.whiteMarble, boysCx, 0.125, cz, 0, 0, 0, false);
+    if (isNorthWing) {
+      tagZone(slab, 'O‘g‘il Bolalar Yotoqxonasi (2 ta yonma-yon + O‘rta gulzor)', '2 × (66.7 × 7.0 m)', '2-yotoqxonaning chekkasigacha (X = +39.5 m) kelgan va nargi yotoqxonalarga o‘xshash o‘rtasida gulzorli 2 ta parallel bino.');
+    }
+    box(groups.dormExterior, boysLen + 0.08, 0.42, boysW + 0.08, M.granite, boysCx, 0.21, cz);
+    box(groups.dormExterior, 0.24, 2.9, boysW, M.dormCream, -27.08, 1.80, cz); // East end wall
+    box(groups.dormExterior, 0.24, 2.9, boysW, M.dormCream, 39.38, 1.80, cz);  // West end wall flush with 2nd Dorm Wing (+39.5)!
+    box(groups.dormExterior, 0.28, 1.45, 2.2, M.whiteTrim, -27.06, 1.85, cz);
+    box(groups.dormExterior, 0.30, 1.25, 1.9, M.clearGlass, -27.06, 1.85, cz);
+    box(groups.dormExterior, 0.28, 1.45, 2.2, M.whiteTrim, 39.36, 1.85, cz);
+    box(groups.dormExterior, 0.30, 1.25, 1.9, M.clearGlass, 39.36, 1.85, cz);
+
+    // Alley-facing wall vs outer wall (Wing #1 doors face South toward Gulzor at cz - 3.38; Wing #2 doors face North toward Gulzor at cz + 3.38!)
+    const alleyZ = isNorthWing ? cz - 3.38 : cz + 3.38;
+    const outerZ = isNorthWing ? cz + 3.38 : cz - 3.38;
+    box(groups.dormExterior, boysLen, 2.9, 0.24, M.dormCream, boysCx, 1.80, outerZ);
+    box(groups.site, boysLen, 0.14, 1.1, M.concretePath, boysCx, 0.07, alleyZ + (isNorthWing ? -0.55 : 0.55), 0, 0, 0, false);
+
+    for (let bx = -24.5; bx <= 35.5; bx += 6.0) {
+      // Alley wall with 1.3m OPEN walkable doorway + PVC window
+      box(groups.dormExterior, 4.6, 2.9, 0.22, M.dormCream, bx + 0.7, 1.80, alleyZ);
+      box(groups.dormExterior, 1.85, 1.45, 0.28, M.whiteTrim, bx + 1.1, 1.85, alleyZ);
+      box(groups.dormExterior, 1.65, 1.25, 0.30, M.clearGlass, bx + 1.1, 1.85, alleyZ);
+      // Outer window + AC
+      box(groups.dormExterior, 1.85, 1.45, 0.28, M.whiteTrim, bx, 1.85, outerZ);
+      box(groups.dormExterior, 1.65, 1.25, 0.30, M.clearGlass, bx, 1.85, outerZ);
+      box(groups.dormExterior, 0.72, 0.48, 0.35, M.acWhite, bx - 1.4, 2.55, outerZ + (isNorthWing ? 0.30 : -0.30));
+
+      // Furnished 4-bed Boys' Dormitory room interior
+      box(groups.dormFloor1, 0.14, 2.9, boysW - 0.6, M.dormMint, bx - 2.9, 1.65, cz);
+      box(groups.dormFloor1, 3.2, 0.03, 2.8, M.carpet, bx, 0.27, cz, 0, 0, 0, false);
+      const bOff = isNorthWing ? 1.4 : -1.4;
+      box(groups.dormFloor1, 1.95, 1.75, 0.92, M.bunkTeal, bx - 1.5, 1.12, cz + bOff);
+      box(groups.dormFloor1, 1.80, 0.16, 0.84, M.whiteTrim, bx - 1.5, 0.78, cz + bOff);
+      box(groups.dormFloor1, 1.80, 0.16, 0.84, M.whiteTrim, bx - 1.5, 1.68, cz + bOff);
+      box(groups.dormFloor1, 0.92, 1.75, 1.95, M.bunkTeal, bx + 1.5, 1.12, cz + bOff * 0.5);
+      box(groups.dormFloor1, 0.84, 0.16, 1.80, M.whiteTrim, bx + 1.5, 0.78, cz + bOff * 0.5);
+      box(groups.dormFloor1, 0.84, 0.16, 1.80, M.whiteTrim, bx + 1.5, 1.68, cz + bOff * 0.5);
+    }
+
     const pitchAng = 0.28;
     const slopeD = (boysW + 1.1) / 2 / Math.cos(pitchAng);
-    box(groups.dormRoof, boysLen + 0.8, 0.14, slopeD, M.slateRoof, boysCx, 3.68, boysCz + boysW * 0.26, pitchAng, 0, 0);
-    box(groups.dormRoof, boysLen + 0.8, 0.14, slopeD, M.slateRoof, boysCx, 3.68, boysCz - boysW * 0.26, -pitchAng, 0, 0);
-    box(groups.dormRoof, boysLen + 0.8, 0.22, 0.30, M.grayTrim, boysCx, 4.20, boysCz);
+    box(groups.dormRoof, boysLen + 0.6, 0.14, slopeD, M.slateRoof, boysCx, 3.68, cz + boysW * 0.26, pitchAng, 0, 0);
+    box(groups.dormRoof, boysLen + 0.6, 0.14, slopeD, M.slateRoof, boysCx, 3.68, cz - boysW * 0.26, -pitchAng, 0, 0);
+    box(groups.dormRoof, boysLen + 0.6, 0.22, 0.30, M.grayTrim, boysCx, 4.20, cz);
   }
-  // Water Tower rising behind Boys' Dormitory
-  [[-4.0, -78.2], [-1.6, -78.2], [-4.0, -75.9], [-1.6, -75.9]].forEach(([wx, wz]) => {
+  buildBoysEWWing(-70.0, true);  // Z in [-73.5, -66.5]
+  buildBoysEWWing(-85.5, false); // Z in [-89.0, -82.0]
+
+  // Water Tower placed cleanly behind South Wing #2 at Z = -93.0
+  [[-4.0, -94.2], [-1.6, -94.2], [-4.0, -91.9], [-1.6, -91.9]].forEach(([wx, wz]) => {
     box(groups.dormExterior, 0.18, 9.6, 0.18, M.steel, wx, 4.8, wz);
   });
   const tank = new THREE.Mesh(new THREE.CylinderGeometry(1.45, 1.45, 2.8, 18), M.steel);
-  tank.position.set(-2.8, 10.6, -77.05);
+  tank.position.set(-2.8, 10.6, -93.05);
   tank.castShadow = true;
   groups.dormExterior.add(tank);
 
-  // PLAIN EMPTY EARTH / DIRT OPEN FIELD — NOTHING ON THE FIELD!
-  const fieldMesh = box(groups.site, 44.3, 0.04, 47.5, M.dirtField, -5.35, 0.0, -41.75, 0, 0, 0, false);
-  tagZone(fieldMesh, 'Ochiq Tuproq Maydon', '44.3 × 47.5 m (~2 100 m²)', 'Orqa yotoqxonalar oldidagi tekis ochiq tuproq maydon (basketbol maydoni olib tashlangan).');
+  // PLAIN EMPTY DIRT GROUND FIELD (Y_top = +0.012, strictly under concretePath Y_top = +0.025 -> ZERO Z-fighting!)
+  const fieldMesh = box(groups.site, 44.3, 0.04, 48.5, M.dirtField, -5.35, -0.008, -42.25, 0, 0, 0, false);
+  tagZone(fieldMesh, 'Ochiq Tekis Yer Maydoni', '44.3 × 48.5 m (~2 150 m²)', 'Yotoqxonalar oldidagi tekis oddiy yer maydoni (hech narsa qo‘yilmagan).');
 
   // =========================================================
   // 5. SCALE VEHICLES
@@ -799,8 +833,8 @@ export function buildTuronCampus(scene, tex) {
   // 6. INTERIOR LIGHTS
   // =========================================================
   const interiorLights = [];
-  [[0, 4.8, 7.5, 0x22c55e, 1.8], [0, 8.8, 6.0, 0xfff3d6, 1.6], [hubX, 6.0, hubZ, 0xfff3d6, 2.2], [20.5, 2.6, -48.5, 0xfff3d6, 1.4], [-1.25, 2.6, boysCz, 0xfff3d6, 1.5]].forEach(([lx, ly, lz, col, inten]) => {
-    const pl = new THREE.PointLight(col, inten, 32);
+  [[0, 4.8, 7.5, 0x22c55e, 1.8], [0, 8.8, 6.0, 0xfff3d6, 1.6], [hubX, 6.0, hubZ, 0xfff3d6, 2.2], [20.5, 2.6, -48.5, 0xfff3d6, 1.4], [6.15, 2.6, -70.0, 0xfff3d6, 1.5], [6.15, 2.6, -85.5, 0xfff3d6, 1.5]].forEach(([lx, ly, lz, col, inten]) => {
+    const pl = new THREE.PointLight(col, inten, 34);
     pl.position.set(lx, ly, lz);
     scene.add(pl);
     interiorLights.push(pl);
