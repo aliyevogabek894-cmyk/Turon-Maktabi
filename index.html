@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Turon Odob-Ilm (Furqat) — 1:1 Old va Orqa Majmua 3D Loyihasi v2.2</title>
+<title>Turon Odob-Ilm (Furqat) — 1:1 Old va Orqa Majmua 3D Loyihasi v2.3</title>
 <script type="importmap">
 {
   "imports": {
@@ -86,7 +86,7 @@
 <div class="hud-top">
   <div class="panel brand">
     <h1>TURON ODOB-ILM (FURQAT) — 1:1 TO‘LIQ 3D MAJMUAVIY MODEL</h1>
-    <p>B blok + Hub (ko‘chaga qarab) · Keng o‘tish yo‘li · Chetroqda Turnik · 2 ta bir xil Yotoqxona qanoti · Yonmachasida Basketbol maydoni &amp; Qora Sport zali</p>
+    <p>B blok + Hub (ko‘chaga qarab) · 2 ta parallel Yotoqxona + To‘rida ulanib ketgan Bolalar Yotoqxonasi · Tekis ochiq yer maydoni</p>
   </div>
   <div class="panel top-actions">
     <button id="btn-walk" onclick="toggleWalk()">🚶 Ichkarida yurish (WASD)</button>
@@ -106,7 +106,7 @@
       <button class="slice-btn" onclick="setSlice('floor1', this)">1-qavat (+1.50m)</button>
       <button class="slice-btn" onclick="setSlice('tsokol', this)">Tsokol (-1.52m)</button>
       <button class="slice-btn" onclick="setSlice('hub', this)">Innovation Hub</button>
-      <button class="slice-btn" style="grid-column: span 2;" onclick="setSlice('dorm', this)">🛏️ Orqa Yotoqxona va Sport zali kesimi</button>
+      <button class="slice-btn" style="grid-column: span 2;" onclick="setSlice('dorm', this)">🛏️ Yotoqxonalar kesimi (3 qanot)</button>
     </div>
   </div>
 
@@ -124,8 +124,8 @@
       <button onclick="goCam('tsokol')">9. Tsokol: Taekwondo &amp; Oshxona</button>
       <button onclick="goCam('rearFacade')">10. Orqa fasad: 3 qator oyna, 3 Besedka &amp; O‘tish yo‘li</button>
       <button onclick="goCam('boiler')">11. Qozonxona, Qizil shit &amp; Turnik (chetaroqda)</button>
-      <button onclick="goCam('alley')">12. 2 ta bir xil Yotoqxona qanoti &amp; Damas yo‘lagi</button>
-      <button onclick="goCam('sportsField')">13. Basketbol, Voleybol &amp; To‘ridagi Qora Sport zali</button>
+      <button onclick="goCam('alley')">12. 2 ta Yotoqxona qanoti &amp; Damas yo‘lagi</button>
+      <button onclick="goCam('boysDorm')">13. Ochiq maydon va to‘ridagi Bolalar Yotoqxonasi</button>
     </div>
   </div>
 
@@ -156,16 +156,16 @@
     <button onclick="tpWalk(10.0, 0.0, -32.5, -Math.PI/2, 'Shirin Kulcha Bufeti')">🥐 Shirin Kulcha</button>
     <button onclick="tpWalk(28.2, 0.0, -28.0, 0, '2 ta Yotoqxona yo‘lagi')">🚐 Damas yo‘lagi</button>
     <button onclick="tpWalk(20.5, 0.25, -40.0, 0, 'Yotoqxona 4 o‘rinli xona')">🛏️ Yotoqxona ichi</button>
-    <button onclick="tpWalk(-7.0, 0.01, -50.0, 0, 'Basketbol maydoni')">🏀 Basketbol maydoni</button>
-    <button onclick="tpWalk(-7.0, 0.20, -76.5, Math.PI, 'Qora Sport Zali ichi')">🏟️ Sport zali ichi</button>
+    <button onclick="tpWalk(-5.0, 0.01, -45.0, 0, 'Ochiq tekis tuproq maydon')">🟤 Ochiq maydon</button>
+    <button onclick="tpWalk(-1.25, 0.25, -70.0, 0, 'Bolalar Yotoqxonasi ichi')">🛌 Bolalar yotoqxonasi</button>
   </div>
   <p class="hint"><b>W/A/S/D</b> — yurish · <b>Shift</b> — tez yugurish · Ekranga bosing — erkin qarash (<b>Esc</b> — chiqish).</p>
 </div>
 
 <div class="panel info-box" id="info-box">
-  <h3 id="info-title">Turon Odob-Ilm Majmuasi (To‘g‘rilangan v2.2)</h3>
-  <div class="dims" id="info-dims">B blok + Hub | Keng o‘tish yo‘li (12m) | 2 ta Yotoqxona (36×7m) | Basketbol (34×17.6m) &amp; Qora Zal (39×11.5m)</div>
-  <p id="info-desc">Orqa darvoza va bog‘ panjarasi ortida keng ochiq maydon qoldirildi; Turnik chetroqda joylashtirildi; 2 ta parallel bino bir xil Yotoqxona dizayniga keltirildi; to‘ridagi qora Sport zali va Basketbol maydoni yonmachasiga kengaytirildi.</p>
+  <h3 id="info-title">Turon Odob-Ilm Majmuasi (v2.3)</h3>
+  <div class="dims" id="info-dims">B blok + Hub | 2 ta Yotoqxona (36×7m) + Ulanib ketgan Bolalar Yotoqxonasi (50.5×7m) | Ochiq tekis maydon</div>
+  <p id="info-desc">To‘ridagi qora bino o‘rniga 2 ta yotoqxona bilan bir xil dizayndagi O‘g‘il bolalar yotoqxonasi ulanib ketgan holda qurildi. Orqa maydondagi basketbol maydoni olib tashlanib, oddiy tekis yer holatiga keltirildi.</p>
 </div>
 
 <script type="module">
@@ -224,8 +224,8 @@ function addDimLine(p1, p2, col = 0x38bdf8) {
 addDimLine([-24.0, 12.8, 10.5], [24.0, 12.8, 10.5], 0x38bdf8);
 addDimLine([6.5, 0, 15.1], [6.5, 12.3, 15.1], 0xef4444);
 addDimLine([34.0, 8.2, 32.6], [52.0, 8.2, 32.6], 0x38bdf8);
-addDimLine([-26.5, 7.5, -71.0], [12.5, 7.5, -71.0], 0x10b981);
-addDimLine([17.0, 4.4, -30.5], [17.0, 4.4, -66.5], 0xf59e0b);
+addDimLine([-26.5, 4.5, -66.5], [24.0, 4.5, -66.5], 0x10b981);
+addDimLine([17.0, 4.5, -30.5], [17.0, 4.5, -66.5], 0xf59e0b);
 
 window.setSlice = (mode, btn) => {
   document.querySelectorAll('.slice-btn').forEach((b) => b.classList.remove('active'));
@@ -248,24 +248,24 @@ window.setSlice = (mode, btn) => {
     goCam('hubInt');
   } else if (mode === 'dorm') {
     g.dormRoof.visible = false; g.dormExterior.visible = false;
-    goCam('alley');
+    goCam('boysDorm');
   }
 };
 
 const PRESETS = {
-  overview:    { pos: [54, 42, 36], target: [6, 2, -32] },
-  front:       { pos: [0.5, 2.4, 34.5], target: [0, 5.2, 10] },
-  east:        { pos: [-26.0, 2.6, 28.0], target: [-6.0, 4.0, 10.0] },
-  west:        { pos: [33.5, 2.4, 37.5], target: [16.0, 4.5, 16.0] },
-  hubExt:      { pos: [30.5, 2.5, 42.5], target: [43.5, 4.0, 29.0] },
-  hubInt:      { pos: [41.5, 2.2, 31.2], target: [44.0, 2.8, 21.5] },
-  lobby:       { pos: [0, 3.2, 13.8], target: [0, 3.1, 2.5] },
-  corridor:    { pos: [3.0, 3.2, 0.0], target: [20.5, 3.1, 0.0] },
-  tsokol:      { pos: [-11.5, 8.5, 16.0], target: [0, -1.0, -4.0] },
-  rearFacade:  { pos: [8.0, 3.8, -32.0], target: [-2.0, 5.2, -10.5] },
-  boiler:      { pos: [29.0, 2.6, -26.0], target: [16.0, 2.2, -15.5] },
-  alley:       { pos: [28.2, 3.4, -20.5], target: [28.2, 1.8, -50.0] },
-  sportsField: { pos: [14.0, 14.0, -28.0], target: [-8.0, 1.5, -62.0] },
+  overview:   { pos: [54, 42, 36], target: [6, 2, -32] },
+  front:      { pos: [0.5, 2.4, 34.5], target: [0, 5.2, 10] },
+  east:       { pos: [-26.0, 2.6, 28.0], target: [-6.0, 4.0, 10.0] },
+  west:       { pos: [33.5, 2.4, 37.5], target: [16.0, 4.5, 16.0] },
+  hubExt:     { pos: [30.5, 2.5, 42.5], target: [43.5, 4.0, 29.0] },
+  hubInt:     { pos: [41.5, 2.2, 31.2], target: [44.0, 2.8, 21.5] },
+  lobby:      { pos: [0, 3.2, 13.8], target: [0, 3.1, 2.5] },
+  corridor:   { pos: [3.0, 3.2, 0.0], target: [20.5, 3.1, 0.0] },
+  tsokol:     { pos: [-11.5, 8.5, 16.0], target: [0, -1.0, -4.0] },
+  rearFacade: { pos: [8.0, 3.8, -32.0], target: [-2.0, 5.2, -10.5] },
+  boiler:     { pos: [29.0, 2.6, -26.0], target: [16.0, 2.2, -15.5] },
+  alley:      { pos: [28.2, 3.4, -20.5], target: [28.2, 1.8, -50.0] },
+  boysDorm:   { pos: [14.0, 12.0, -24.0], target: [-4.0, 2.0, -64.0] },
 };
 
 let camTween = null;
@@ -411,7 +411,9 @@ function computeWalkFloorHeight(x, z, curFloor) {
   if (((x >= 17.0 && x <= 24.0) || (x >= 32.5 && x <= 39.5)) && z >= -66.5 && z <= -30.5) {
     return { floorY: 0.25, label: 'Yotoqxona Qanoti (4 o‘rinli xonalar)' };
   }
-  if (x >= -26.5 && x <= 12.5 && z >= -82.5 && z <= -71.0) return { floorY: 0.20, label: 'To‘ridagi Qora Sport Zali ichi' };
+  if (x >= -26.5 && x <= 24.0 && z >= -73.5 && z <= -66.5) {
+    return { floorY: 0.25, label: 'O‘g‘il Bolalar Yotoqxonasi ichi' };
+  }
 
   if (x >= 23.8 && x <= 25.4 && z >= -9.8 && z <= -5.0 && curFloor < 3.6) {
     const t = Math.max(0, Math.min(1, (z - (-9.8)) / 4.4));
@@ -449,10 +451,9 @@ function computeWalkFloorHeight(x, z, curFloor) {
   if (x >= 14.8 && x <= 22.0 && z >= -18.0 && z <= -12.0) return { floorY: 0.0, label: 'Qozonxona & Qizil shit oldi' };
   if (z <= -12.0 && z >= -18.0 && x < 14.8) return { floorY: 0.0, label: '3 ta Yashil Besedka bog‘i' };
   if (x >= 6.5 && x <= 13.0 && z >= -24.0 && z <= -19.2) return { floorY: 0.03, label: 'Turnik & Brusya (Chetroqda)' };
-  if (z <= -21.0 && z >= -30.5 && x >= -10.0 && x <= 33.0) return { floorY: 0.0, label: 'Keng o‘tish yo‘lagi (Orqa maydon)' };
+  if (z <= -21.0 && z >= -30.5 && x >= -10.0 && x <= 33.0) return { floorY: 0.0, label: 'Keng o‘tish yo‘lagi' };
   if (x >= 24.0 && x <= 32.5 && z <= -21.0 && z >= -66.5) return { floorY: 0.0, label: 'Yotoqxonalar yo‘lagi (Damas)' };
-  if (x >= -26.5 && x <= 12.0 && z <= -49.5 && z >= -68.0) return { floorY: 0.02, label: 'Basketbol o‘ynaydigan maydon' };
-  if (x >= -27.0 && x <= 12.0 && z <= -24.5 && z > -49.5) return { floorY: 0.01, label: 'Voleybol & Ochiq sport maydoni' };
+  if (x >= -27.5 && x <= 16.8 && z <= -18.0 && z >= -65.5) return { floorY: 0.01, label: 'Ochiq tekis tuproq maydon' };
   if (z > 33.0) return { floorY: 0.0, label: 'A-376 ko‘cha bo‘yi' };
   return { floorY: 0.0, label: 'Maktab hovlisi' };
 }
@@ -492,7 +493,7 @@ function animate() {
     if (keys['KeyD'] || keys['ArrowRight']) camera.position.addScaledVector(right, spd);
 
     camera.position.x = Math.max(-36, Math.min(56, camera.position.x));
-    camera.position.z = Math.max(-82.0, Math.min(48, camera.position.z));
+    camera.position.z = Math.max(-75.0, Math.min(48, camera.position.z));
 
     const surf = computeWalkFloorHeight(camera.position.x, camera.position.z, walkFloorY);
     walkFloorY = surf.floorY;

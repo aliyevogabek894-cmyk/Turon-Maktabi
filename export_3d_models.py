@@ -1,9 +1,8 @@
 """
-Exports the v2.2 1:1 3D architectural model of Turon Odob-Ilm (Furqat branch)
-with clean open passages, corner Turnik, twin Yotoqxona wings, side-by-side
-Basketball court & Dark Sports Hall:
-  - turon_odob_ilm_3d.glb
-  - turon_odob_ilm_3d.obj + turon_odob_ilm_3d.mtl
+Exports the v2.3 1:1 3D architectural model of Turon Odob-Ilm (Furqat branch):
+  - B blok + Innovation Hub
+  - Twin Yotoqxona Wings + Seamless Boys' Yotoqxona Wing at South end
+  - Plain empty dirt field (basketball court removed)
 """
 import json
 import math
@@ -55,7 +54,7 @@ class MeshBuilder:
                 (r, g, b, a), met, rough = self.materials[m]
                 fm.write(f"newmtl {m}\nKd {r:.3f} {g:.3f} {b:.3f}\nd {a:.3f}\nNs {max(10, int((1-rough)*200))}\n\n")
         with open(obj_path, "w", encoding="utf-8") as fo:
-            fo.write(f"# Turon Odob-Ilm (Furqat) v2.2 3D Model\nmtllib {mtl_name}\n")
+            fo.write(f"# Turon Odob-Ilm (Furqat) v2.3 3D Model\nmtllib {mtl_name}\n")
             v_off = 1
             for m in self.mat_order:
                 pos, norm, idx = self.groups[m]
@@ -132,7 +131,7 @@ class MeshBuilder:
             primitives.append({"attributes": {"POSITION": acc_pos, "NORMAL": acc_norm}, "indices": acc_idx, "material": mi})
 
         gltf = {
-            "asset": {"version": "2.0", "generator": "Turon Odob-Ilm v2.2 Exporter"},
+            "asset": {"version": "2.0", "generator": "Turon Odob-Ilm v2.3 Exporter"},
             "scene": 0,
             "scenes": [{"nodes": [0]}],
             "nodes": [{"mesh": 0, "name": "Turon_Odob_Ilm_Furqat_Full"}],
@@ -159,7 +158,6 @@ def build_model():
     mb = MeshBuilder()
     mb.add_mat("Stucco_Cream", (0.92, 0.91, 0.87, 1.0), 0.05, 0.78)
     mb.add_mat("Charcoal_Parapet", (0.21, 0.23, 0.26, 1.0), 0.35, 0.45)
-    mb.add_mat("Dark_SportsHall", (0.13, 0.15, 0.18, 1.0), 0.40, 0.48)
     mb.add_mat("Gray_Trim", (0.58, 0.61, 0.65, 1.0), 0.12, 0.55)
     mb.add_mat("Granite_Tsokol", (0.11, 0.13, 0.16, 1.0), 0.15, 0.25)
     mb.add_mat("Bronze_Glass", (0.29, 0.22, 0.18, 0.82), 0.30, 0.12)
@@ -168,7 +166,6 @@ def build_model():
     mb.add_mat("Red_Sign", (0.78, 0.12, 0.15, 1.0), 0.20, 0.35)
     mb.add_mat("Paving_Courtyard", (0.66, 0.68, 0.71, 1.0), 0.02, 0.88)
     mb.add_mat("Dirt_Field", (0.55, 0.45, 0.33, 1.0), 0.00, 0.96)
-    mb.add_mat("Basketball_Court", (0.60, 0.30, 0.19, 1.0), 0.05, 0.72)
     mb.add_mat("Asphalt_Road", (0.16, 0.18, 0.20, 1.0), 0.02, 0.92)
     mb.add_mat("Hub_Red", (0.73, 0.11, 0.14, 1.0), 0.30, 0.35)
     mb.add_mat("Brick_Plinth", (0.55, 0.33, 0.24, 1.0), 0.05, 0.85)
@@ -181,13 +178,12 @@ def build_model():
     mb.add_mat("Gazebo_Green", (0.08, 0.33, 0.18, 0.78), 0.05, 0.85)
     mb.add_mat("Damas_Blue", (0.11, 0.31, 0.85, 1.0), 0.25, 0.35)
 
-    # 1. Ground paving & A-376 & Open Rear Plaza
+    # 1. Ground, Plaza & Plain Bare Dirt Field (nothing on field)
     mb.add_box("Paving_Courtyard", -1.0, -0.04, 10.25, 65.0, 0.08, 45.5)
     mb.add_box("Paving_Courtyard", 28.4, -0.02, 6.0, 8.8, 0.06, 54.0)
     mb.add_box("Paving_Courtyard", 6.5, -0.02, -24.2, 61.5, 0.06, 12.6)
     mb.add_box("Asphalt_Road", 8.0, -0.03, 46.2, 240.0, 0.05, 12.0)
-    mb.add_box("Dirt_Field", -7.5, 0.0, -36.5, 39.0, 0.04, 24.0)
-    mb.add_box("Basketball_Court", -7.25, 0.01, -58.5, 34.0, 0.05, 17.6)
+    mb.add_box("Dirt_Field", -5.35, 0.0, -41.75, 44.3, 0.04, 47.5)
     mb.add_box("Paving_Courtyard", 28.25, -0.01, -43.5, 8.6, 0.06, 46.5)
 
     # 2. B blok (48 x 21 x 12.3 m)
@@ -212,7 +208,7 @@ def build_model():
             mb.add_box("Bronze_Glass", rx, ry, -10.28, 2.02, 1.72, 0.52)
     mb.add_box("White_Trim", 0.0, 9.70, 0.0, 48.0, 0.26, 21.0)
 
-    # 3. Innovation Hub (+X Beyond Gate, Facing North +Z)
+    # 3. Innovation Hub
     hx, hz = 43.0, 26.25
     mb.add_box("Brick_Plinth", 36.4, 0.36, 32.35, 4.8, 0.72, 0.42)
     mb.add_box("Charcoal_Parapet", 36.4, 3.76, 32.35, 4.8, 6.08, 0.38)
@@ -226,7 +222,7 @@ def build_model():
     mb.add_box("Charcoal_Parapet", 51.82, 3.4, hz, 0.38, 6.8, 12.5)
     mb.add_box("Charcoal_Parapet", hx, 3.4, 20.18, 18.0, 6.8, 0.38)
 
-    # 4. Rear Campus
+    # 4. Rear Campus (3 Dormitory Wings Ulanib Ketgan + Plain Empty Dirt Field)
     mb.add_box("Stucco_Cream", 18.15, 1.625, -15.0, 6.7, 3.25, 4.8)
     mb.add_box("Steel_Poles", 16.5, 4.1, -14.2, 0.5, 8.2, 0.5)
     mb.add_box("Steel_Poles", 19.9, 4.1, -14.2, 0.5, 8.2, 0.5)
@@ -236,9 +232,9 @@ def build_model():
     for tx in (7.2, 9.0, 10.8, 12.6):
         mb.add_box("Orange_Metal", tx, 1.22, -23.4, 0.10, 2.45, 0.10)
         mb.add_box("Orange_Metal", tx, 1.22, -19.8, 0.10, 2.45, 0.10)
-    mb.add_box("Soft_Ochre", 36.8, 1.375, -25.2, 5.2, 2.75, 4.2)
+    mb.add_box("Soft_Ochre", 37.2, 1.275, -20.8, 4.8, 2.55, 3.6)
 
-    # Shirin Kulcha + Twin Dormitory Wings (Z = -30.5..-66.5) + Damas
+    # Shirin Kulcha + Twin Dormitory Wings + Connected Boys' Yotoqxona Wing at South end
     mb.add_box("White_Trim", 14.8, 1.4, -32.75, 4.4, 2.55, 4.5)
     mb.add_box("Slate_Roof", 14.8, 3.0, -32.75, 4.8, 0.55, 4.9)
     for cx in (20.5, 36.0):
@@ -247,18 +243,15 @@ def build_model():
         for s in range(6):
             rz = -33.5 - s * 6.0
             mb.add_box("Bunk_Teal", cx - 1.2, 1.12, rz - 1.9, 1.95, 1.75, 0.92)
+    mb.add_box("Dorm_Cream", -1.25, 1.80, -70.0, 50.5, 2.9, 7.0)
+    mb.add_box("Slate_Roof", -1.25, 3.68, -70.0, 51.3, 0.55, 7.9)
     mb.add_box("Damas_Blue", 25.4, 1.04, -34.5, 1.40, 1.58, 3.48)
-
-    # Sports Hoops + To'ridagi Qora Sport Zali (Z = -76.75) + Water Tower
-    for hx in (-23.2, 8.7):
-        mb.add_box("Orange_Metal", hx, 1.62, -58.5, 0.18, 3.25, 0.18)
-    mb.add_box("Dark_SportsHall", -7.0, 3.4, -76.75, 39.0, 6.8, 11.5)
-    mb.add_box("Steel_Poles", -2.8, 6.0, -85.35, 2.8, 12.0, 2.8)
+    mb.add_box("Steel_Poles", -2.8, 6.0, -77.05, 2.8, 12.0, 2.8)
     mb.add_box("Orange_Metal", -7.3, 0.56, 18.8, 1.61, 0.62, 4.10)
 
     mb.export_glb(os.path.join(OUT_DIR, "turon_odob_ilm_3d.glb"))
     mb.export_obj(os.path.join(OUT_DIR, "turon_odob_ilm_3d.obj"), os.path.join(OUT_DIR, "turon_odob_ilm_3d.mtl"))
-    print("EXPORT_V22_SUCCESS")
+    print("EXPORT_V23_SUCCESS")
 
 
 if __name__ == "__main__":
