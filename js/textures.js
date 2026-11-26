@@ -459,5 +459,26 @@ export function createTextures() {
     tex.volleyballNet = asTex(c, 8, 1);
   }
 
+  // 19. Outdoor Basketball Court Surface with White Markings
+  {
+    const [c, g] = makeCanvas(512, 256);
+    g.fillStyle = '#3b4d63';
+    g.fillRect(0, 0, 512, 256);
+    g.fillStyle = '#9a4d32';
+    g.fillRect(24, 18, 464, 220);
+    g.strokeStyle = '#ffffff';
+    g.lineWidth = 4;
+    g.strokeRect(24, 18, 464, 220);
+    g.beginPath(); g.moveTo(256, 18); g.lineTo(256, 238); g.stroke();
+    g.beginPath(); g.arc(256, 128, 34, 0, Math.PI * 2); g.stroke();
+    // Left & right keys + 3pt arcs
+    g.fillStyle = '#2563eb';
+    g.fillRect(24, 86, 86, 84); g.strokeRect(24, 86, 86, 84);
+    g.fillRect(402, 86, 86, 84); g.strokeRect(402, 86, 86, 84);
+    g.beginPath(); g.arc(54, 128, 86, -Math.PI * 0.45, Math.PI * 0.45); g.stroke();
+    g.beginPath(); g.arc(458, 128, 86, Math.PI * 0.55, Math.PI * 1.45); g.stroke();
+    tex.basketballCourt = asTex(c, 1, 1);
+  }
+
   return tex;
 }

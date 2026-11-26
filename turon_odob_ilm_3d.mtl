@@ -8,6 +8,11 @@ Kd 0.210 0.230 0.260
 d 1.000
 Ns 110
 
+newmtl Dark_SportsHall
+Kd 0.130 0.150 0.180
+d 1.000
+Ns 104
+
 newmtl Gray_Trim
 Kd 0.580 0.610 0.650
 d 1.000
@@ -48,15 +53,15 @@ Kd 0.550 0.450 0.330
 d 1.000
 Ns 10
 
+newmtl Basketball_Court
+Kd 0.600 0.300 0.190
+d 1.000
+Ns 56
+
 newmtl Asphalt_Road
 Kd 0.160 0.180 0.200
 d 1.000
 Ns 15
-
-newmtl Lawn_Green
-Kd 0.180 0.420 0.180
-d 1.000
-Ns 10
 
 newmtl Hub_Red
 Kd 0.730 0.110 0.140
@@ -78,11 +83,6 @@ Kd 0.940 0.880 0.730
 d 1.000
 Ns 50
 
-newmtl Dorm_Mint
-Kd 0.510 0.850 0.820
-d 1.000
-Ns 60
-
 newmtl Bunk_Teal
 Kd 0.170 0.480 0.560
 d 1.000
@@ -98,10 +98,10 @@ Kd 0.920 0.350 0.050
 d 1.000
 Ns 124
 
-newmtl Yellow_Gas
-Kd 0.980 0.820 0.100
+newmtl Soft_Ochre
+Kd 0.910 0.810 0.480
 d 1.000
-Ns 110
+Ns 43
 
 newmtl Gazebo_Green
 Kd 0.080 0.330 0.180
