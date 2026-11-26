@@ -17,6 +17,27 @@ function asTex(canvas, rx = 1, ry = 1, srgb = true) {
   return t;
 }
 
+function loadImgTex(url, fallbackTex) {
+  const loader = new THREE.TextureLoader();
+  const tex = loader.load(
+    url,
+    (loaded) => {
+      loaded.colorSpace = THREE.SRGBColorSpace;
+      loaded.anisotropy = 8;
+      loaded.needsUpdate = true;
+    },
+    undefined,
+    () => {
+      if (fallbackTex && fallbackTex.image) {
+        tex.image = fallbackTex.image;
+        tex.needsUpdate = true;
+      }
+    }
+  );
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
 export function createTextures() {
   const tex = {};
 
@@ -38,11 +59,10 @@ export function createTextures() {
         }
         g.closePath();
         g.fill();
-        g.strokeStyle = '#6f757c';
+        g.strokeStyle = '#686e75';
         g.lineWidth = 3;
         g.stroke();
 
-        // Inner rosette ring
         g.strokeStyle = '#9aa0a6';
         g.lineWidth = 2;
         g.beginPath();
@@ -50,8 +70,7 @@ export function createTextures() {
         g.stroke();
       }
     }
-    // Dark diamond inserts at grid corners
-    g.fillStyle = '#383d44';
+    g.fillStyle = '#333840';
     for (let y = 0; y <= 512; y += step) {
       for (let x = 0; x <= 512; x += step) {
         g.beginPath();
@@ -60,7 +79,7 @@ export function createTextures() {
         g.fill();
       }
     }
-    tex.bruschatka = asTex(c, 22, 16);
+    tex.bruschatka = asTex(c, 26, 18);
   }
 
   // 2. Black speckled polished granite (Tsokol & stairs)
@@ -77,13 +96,13 @@ export function createTextures() {
     g.lineWidth = 2;
     for (let x = 0; x < 256; x += 128) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, 256); g.stroke(); }
     for (let y = 0; y < 256; y += 64) { g.beginPath(); g.moveTo(0, y); g.lineTo(256, y); g.stroke(); }
-    tex.granite = asTex(c, 8, 2);
+    tex.granite = asTex(c, 10, 2);
   }
 
   // 3. Cream travertine / stucco facade
   {
     const [c, g] = makeCanvas(256, 256);
-    g.fillStyle = '#ece9e0';
+    g.fillStyle = '#eeebe2';
     g.fillRect(0, 0, 256, 256);
     for (let i = 0; i < 2000; i++) {
       const d = Math.random() > 0.5 ? 245 : 225;
@@ -93,45 +112,55 @@ export function createTextures() {
     tex.stucco = asTex(c, 4, 4);
   }
 
-  // 4. Dark charcoal metal cassette parapet
+  // 4. Dark charcoal metal cassette parapet (Photo 1 & 5)
   {
     const [c, g] = makeCanvas(256, 256);
-    g.fillStyle = '#333940';
+    g.fillStyle = '#31373e';
     g.fillRect(0, 0, 256, 256);
-    g.strokeStyle = '#20252a';
+    g.strokeStyle = '#1d2228';
     g.lineWidth = 3;
     for (let x = 0; x < 256; x += 64) {
       g.beginPath(); g.moveTo(x, 0); g.lineTo(x, 256); g.stroke();
     }
-    tex.parapet = asTex(c, 8, 1);
+    tex.parapet = asTex(c, 10, 1);
   }
 
-  // 5. Lobby & corridor white-black marble floor (0.60x0.60m tiles, Photos 10-12)
+  // 5. Corrugated dark charcoal spandrel for Innovation Hub (Photo 6)
+  {
+    const [c, g] = makeCanvas(256, 256);
+    g.fillStyle = '#2a2f35';
+    g.fillRect(0, 0, 256, 256);
+    for (let x = 0; x < 256; x += 16) {
+      g.fillStyle = '#1d2126';
+      g.fillRect(x, 0, 6, 256);
+    }
+    tex.hubCorrugated = asTex(c, 2, 1);
+  }
+
+  // 6. Lobby & corridor white-black marble floor (0.60x0.60m tiles)
   {
     const [c, g] = makeCanvas(512, 512);
     g.fillStyle = '#f2f2ef';
     g.fillRect(0, 0, 512, 512);
-    // Subtle marble veining
     g.strokeStyle = 'rgba(170,175,180,0.35)';
     g.lineWidth = 2;
     for (let i = 0; i < 24; i++) {
       g.beginPath();
-      let x = Math.random() * 512, y = Math.random() * 512;
+      const x = Math.random() * 512, y = Math.random() * 512;
       g.moveTo(x, y);
       g.bezierCurveTo(x + 40, y - 30, x + 80, y + 40, x + 130, y + 10);
       g.stroke();
     }
-    // Tile grid lines (4x4 = 0.60m tiles on 2.40m repeat)
     g.strokeStyle = '#cfd4da';
     g.lineWidth = 2;
     for (let i = 0; i <= 512; i += 128) {
       g.beginPath(); g.moveTo(i, 0); g.lineTo(i, 512); g.stroke();
       g.beginPath(); g.moveTo(0, i); g.lineTo(512, i); g.stroke();
     }
-    tex.whiteMarble = asTex(c, 10, 10);
+    tex.whiteMarble = asTex(c, 12, 12);
   }
 
-  // 6. Black marble border strip
+  // 7. Black marble border strip
   {
     const [c, g] = makeCanvas(256, 256);
     g.fillStyle = '#202328';
@@ -146,7 +175,7 @@ export function createTextures() {
     tex.blackMarble = asTex(c, 4, 1);
   }
 
-  // 7. Terracotta brick-tile klumba / Innovation Hub plinth
+  // 8. Terracotta brick-tile klumba / Innovation Hub plinth
   {
     const [c, g] = makeCanvas(256, 128);
     const cols = ['#8c4f3b', '#b56e52', '#c8a98a', '#6e4537', '#a65d43'];
@@ -158,10 +187,10 @@ export function createTextures() {
         g.fillRect(k * bw + off + 2, r * bh + 2, bw - 4, bh - 4);
       }
     }
-    tex.stoneBrick = asTex(c, 10, 1);
+    tex.stoneBrick = asTex(c, 12, 1);
   }
 
-  // 8. A-376 Asphalt road
+  // 9. A-376 Asphalt road
   {
     const [c, g] = makeCanvas(512, 256);
     g.fillStyle = '#262a2f';
@@ -176,10 +205,10 @@ export function createTextures() {
     g.fillRect(0, 238, 512, 6);
     g.fillStyle = '#facc15';
     for (let x = 20; x < 512; x += 80) g.fillRect(x, 124, 44, 6);
-    tex.road = asTex(c, 8, 1);
+    tex.road = asTex(c, 10, 1);
   }
 
-  // 9. Uzbek Atlas / Adras valances (Photo 10)
+  // 10. Uzbek Atlas / Adras valances (Photo 10)
   {
     const [c, g] = makeCanvas(256, 128);
     g.fillStyle = '#b91c1c';
@@ -192,10 +221,10 @@ export function createTextures() {
       g.fillStyle = '#f8fafc';
       g.beginPath(); g.ellipse(x, 96, 8, 24, 0, 0, Math.PI * 2); g.fill();
     }
-    tex.atlas = asTex(c, 6, 1);
+    tex.atlas = asTex(c, 8, 1);
   }
 
-  // 10. Signage & Branding Textures
+  // 11. Signage & Branding Textures
   function signTex(w, h, bg, fg, text, sub = '', border = null) {
     const [c, g] = makeCanvas(w, h);
     g.fillStyle = bg;
@@ -245,35 +274,33 @@ export function createTextures() {
     tex.emblem = asTex(c, 1, 1);
   }
 
-  // Innovation Hub vertical banner (Photo 6)
-  {
-    const [c, g] = makeCanvas(512, 640);
-    g.fillStyle = '#161b22'; g.fillRect(0, 0, 512, 640);
-    g.fillStyle = '#38bdf8'; g.font = '900 92px Arial'; g.fillText('IT', 30, 96);
-    g.fillStyle = '#ffffff'; g.font = 'bold 34px Arial';
-    g.fillText('SOHASI BIZ', 140, 62);
-    g.fillStyle = '#38bdf8'; g.fillText('BILAN OSON!', 140, 104);
-    const items = ['SMM', 'GRAFIK DIZAYN', 'WEB DASTURLASH', 'MOBILOGRAFIYA', 'OFFICE DASTURLARI', '3D DIZAYN', "BOSHLANG'ICH DARSLAR"];
-    g.fillStyle = '#e5e7eb'; g.font = 'bold 26px Arial';
-    items.forEach((it, i) => g.fillText('• ' + it, 32, 175 + i * 42));
-    // Colored icons
-    const badges = [['Ps', '#0284c7', 50, 480], ['Py', '#eab308', 350, 500], ['CAD', '#dc2626', 380, 180]];
-    badges.forEach(([t, col, bx, by]) => {
-      g.fillStyle = col; g.fillRect(bx, by, 76, 76);
-      g.fillStyle = '#fff'; g.font = 'bold 32px Arial'; g.fillText(t, bx + 12, by + 48);
-    });
-    tex.hubBanner = asTex(c, 1, 1);
-  }
+  // Real Cropped Photo Banners (with procedural fallback)
+  const fallbackHubBanner = signTex(512, 640, '#161b22', '#38bdf8', 'IT SOHASI', 'SMM · DASTURLASH · 3D');
+  const fallbackFence = signTex(512, 256, '#141923', '#f8fafc', 'TURON ODOB-ILM', 'ENDI XALQARO MAKTAB · 78 113 61 08', '#f59e0b');
+  tex.hubBanner = loadImgTex('./assets/hub_banner.jpg', fallbackHubBanner);
+  tex.fenceBanner1 = loadImgTex('./assets/fence_banner1.jpg', fallbackFence);
+  tex.fenceBanner2 = loadImgTex('./assets/fence_banner2.jpg', fallbackFence);
 
-  // Fence banner
-  tex.fenceBanner = signTex(512, 256, '#141923', '#f8fafc', 'TURON ODOB-ILM', 'ENDI XALQARO MAKTAB · 78 113 61 08', '#f59e0b');
+  // Children's window decals (Photo 1 & 5 right/West wing lower panes)
+  {
+    const [c, g] = makeCanvas(256, 256);
+    g.fillStyle = '#3b2e27';
+    g.fillRect(0, 0, 256, 256);
+    g.fillStyle = '#ffffff';
+    g.beginPath(); g.arc(70, 170, 24, 0, Math.PI * 2); g.arc(95, 165, 28, 0, Math.PI * 2); g.arc(120, 172, 22, 0, Math.PI * 2); g.fill();
+    g.fillStyle = '#38bdf8';
+    g.beginPath(); g.arc(190, 145, 28, 0, Math.PI * 2); g.fill();
+    g.fillStyle = '#facc15';
+    g.beginPath(); g.arc(190, 145, 12, 0, Math.PI * 2); g.fill();
+    tex.kidsDecal = asTex(c, 1, 1);
+  }
 
   // Taekwondo 1x1m red-blue tatami checkerboard
   {
     const [c, g] = makeCanvas(256, 256);
     g.fillStyle = '#2563eb'; g.fillRect(0, 0, 128, 128); g.fillRect(128, 128, 128, 128);
     g.fillStyle = '#dc2626'; g.fillRect(128, 0, 128, 128); g.fillRect(0, 128, 128, 128);
-    tex.tatami = asTex(c, 10, 5);
+    tex.tatami = asTex(c, 11, 5);
   }
 
   // Oshxona pink-mint-white checkerboard wall
@@ -285,6 +312,21 @@ export function createTextures() {
       g.fillRect(x * 128, y * 128, 128, 128);
     }
     tex.oshxonaWall = asTex(c, 4, 2);
+  }
+
+  // Dormitory Uzbek Carpet texture (tg_7058_5.jpg)
+  {
+    const [c, g] = makeCanvas(256, 256);
+    g.fillStyle = '#6b1d24';
+    g.fillRect(0, 0, 256, 256);
+    g.strokeStyle = '#e6c280';
+    g.lineWidth = 8;
+    g.strokeRect(14, 14, 228, 228);
+    g.fillStyle = '#d4af6a';
+    g.beginPath(); g.arc(128, 128, 48, 0, Math.PI * 2); g.fill();
+    g.fillStyle = '#6b1d24';
+    g.beginPath(); g.arc(128, 128, 26, 0, Math.PI * 2); g.fill();
+    tex.carpet = asTex(c, 1, 1);
   }
 
   // Flags: UZ, UK, RU
@@ -316,7 +358,7 @@ export function createTextures() {
     g.fillStyle = '#dc2626'; g.fillRect(0, 94, 256, 46);
   });
 
-  // IT macOS & ChatGPT walls
+  // IT Labs & Hubs
   tex.macWall = signTex(512, 256, '#16a34a', '#ffffff', 'Apple macOS', 'IT LABORATORIYA #1');
   tex.gptWall = signTex(512, 256, '#eab308', '#1e293b', 'ChatGPT · SMM', 'IT LABORATORIYA #2');
 

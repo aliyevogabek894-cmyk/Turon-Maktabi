@@ -8,6 +8,11 @@ Kd 0.210 0.230 0.260
 d 1.000
 Ns 110
 
+newmtl Gray_Trim
+Kd 0.580 0.610 0.650
+d 1.000
+Ns 89
+
 newmtl Granite_Tsokol
 Kd 0.110 0.130 0.160
 d 1.000
@@ -17,6 +22,11 @@ newmtl Bronze_Glass
 Kd 0.290 0.220 0.180
 d 0.820
 Ns 176
+
+newmtl Clear_Glass
+Kd 0.680 0.840 0.920
+d 0.450
+Ns 180
 
 newmtl White_Trim
 Kd 0.960 0.960 0.970
@@ -57,4 +67,24 @@ newmtl Steel_Poles
 Kd 0.820 0.850 0.880
 d 1.000
 Ns 150
+
+newmtl Dorm_Cream
+Kd 0.940 0.880 0.730
+d 1.000
+Ns 50
+
+newmtl Dorm_Mint
+Kd 0.510 0.850 0.820
+d 1.000
+Ns 60
+
+newmtl Bunk_Teal
+Kd 0.170 0.480 0.560
+d 1.000
+Ns 80
+
+newmtl Orange_Lada
+Kd 0.900 0.390 0.090
+d 1.000
+Ns 140
 

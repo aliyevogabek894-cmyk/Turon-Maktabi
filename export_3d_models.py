@@ -1,8 +1,15 @@
 """
-Exports the 1:1 3D architectural model of Turon Odob-Ilm (Furqat branch)
+Exports the v2 non-mirrored 3D architectural model of Turon Odob-Ilm (Furqat branch)
 to standard industry formats:
   - turon_odob_ilm_3d.glb  (Binary glTF 2.0: Windows 3D Viewer, Blender, Web)
   - turon_odob_ilm_3d.obj + turon_odob_ilm_3d.mtl (SketchUp, 3ds Max, AutoCAD/Blender)
+
+Coordinate System (matches js/scene_builder.js v2):
+  +Z = North (A-376 Highway, Front of BOTH B blok and Innovation Hub)
+  -Z = South (Backyard & 2-Story Yotoqxona Dormitory)
+  -X = East (Screen LEFT facing school: 37-maktab, Tashna, Orange Lada, 1F East Annex)
+  +X = West (Screen RIGHT facing school: Ramp, 3 Flagpoles, West Gate, Innovation Hub)
+  1 unit = 1 meter
 """
 import json
 import math
@@ -11,11 +18,12 @@ import struct
 
 OUT_DIR = r"c:\Users\Teacher\Pictures\turon odob ilm"
 
+
 class MeshBuilder:
     def __init__(self):
         self.materials = {}
         self.mat_order = []
-        self.groups = {}  # mat_name -> list of (positions, normals, indices)
+        self.groups = {}
 
     def add_mat(self, name, rgba, metallic=0.1, roughness=0.7):
         if name not in self.materials:
@@ -26,7 +34,6 @@ class MeshBuilder:
     def add_box(self, mat, cx, cy, cz, w, h, d, ry=0.0):
         pos_list, norm_list, idx_list = self.groups[mat]
         hw, hh, hd = w / 2.0, h / 2.0, d / 2.0
-        # 6 faces (4 verts each = 24 verts)
         faces = [
             ((0, 0, 1), [(-hw, -hh, hd), (hw, -hh, hd), (hw, hh, hd), (-hw, hh, hd)]),
             ((0, 0, -1), [(hw, -hh, -hd), (-hw, -hh, -hd), (-hw, hh, -hd), (hw, hh, -hd)]),
@@ -54,7 +61,7 @@ class MeshBuilder:
                 (r, g, b, a), met, rough = self.materials[m]
                 fm.write(f"newmtl {m}\nKd {r:.3f} {g:.3f} {b:.3f}\nd {a:.3f}\nNs {max(10, int((1-rough)*200))}\n\n")
         with open(obj_path, "w", encoding="utf-8") as fo:
-            fo.write(f"# Turon Odob-Ilm (Furqat) 1:1 3D Model (1 unit = 1 meter)\nmtllib {mtl_name}\n")
+            fo.write(f"# Turon Odob-Ilm (Furqat) v2 3D Model (1 unit = 1 meter)\nmtllib {mtl_name}\n")
             v_off = 1
             for m in self.mat_order:
                 pos, norm, idx = self.groups[m]
@@ -99,7 +106,6 @@ class MeshBuilder:
             if not idx:
                 continue
 
-            # Positions
             pos_off = len(bin_buf)
             min_p = [min(p[k] for p in pos) for k in range(3)]
             max_p = [max(p[k] for p in pos) for k in range(3)]
@@ -111,7 +117,6 @@ class MeshBuilder:
             acc_pos = len(accessors)
             accessors.append({"bufferView": bv_pos, "componentType": 5126, "count": len(pos), "type": "VEC3", "min": min_p, "max": max_p})
 
-            # Normals
             norm_off = len(bin_buf)
             for n in norm:
                 bin_buf.extend(struct.pack("<3f", *n))
@@ -121,7 +126,6 @@ class MeshBuilder:
             acc_norm = len(accessors)
             accessors.append({"bufferView": bv_norm, "componentType": 5126, "count": len(norm), "type": "VEC3"})
 
-            # Indices (uint32)
             idx_off = len(bin_buf)
             for ix in idx:
                 bin_buf.extend(struct.pack("<I", ix))
@@ -134,10 +138,10 @@ class MeshBuilder:
             primitives.append({"attributes": {"POSITION": acc_pos, "NORMAL": acc_norm}, "indices": acc_idx, "material": mi})
 
         gltf = {
-            "asset": {"version": "2.0", "generator": "Turon Odob-Ilm 1:1 Python Exporter"},
+            "asset": {"version": "2.0", "generator": "Turon Odob-Ilm v2 Python Exporter"},
             "scene": 0,
             "scenes": [{"nodes": [0]}],
-            "nodes": [{"mesh": 0, "name": "Turon_Odob_Ilm_Furqat_1to1"}],
+            "nodes": [{"mesh": 0, "name": "Turon_Odob_Ilm_Furqat_v2"}],
             "meshes": [{"primitives": primitives, "name": "CampusMesh"}],
             "materials": materials,
             "accessors": accessors,
@@ -161,97 +165,170 @@ def build_model():
     mb = MeshBuilder()
     mb.add_mat("Stucco_Cream", (0.92, 0.91, 0.87, 1.0), 0.05, 0.78)
     mb.add_mat("Charcoal_Parapet", (0.21, 0.23, 0.26, 1.0), 0.35, 0.45)
+    mb.add_mat("Gray_Trim", (0.58, 0.61, 0.65, 1.0), 0.12, 0.55)
     mb.add_mat("Granite_Tsokol", (0.11, 0.13, 0.16, 1.0), 0.15, 0.25)
-    mb.add_mat("Bronze_Glass", (0.29, 0.22, 0.18, 0.82), 0.3, 0.12)
+    mb.add_mat("Bronze_Glass", (0.29, 0.22, 0.18, 0.82), 0.30, 0.12)
+    mb.add_mat("Clear_Glass", (0.68, 0.84, 0.92, 0.45), 0.20, 0.10)
     mb.add_mat("White_Trim", (0.96, 0.96, 0.97, 1.0), 0.05, 0.45)
-    mb.add_mat("Red_Sign", (0.78, 0.12, 0.15, 1.0), 0.2, 0.35)
+    mb.add_mat("Red_Sign", (0.78, 0.12, 0.15, 1.0), 0.20, 0.35)
     mb.add_mat("Paving_Courtyard", (0.70, 0.72, 0.74, 1.0), 0.02, 0.88)
     mb.add_mat("Asphalt_Road", (0.16, 0.18, 0.20, 1.0), 0.02, 0.92)
-    mb.add_mat("Lawn_Green", (0.18, 0.42, 0.18, 1.0), 0.0, 0.95)
-    mb.add_mat("Hub_Red", (0.73, 0.11, 0.14, 1.0), 0.3, 0.35)
+    mb.add_mat("Lawn_Green", (0.18, 0.42, 0.18, 1.0), 0.00, 0.95)
+    mb.add_mat("Hub_Red", (0.73, 0.11, 0.14, 1.0), 0.30, 0.35)
     mb.add_mat("Brick_Plinth", (0.55, 0.33, 0.24, 1.0), 0.05, 0.85)
     mb.add_mat("Steel_Poles", (0.82, 0.85, 0.88, 1.0), 0.85, 0.25)
+    mb.add_mat("Dorm_Cream", (0.94, 0.88, 0.73, 1.0), 0.04, 0.75)
+    mb.add_mat("Dorm_Mint", (0.51, 0.85, 0.82, 1.0), 0.04, 0.70)
+    mb.add_mat("Bunk_Teal", (0.17, 0.48, 0.56, 1.0), 0.10, 0.60)
+    mb.add_mat("Orange_Lada", (0.90, 0.39, 0.09, 1.0), 0.20, 0.30)
 
-    # Site paving & A-376 road
-    mb.add_box("Paving_Courtyard", 0, -0.04, 8.0, 58.0, 0.08, 43.0)
-    mb.add_box("Asphalt_Road", 0, -0.03, 42.0, 90.0, 0.06, 11.0)
-    mb.add_box("Lawn_Green", -15.2, 0.03, 12.2, 12.2, 0.08, 4.2)
-    mb.add_box("Lawn_Green", 15.2, 0.03, 12.2, 12.2, 0.08, 4.2)
+    # 1. Site Paving, A-376 Road & Lawns
+    mb.add_box("Paving_Courtyard", 0.0, -0.04, 10.0, 72.0, 0.08, 46.0)
+    mb.add_box("Paving_Courtyard", 10.0, -0.02, 36.5, 115.0, 0.04, 7.2)
+    mb.add_box("Paving_Courtyard", 0.0, -0.02, -23.0, 48.0, 0.04, 24.0)
+    mb.add_box("Asphalt_Road", 10.0, -0.03, 46.2, 120.0, 0.06, 12.0)
+    mb.add_box("Lawn_Green", -16.5, 0.03, 13.6, 13.0, 0.08, 4.4)
+    mb.add_box("Lawn_Green", 16.5, 0.03, 13.6, 13.0, 0.08, 4.4)
 
-    # B blok Main Building (43.37 x 18.94 m)
-    # Granite Tsokol plinth (0 to 1.45m)
-    mb.add_box("Granite_Tsokol", 0, 0.725, 0, 43.37, 1.45, 18.94)
-    mb.add_box("Granite_Tsokol", 0, 0.725, 11.57, 10.64, 1.45, 4.20)
-    # 1st + 2nd floor main volume (1.45 to 9.10m)
-    mb.add_box("Stucco_Cream", 0, 5.275, 0, 43.37, 7.65, 18.94)
-    # Wing parapets (9.10 to 10.70m)
-    mb.add_box("Charcoal_Parapet", 0, 9.90, 0, 43.45, 1.60, 19.02)
-    # Central projecting portal (10.64m wide, +11.35m tall)
-    mb.add_box("Stucco_Cream", 0, 5.275, 11.57, 6.24, 7.65, 4.20)
-    mb.add_box("Charcoal_Parapet", -4.22, 5.275, 11.57, 2.20, 7.65, 4.20)
-    mb.add_box("Charcoal_Parapet", 4.22, 5.275, 11.57, 2.20, 7.65, 4.20)
-    mb.add_box("Charcoal_Parapet", 0, 10.225, 11.57, 10.72, 2.25, 4.26)
-    # Chamfers
-    ang = math.atan2(4.2, 3.08)
-    for s in (-1, 1):
-        mb.add_box("Granite_Tsokol", s * 6.86, 0.725, 11.57, 5.2, 1.45, 0.45, ry=-s * ang)
-        mb.add_box("Charcoal_Parapet", s * 6.86, 5.275, 11.57, 5.2, 7.65, 0.45, ry=-s * ang)
-        mb.add_box("Charcoal_Parapet", s * 6.86, 10.225, 11.57, 5.25, 2.25, 0.50, ry=-s * ang)
+    # 2. B blok Main Building (48.0 x 21.0 m, Roof Y=9.70, Wings +11.50, Portal +12.30)
+    # Tsokol Floor (-1.80) + Plinth (0..1.50) + 1F (+1.50) + 2F (+5.60) + Roof (+9.70)
+    mb.add_box("Granite_Tsokol", 0.0, -1.72, 0.0, 48.0, 0.18, 21.0)
+    mb.add_box("Granite_Tsokol", 0.0, 0.75, 0.0, 48.0, 1.50, 21.0)
+    mb.add_box("Granite_Tsokol", 0.0, 0.75, 12.8, 12.0, 1.50, 4.6)
 
-    # 4 + 4 Vertical Bronze Window Bays + Portal Windows
-    for start_x, d in ((-8.40, -1), (8.40, 1)):
+    # Exterior Wing Front Walls (Z = +10.28) + Parapets + Window Bays
+    for start_x, d in ((-9.2, -1), (9.2, 1)):
         for b in range(4):
-            cx = start_x + d * (1.8 + b * 3.15)
-            mb.add_box("Bronze_Glass", cx, 5.2, 9.48, 1.42, 7.15, 0.14)
-            mb.add_box("Bronze_Glass", cx, 0.85, 9.48, 1.35, 0.52, 0.14)
-    mb.add_box("Bronze_Glass", 0, 2.78, 13.70, 4.6, 2.65, 0.16)
-    mb.add_box("Bronze_Glass", 0, 7.3, 13.70, 3.2, 2.65, 0.16)
-    # West gable stairwell window & vestibule
-    mb.add_box("Bronze_Glass", -21.70, 5.1, 0, 0.14, 6.8, 1.65)
-    mb.add_box("Bronze_Glass", -22.55, 1.4, -7.2, 2.2, 2.8, 2.8)
-    # East 1-story annex
-    mb.add_box("Stucco_Cream", 24.5, 1.9, -3.0, 5.7, 3.8, 9.0)
-    mb.add_box("Charcoal_Parapet", 24.5, 3.9, -3.0, 5.8, 0.45, 9.1)
+            cx = start_x + d * (2.05 + b * 3.55)
+            mb.add_box("Stucco_Cream", cx - d * 1.78, 5.0, 10.28, 1.90, 7.0, 0.44)
+            mb.add_box("Gray_Trim", cx - d * 1.78, 8.55, 10.30, 2.05, 0.16, 0.50)
+            mb.add_box("Gray_Trim", cx - 0.85, 5.4, 10.30, 0.12, 7.8, 0.50)
+            mb.add_box("Gray_Trim", cx + 0.85, 5.4, 10.30, 0.12, 7.8, 0.50)
+            mb.add_box("Charcoal_Parapet", cx, 9.11, 10.28, 3.62, 1.18, 0.46)
+            mb.add_box("Bronze_Glass", cx, 5.45, 10.28, 1.56, 7.75, 0.22)
+        mb.add_box("Stucco_Cream", start_x + d * 14.0, 5.0, 10.28, 1.60, 7.0, 0.44)
+        mb.add_box("Charcoal_Parapet", start_x + d * 7.4, 10.60, 10.32, 14.85, 1.80, 0.54)
 
-    # Portico canopy, columns, 9 steps, sign
-    mb.add_box("White_Trim", 0, 5.18, 15.38, 10.80, 1.15, 3.45)
-    mb.add_box("White_Trim", -4.90, 3.05, 16.82, 0.44, 3.25, 0.44)
-    mb.add_box("White_Trim", 4.90, 3.05, 16.82, 0.44, 3.25, 0.44)
-    mb.add_box("Red_Sign", 0, 5.18, 17.13, 8.6, 0.72, 0.08)
-    mb.add_box("Red_Sign", 1.0, 6.45, 16.88, 7.2, 0.82, 0.12)
-    mb.add_box("Granite_Tsokol", 0, 0.725, 15.32, 10.64, 1.45, 3.30)
+    # Central Portal (Z = +14.88) WITH OPEN CENTRAL DOORWAY!
+    mb.add_box("Charcoal_Parapet", -4.75, 5.6, 14.88, 2.5, 8.2, 0.46)
+    mb.add_box("Charcoal_Parapet", 4.75, 5.6, 14.88, 2.5, 8.2, 0.46)
+    mb.add_box("Stucco_Cream", 0.0, 7.9, 14.88, 7.0, 3.6, 0.42)
+    mb.add_box("Stucco_Cream", -2.95, 3.2, 14.88, 1.1, 3.4, 0.42)
+    mb.add_box("Stucco_Cream", 2.95, 3.2, 14.88, 1.1, 3.4, 0.42)
+    mb.add_box("Charcoal_Parapet", 0.0, 4.35, 14.90, 5.0, 0.65, 0.24)
+    mb.add_box("Bronze_Glass", 0.0, 7.85, 14.94, 3.6, 2.9, 0.25)
+    mb.add_box("Charcoal_Parapet", 0.0, 11.00, 14.90, 12.1, 2.60, 0.54)
+
+    # 45-deg Chamfers
+    ang = math.atan2(4.6, 3.2)
+    for s in (-1, 1):
+        mb.add_box("Charcoal_Parapet", s * 7.6, 5.6, 12.8, 5.65, 8.2, 0.46, ry=-s * ang)
+        mb.add_box("Charcoal_Parapet", s * 7.6, 11.00, 12.8, 5.70, 2.60, 0.54, ry=-s * ang)
+
+    # Portico Canopy, Pillars, Sign, 9 Steps, +X Ramp
+    mb.add_box("White_Trim", 0.0, 5.55, 17.02, 12.2, 1.25, 3.85)
+    mb.add_box("Charcoal_Parapet", 0.0, 6.28, 17.02, 12.25, 0.28, 3.90)
+    mb.add_box("White_Trim", -5.45, 3.25, 18.68, 0.48, 3.5, 0.48)
+    mb.add_box("White_Trim", 5.45, 3.25, 18.68, 0.48, 3.5, 0.48)
+    mb.add_box("Red_Sign", 0.0, 5.55, 18.98, 9.6, 0.78, 0.08)
+    mb.add_box("Red_Sign", 1.2, 6.92, 18.68, 7.8, 0.88, 0.14)
+    mb.add_box("Granite_Tsokol", 0.0, 0.75, 16.95, 12.0, 1.50, 3.70)
     for st in range(9):
-        sh = 1.45 - st * (1.45 / 9.0)
-        sz = 16.97 + st * 0.30
-        mb.add_box("Granite_Tsokol", 0, sh / 2.0, sz, 9.80, sh, 0.32)
+        sh = 1.50 - st * (1.50 / 9.0)
+        sz = 18.80 + st * 0.32
+        mb.add_box("Granite_Tsokol", 0.0, sh / 2.0, sz, 11.0, sh, 0.34)
+        mb.add_box("White_Trim", -0.6, sh + 0.01, sz + 0.14, 9.6, 0.03, 0.05)
 
-    # 3 Flagpoles
+    # Side Walls + East 1-story Annex (-X) + West SW Vestibule (+X) + Rear Wall with Open Courtyard Exit
+    mb.add_box("Stucco_Cream", -23.78, 5.6, 0.0, 0.44, 8.2, 21.0)
+    mb.add_box("Charcoal_Parapet", -23.78, 10.6, 0.0, 0.46, 1.8, 21.0)
+    mb.add_box("Stucco_Cream", -27.1, 2.05, -3.5, 6.2, 4.1, 10.0)
+    mb.add_box("Charcoal_Parapet", -27.1, 4.25, -3.5, 6.3, 0.5, 10.1)
+
+    mb.add_box("Stucco_Cream", 23.78, 5.6, 5.8, 0.44, 8.2, 9.4)
+    mb.add_box("Stucco_Cream", 23.78, 5.6, -5.8, 0.44, 8.2, 9.4)
+    mb.add_box("Charcoal_Parapet", 23.78, 10.6, 0.0, 0.46, 1.8, 21.0)
+    mb.add_box("Bronze_Glass", 23.78, 5.4, 0.0, 0.25, 7.2, 1.85)
+    mb.add_box("Clear_Glass", 25.0, 1.5, -5.8, 2.4, 3.0, 0.15)
+    mb.add_box("Clear_Glass", 25.0, 1.5, -8.8, 2.4, 3.0, 0.15)
+    mb.add_box("White_Trim", 25.0, 3.05, -7.3, 2.5, 0.22, 3.2)
+
+    mb.add_box("Stucco_Cream", -13.0, 5.6, -10.28, 22.0, 8.2, 0.44)
+    mb.add_box("Stucco_Cream", 13.0, 5.6, -10.28, 22.0, 8.2, 0.44)
+    mb.add_box("Stucco_Cream", 0.0, 7.3, -10.28, 4.0, 4.8, 0.44)
+    mb.add_box("Charcoal_Parapet", 0.0, 10.60, -10.30, 48.1, 1.80, 0.50)
+    for st in range(7):
+        sh = 1.50 - st * (1.50 / 7.0)
+        mb.add_box("Granite_Tsokol", 0.0, sh / 2.0, -10.7 - st * 0.38, 4.2, sh, 0.38)
+
+    # B blok Roof Slab + 2F Slab + Interior Stairs
+    mb.add_box("White_Trim", 0.0, 9.70, 0.0, 48.0, 0.26, 21.0)
+    mb.add_box("White_Trim", 0.0, 5.50, 0.0, 40.0, 0.22, 20.6)
+    for sx in (-21.8, 21.8):
+        for st in range(16):
+            mb.add_box("White_Trim", sx, 1.62 + st * (4.10 / 16.0), 2.2 + st * 0.40, 2.6, 0.14, 0.44)
+
+    # 3 Flagpoles (+X West lawn), Tashna (-X East lawn), Orange VAZ-2106 (-X left of stairs)
     for i in range(3):
-        mb.add_box("Steel_Poles", -10.5 - i * 2.1, 4.75, 15.6, 0.12, 9.5, 0.12)
+        mb.add_box("Steel_Poles", 11.2 + i * 2.3, 5.4, 17.6, 0.12, 10.8, 0.12)
+    mb.add_box("White_Trim", -24.5, 0.65, 22.0, 4.0, 1.3, 1.1)
+    mb.add_box("White_Trim", -24.5, 1.75, 21.6, 3.8, 1.1, 0.25)
+    mb.add_box("Orange_Lada", -7.3, 0.56, 18.8, 1.61, 0.62, 4.10)
+    mb.add_box("Orange_Lada", -7.3, 1.13, 18.7, 1.46, 0.62, 2.05)
 
-    # Tashna washing fountain
-    mb.add_box("White_Trim", 22.5, 0.85, 18.5, 3.2, 1.7, 0.9)
-
-    # Innovation Hub (11.0 x 16.2 x 7.2 m)
-    hx, hz = -32.0, 21.5
-    mb.add_box("Brick_Plinth", hx, 0.325, hz + 6.0, 11.0, 0.65, 4.2)
-    mb.add_box("Charcoal_Parapet", hx, 3.92, hz + 6.0, 11.0, 6.55, 4.2)
-    mb.add_box("Charcoal_Parapet", hx, 3.1, hz - 2.0, 10.8, 6.2, 11.8)
-    mb.add_box("Charcoal_Parapet", hx, 6.7, hz, 11.1, 1.0, 16.3)
+    # 3. INNOVATION HUB (+X Beyond Gate, Facing North +Z A-376 Street!)
+    hx, hz = 43.0, 26.25
+    mb.add_box("White_Trim", hx, 0.11, hz, 18.0, 0.22, 12.5)
+    mb.add_box("Brick_Plinth", 36.4, 0.36, 32.35, 4.8, 0.72, 0.42)
+    mb.add_box("Charcoal_Parapet", 36.4, 3.76, 32.35, 4.8, 6.08, 0.38)
+    mb.add_box("Clear_Glass", 36.4, 2.05, 32.38, 1.8, 2.0, 0.24)
     for b in range(4):
-        bz = hz + 3.8 - b * 3.85
-        mb.add_box("Hub_Red", hx + 5.3, 3.1, bz, 0.4, 6.2, 0.65)
+        rx = 39.0 + b * 4.25
+        mb.add_box("Hub_Red", rx, 3.4, 32.35, 0.68, 6.8, 0.45)
         if b < 3:
-            mb.add_box("Bronze_Glass", hx + 5.32, 3.0, bz - 1.9, 0.22, 6.0, 3.15)
+            gx = rx + 2.125
+            mb.add_box("Clear_Glass", gx, 5.4, 32.35, 3.55, 2.4, 0.20)
+            mb.add_box("Charcoal_Parapet", gx, 3.6, 32.38, 3.58, 1.25, 0.38)
+            if b == 0:
+                mb.add_box("Clear_Glass", gx - 0.88, 1.5, 32.35, 1.75, 2.95, 0.20)
+            else:
+                mb.add_box("Clear_Glass", gx, 1.5, 32.35, 3.55, 2.95, 0.20)
+    mb.add_box("Charcoal_Parapet", hx, 7.28, hz, 18.1, 1.05, 12.6)
+    mb.add_box("Red_Sign", 45.2, 7.30, 32.60, 10.5, 0.90, 0.14)
+    mb.add_box("Charcoal_Parapet", 34.18, 3.4, hz, 0.38, 6.8, 12.5)
+    mb.add_box("Charcoal_Parapet", 51.82, 3.4, hz, 0.38, 6.8, 12.5)
+    mb.add_box("Charcoal_Parapet", hx, 3.4, 20.18, 18.0, 6.8, 0.38)
+    mb.add_box("White_Trim", 42.5, 3.65, 22.6, 13.5, 0.24, 4.8)
 
-    # Front fence pillars
-    for i in range(11):
-        px = -20.5 + i * 4.9
-        mb.add_box("Stucco_Cream", px, 1.12, 29.5, 0.45, 2.25, 0.45)
+    # 4. REAR 2-STORY DORMITORY (YOTOQXONA, 46.0 x 11.0 x 8.1 m, Z = -40.5)
+    dz = -40.5
+    mb.add_box("Granite_Tsokol", 0.0, 0.325, dz, 46.0, 0.65, 11.0)
+    mb.add_box("Dorm_Cream", -12.6, 3.85, -35.15, 20.8, 6.8, 0.35)
+    mb.add_box("Dorm_Cream", 12.6, 3.85, -35.15, 20.8, 6.8, 0.35)
+    mb.add_box("Dorm_Cream", 0.0, 5.35, -35.15, 4.4, 3.8, 0.35)
+    mb.add_box("Dorm_Cream", 0.0, 3.85, -45.82, 46.0, 6.8, 0.35)
+    mb.add_box("Dorm_Cream", -22.82, 3.85, dz, 0.35, 6.8, 11.0)
+    mb.add_box("Dorm_Cream", 22.82, 3.85, dz, 0.35, 6.8, 11.0)
+    mb.add_box("Charcoal_Parapet", 0.0, 7.65, dz, 46.2, 0.95, 11.2)
+    mb.add_box("White_Trim", 0.0, 7.25, dz, 46.0, 0.25, 11.0)
+    mb.add_box("White_Trim", 0.0, 3.85, dz, 45.4, 0.22, 10.4)
+    for base_y in (0.45, 3.96):
+        for rx in (-19.5, -13.0, -6.5, 0.0, 6.5, 13.0, 19.5):
+            mb.add_box("Dorm_Mint", rx - 3.2, base_y + 1.55, -42.7, 0.16, 3.1, 6.0)
+            mb.add_box("Dorm_Mint", rx - 0.65, base_y + 1.55, -39.7, 4.9, 3.1, 0.16)
+            mb.add_box("Bunk_Teal", rx - 1.6, base_y + 0.9, -44.8, 2.0, 1.75, 0.95)
+            mb.add_box("Bunk_Teal", rx + 2.2, base_y + 0.9, -43.5, 0.95, 1.75, 2.0)
+
+    # 5. Front Fence Pillars along Z = +33.0 & Open West Gate Leaf (+32.5)
+    for i in range(13):
+        px = -31.5 + i * 4.85
+        mb.add_box("Stucco_Cream", px, 1.25, 33.0, 0.48, 2.5, 0.48)
+    mb.add_box("Charcoal_Parapet", 32.5, 1.35, 30.8, 0.16, 2.5, 4.6)
 
     mb.export_glb(os.path.join(OUT_DIR, "turon_odob_ilm_3d.glb"))
     mb.export_obj(os.path.join(OUT_DIR, "turon_odob_ilm_3d.obj"), os.path.join(OUT_DIR, "turon_odob_ilm_3d.mtl"))
-    print("EXPORT_SUCCESS")
+    print("EXPORT_V2_SUCCESS")
+
 
 if __name__ == "__main__":
     build_model()

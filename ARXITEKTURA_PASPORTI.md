@@ -1,105 +1,58 @@
-# “Turon Odob-Ilm” Xususiy Maktabi (Furqat Filiali) — 1:1 Arxitektura Pasporti va Texnik Spetsifikatsiya
+# “Turon Odob-Ilm” Xususiy Maktabi (Furqat Filiali) — Arxitektura Pasporti (v2)
 
-> **Maqsad:** Ushbu hujjat Furqat tumanidagi **“Turon odob-ilm” xususiy maktabi** majmuasining sun’iy yo‘ldosh xaritasi (OpenStreetMap `way/1497716115`, ArcGIS World Imagery), rasmiy foto-hisobotlar (`fergana.uz`, `@turonodobilm_furqat`) va taqdim etilgan **12 ta real fotosurat** asosida tuzilgan **1:1 me’moriy-texnik pasporti**dir.
+> **Maqsad:** Ushbu hujjat Furqat tumanidagi **“Turon odob-ilm” xususiy maktabi** majmuasining sun’iy yo‘ldosh xaritasi (OpenStreetMap `way/1497716115`, ArcGIS World Imagery), rasmiy foto-hisobotlar (`fergana.uz`, `@turonodobilm_furqat`), taqdim etilgan **12 ta real tashqi/ichki fotosurat** hamda Yotoqxona tasviri (`tg_7058_5.jpg`) asosida tuzilgan arxitektura pasportidir.
 
 ---
 
-## 1. Geografik joylashuv va Bosh reja (Masterplan)
+## 1. Geografik joylashuv va Orientatsiya (v2 Tekislangan)
 
 | Ko‘rsatkich | Qiymati | Manba / Aniqlik darajasi |
 | :--- | :--- | :--- |
 | **Rasmiy manzil** | Farg‘ona viloyati, Furqat tumani, Navbahor shaharchasi, Yangi MFY, Surpa ko‘chasi, 405-uy | Rasmiy sayt / Yandex Maps |
 | **Google Maps belgisi** | `FPGX+82H Turon odob-ilm xususiy maktabi, A-376, Chirkay` | Maktab ulashgan Google Maps havolasi |
 | **Markaz koordinatasi** | `40.475804° N, 70.746408° E` | OpenStreetMap (`way/1497716115`) |
-| **Fasad yo‘nalishi (Azimut)** | **337.5° (Shimoli-g‘arb — NNW)**, to‘g‘ridan-to‘g‘ri **A-376 (“Qo‘qon — Beshariq”)** magistral yo‘liga qaragan | OSM vektor hisobi |
-| **Asosiy hovli uchastkasi** | `~58 m × 43 m` (**~2 490 m²**) | Sun’iy yo‘ldosh o‘lchovi (`0.586 m/px`) |
-| **Orqa hovli / sport maydoni** | `~27.5 m × 45.6 m` (**1 254 m²**) | OSM (`way/1497716114`) va `@turonodobilm_furqat/11142` |
-| **Qo‘shni obyektlar** | Sharqda — **Furqat tumani 37-maktab** (`way/450557460`); G‘arbda — kottej turar-joylar va **Innovation Hub** | OSM + sun’iy yo‘ldosh + fotolar |
+| **3D Sahna o‘qlari** | **`+Z` = Shimol (A-376 magistrali)**; **`-Z` = Janub (Orqa hovli + Yotoqxona)**; **`-X` = Sharq (ekran chapi)**; **`+X` = G‘arb (ekran o‘ngi)** | 1–6-rasmlar va sun’iy yo‘ldosh bilan 100% mos |
+| **Chap tomonda (`-X`, Sharq)** | `37-maktab`, `Tashna`, olovrang `VAZ-2106`, Sharqiy 1-qavatli qanot, foye ichida Kema maketi | 1-, 2-, 10-rasmlardan tasdiqlangan |
+| **O‘ng tomonda (`+X`, G‘arb)** | Kirish zinasi **pandusi**, `3 ta bayroq ustuni`, quyi oynalarda bolalar stikerlari, **G‘arbiy darvoza**, darvoza ortida **A-376 ko‘chasiga qaragan Innovation Hub** | 1-, 4-, 5-, 6-rasmlardan tasdiqlangan |
 
 ---
 
-## 2. Fotogrammetrik kalibrlash (O‘lcham va balandliklarni topish usuli)
+## 2. Fotogrammetrik Asl O‘lchovlar vs Kengaytirilgan 3D v2 Masshtab
 
-Ochiq internet manbalarida kadastr balandligi metrda e’lon qilinmagani sababli, o‘lchamlar va balandliklar **uchta mustaqil real etalon** yordamida kalibrlandi:
-1. **OSM bino konturi (`way/1497716115`):** Orqa devor — `43.37 m`, yon devorlar — `18.46 m` / `18.94 m`, oldingi chiqib turgan markaziy blok eni — `10.64 m`, qurilish osti maydoni — `856.0 m²`.
-2. **VAZ-2106 avtomobili va kirish zinalari (1-rasm):** VAZ-2106 zavod balandligi `1.446 m` bo‘lib, rasmda zinalarning yuqori maydonchasi (`9` ta zina ko‘tarilishi) bilan deyarli bir sathda (`67 px = 1.45 m`) turibdi. Zina tutqichi (`0.95 m`) va qo‘sh shisha eshik (`2.40 m`) ham aynan shu masshtabni (`~33.5–34.7 px/m` portal tekisligida; `~32 px/m` qanot tekisligida) tasdiqlaydi.
-3. **Ichki pol kafellari (`0.60 × 0.60 m`) va tatami (`1.0 × 1.0 m`):** 10- va 11-rasmlarda foyedagi oq-qora marmar kafellar (`4 ta oq + 2 ta qora hoshiya = 3.60 m` markaziy yo‘lak; `2.60 m` yo‘lak eni) va Taekwondo zalidagi `1×1 m` tatamilar orqali xona o‘lchamlari aniqlandi.
-4. **Innovation Hub etaloni (6-rasm):** Kirish eshigi yonidagi odam (`~1.72 m`, `146 px`) orqali `~84.9 px/m` masshtabi olinib, binoning balandligi va qismlar eni hisoblandi.
-
----
-
-## 3. Binolar bo‘yicha 1:1 o‘lcham, maydon va hajm jadvali
-
-### 3.1. Asosiy o‘quv binosi (`B blok`)
-* **Tuzilishi:** 1 ta yarim yerto‘la (`tsokol`) + 2 ta to‘liq yer usti qavati (`1-qavat`, `2-qavat`) + parapetli tekis tom.
-* **Gorizontal o‘lchamlari:**
-  * Umumiy uzunligi (Sharq–G‘arb): **`43.37 m`**
-  * Qanotlar chuqurligi (Shimol–Janub): **`18.94 m`**
-  * Markaziy qirrali portal: kengligi **`10.64 m`** (qanotlar bilan tutash qismi **`16.80 m`**), oldinga **`4.20 m`** chiqib turadi (`+13.67 m` gacha); ustidagi ayvon **`10.80 m × 3.40 m`**
-  * Kirish zinapoyasi va pandus: eni **`9.80 m`** (pandus **`1.10 m`**), chuqurligi **`2.70 m`** (`9` ta zina)
-  * Sharqiy 1 qavatli qo‘shimcha qanot: **`~5.7 m × 9.0 m × 3.80 m`** (`51.3 m²`, `~195 m³`)
-* **Vertikal sathlar (`Y = 0.00 m` — hovli bruschatkasi):**
-  * `Tsokol` (yarim yerto‘la) poli: **`-1.70 m`** (shift balandligi `2.95 m`, qavat-qavat `3.15 m`, yerdan chiqib turgan qora granit qismi **`+1.45 m`**)
-  * `1-qavat` poli: **`+1.45 m`** (qavat balandligi **`3.80 m`**, toza shift **`3.40 m`**)
-  * `2-qavat` poli: **`+5.25 m`** (qavat balandligi **`3.85 m`**, toza shift **`3.45 m`**)
-  * Tom plitasi sathı: **`+9.10 m`**
-  * Yon qanotlar parapet tepasi: **`+10.70 m`** (parapet **`1.60 m`**)
-  * Markaziy portal parapet tepasi: **`+11.35 m`** (parapet **`2.25 m`**)
-* **Maydoni va hajmi (`B blok`):**
-  * Qurilish osti maydoni: **`856.0 m²`** (sharqiy qanot bilan **`~907 m²`**)
-  * Umumiy qavatlar maydoni (3 daraja × 856 m² + sharqiy qanot): **`~2 619 m²`**
-  * Yer usti qurilish hajmi (`Y ≥ 0`): **`~9 405 m³`**
-  * Yer osti `tsokol` qismi hajmi (`-1.70..0.00 m`): **`~1 455 m³`**
-  * **Jami bino hajmi (to‘liq):** **`~10 860 m³`**
-
-### 3.2. “INNOVATION HUB” IT markazi (2026-yil 28-yanvar)
-* **Joylashuvi:** Asosiy darvozadan kirishda darhol o‘ng (g‘arbiy) tomonda, `B blok` hovlisiga yondosh.
-* **Tuzilishi:** 2 qavatli + ichida ikki balandlikli (**~6.2 m**) markaziy konferens-zal va antresol balkonli bino.
-* **O‘lchamlari:** Uzunligi **`~16.2 m`**, eni **`~11.0 m`**, balandligi **`~7.20 m`**.
-* **Maydoni va hajmi:**
-  * Qurilish osti maydoni: **`~178 m²`**
-  * Umumiy qavatlar maydoni (1-qavat zal/resepshn + 2-qavat antresol va IT sinfxonasi): **`~275 m²`**
-  * **Umumiy hajmi:** **`~1 280 m³`**
-
-### 3.3. Hovli kichik inshootlari
-* **Qo‘l yuvish / ichimlik suvi nuqtasi (`Tashna`):** Sharqiy hovlida, `~3.20 m × 1.10 m × 1.75 m` (oq kafel, 2 ta jo‘mrak, sovun idishlari, tepasida yoritgich ustuni).
-* **3 ta bayroq ustuni:** G‘arbiy old hovlida, balandligi `~9.5 m` (O‘zbekiston, Buyuk Britaniya, Rossiya bayroqlari).
-* **Old panjara va klumba:** Oqish g‘isht ustunlar, qora metall panjara, `6` ta axborot banneri va terrakota toshli past klumba devori.
+* **Asl OSM / Fotogrammetriya bazasi:**
+  * `B blok` OSM konturi (`way/1497716115`): **`43.37 × 18.94 m`** (`856.0 m²`), balandligi VAZ-2106 (`1.446 m`) etaloni bo‘yicha `~10.70 / 11.35 m`.
+  * `Innovation Hub` odam bo‘yi (`~1.72 m`, `6-rasm`) bo‘yicha boshlang‘ich baho: `~16.2 × 11.0 × 7.20 m`.
+* **3D v2 Kengaytirilgan va Erkin Yurish Masshtabi (`~11%` kengaytirilgan):**
+  * Foydalanuvchi talabiga binoan koridorlar, sinfxonalar, zinalar va eshiklardan qulay yurish uchun asosiy majmua hajmi kattalashtirildi:
+    * **`B blok`:** **`48.0 × 21.0 m`** (qirrali portal bilan `25.6 m`), wing parapet **`+11.50 m`**, portal parapet **`+12.30 m`**; qavat sathi: Tsokol **`-1.52 m`** (plitasi `-1.80 m`), 1-qavat **`+1.50 m`**, 2-qavat **`+5.60 m`**, tom **`+9.70 m`**.
+    * **`Innovation Hub`:** **`18.0 × 12.5 × 7.80 m`**, `X ∈ [+34.0, +52.0]`, `Z ∈ [+20.0, +32.5]`, **Shimolga (`+Z`, A-376 ko‘chasiga)** qaragan holatda joylashgan (`1F +0.22 m`, antresol `2F +3.65 m`).
+    * **`Orqa Yotoqxona`:** **`46.0 × 11.0 × 8.10 m`** (`2 qavat`, `1F +0.45 m`, `2F +3.96 m`), `B blok` orqa chiqish zinapoyasidan Janubda (`Z ∈ [-46.0, -35.0]`).
 
 ---
 
-## 4. Qavatma-qavat xonalar jadvali (Tasdiqlangan vs Rekonstruksiya)
+## 3. Foydalanilgan haqiqiy foto teksturalar (`assets/`)
 
-> *Izoh: ✅ = Rasmiy fotolar va xabarlardan bevosita tasdiqlangan; 📐 = Bino konstruksiyasi va koridor/deraza bo‘linishidan me’moriy rekonstruksiya qilingan.*
-
-| Qavat | Xona / Zona nomi | Taxminiy o‘lcham (`m`) | Maydon (`m²`) | Dizayn va jihozlar | Holati |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Tsokol (`-1.70 m`)** | **Taekwondo / Sport zali** | `20.0 × 9.5 × 2.95` | `~190` | Qizil-ko‘k `1×1 m` tatami, devor rasmlari, yashil ustun, kontur LED | ✅ |
-| **Tsokol (`-1.70 m`)** | **500 o‘rinli Oshxona zali** | `16.0 × 9.5 × 2.95` | `~152` | Pushti-yalpiz-oq devor, ko‘k ustunlar, marmar-ko‘k stollar, dumaloq LED | ✅ |
-| **Tsokol (`-1.70 m`)** | **Oshxona pishirish sexi va ombor** | `7.0 × 9.0 × 2.95` | `~63` | Taom tayyorlash bo‘limi (rasmiy postda alohida ekani aytilgan) | ✅/📐 |
-| **Tsokol (`-1.70 m`)** | **Garderob / Texnik xonalar** | `~10.0 × 10.0` | `~100` | Qozonxona, elektr shiti, qo‘shimcha zaxira xona | 📐 |
-| **1-qavat (`+1.45 m`)** | **Markaziy Foye va Resepshn** | `10.6 × 15.6 × 3.40` | `~165` | Oq-qora marmar pol, kema maketi, *atlas* bezak, qizil-yashil papkali resepshn, to‘q sariq devor | ✅ |
-| **1-qavat (`+1.45 m`)** | **G‘arbiy va Sharqiy koridorlar** | `2 × (15.9 × 2.6)` | `~83` | `0.60×0.60` marmar pol, yashil LED ship, gullar, vitraj devorlar | ✅ |
-| **1-qavat (`+1.45 m`)** | **G‘arbiy qanot vitraj sinflari (3 ta)** | `3 × (5.3 × 7.5)` | `~119` | Boshlang‘ich sinflar: rangli devorlar, yulduzsimon ship, rangli partalar | ✅ |
-| **1-qavat (`+1.45 m`)** | **G‘arbiy qanot oldingi sinflari (2 ta)** | `2 × (6.6 × 7.5)` | `~99` | Oldingi derazalarida bolalar stikerlari bor boshlang‘ich sinflar | ✅ |
-| **1-qavat (`+1.45 m`)** | **Sharqiy qanot sinf va ma’muriyat (5 ta)** | `~5 × (5.5 × 7.5)` | `~206` | Qorovulxona/ma’muriyat (chap vitraj), direktor/o‘qituvchilar xonasi, sinflar | ✅/📐 |
-| **1-qavat (`+1.45 m`)** | **2 ta asosiy zinapoya va sanuzellar** | `2 × 28 + 51` | `~107` | Markaziy qirrali burchaklar / chekka zina + sharqiy 1-qavat qanot | 📐 |
-| **2-qavat (`+5.25 m`)** | **Markaziy Kutubxona va o‘quv zali** | `10.6 × 12.0 × 3.45` | `~127` | 1000+ badiiy kitoblar, oq javonlar, 3-bo‘lakli old vitraj | ✅ |
-| **2-qavat (`+5.25 m`)** | **IT / Kompyuter xonalari (2 ta)** | `2 × (8.0 × 7.5)` | `~120` | 1-xona: `macOS / Apple` yashil devor; 2-xona: `ChatGPT / SMM` sariq devor, `IMMER` PC | ✅ |
-| **2-qavat (`+5.25 m`)** | **Kimyo, Biologiya, Fizika va Tillar** | `6–7 × (5.3–6.6 × 7.5)` | `~290` | Laboratoriya jihozlari, smart-doskalar, ingliz/rus/aniq fan sinflari | ✅/📐 |
-| **Innovation Hub** | **Konferens-zal + Resepshn (1-qavat)** | `15.5 × 10.4 × 6.2` | `~161` | Kulrang kreslolar, yog‘och bezakli devor, metall zina | ✅ |
-| **Innovation Hub** | **2-qavat Antresol va IT vitraj xonasi** | `10.4 × 5.2 + yo‘lak` | `~85` | Shisha devorli o‘quv kabineti (`OPENAI/APPLE/NVIDIA` stendli xonalar) | ✅ |
-| **Hovli / Alohida** | **144 o‘rinli Yotoqxona** | *~36 xona × 4 o‘rin* | *rekonstruksiya* | Moviy devorli xonalar, 2 tadan ikki qavatli ko‘k karavot, shkaf, gilam | ✅ (ichki) |
+1. **`assets/hub_banner.jpg`** (`6-rasm`dan perspektiv to‘g‘rilab qirqilgan) — Innovation Hub old fasadidagi *“IT SOHASI BIZ BILAN OSON!”* real banneri.
+2. **`assets/fence_banner1.jpg`** & **`assets/fence_banner2.jpg`** (`4-rasm`dan) — G‘arbiy darvoza yonidagi *“TURON ODOB-ILM ENDI XALQARO MAKTAB”* va *“78 113 61 08”* bannerlari.
+3. **Fasaddagi bir xil me’moriy elementlar:** Qirrali kulrang deraza rom hoshiyalari, `B blok` o‘ng qanotidagi bolalar stikerlari, 9 ta qora granit zinapoya oldidagi oq chiziqlar hamda 4 ta qizil alyukobond + qora gofra panelli Hub fasadi.
 
 ---
 
-## 5. Materiallar va Ranglar Palitrasi (1:1 dizayn kodlari)
+## 4. Qavatma-qavat xonalar va ichki yurish marshruti
 
-* **Fasad oqish suvoq (`Travertin / Dekorativ`):** `#EDEBE4`
-* **To‘q grafit parapet va ustunlar:** `#363B40`
-* **Qora granit poydevor (`Tsokol`):** `#1E2126`
-* **Bronza/to‘q tusli oyna vitrajlari:** `#3D2F28` (oyna refleksi `#5A4638`)
-* **Kirish yozuvi (`TURON ODOB-ILM XUSUSIY MAKTABI`):** `#C8262B` (oq fon `#F4F5F7`)
-* **Innovation Hub fasad:** Qizil alyukobond `#B81D24`, To‘q grafit `#2A2E33`, G‘isht plitka `#8E5B43`
-* **Ichki foye:** Oq marmar `#F2F2F0`, Qora marmar `#222428`, Yog‘och ustun `#B8926A`, Aksent to‘q sariq devor `#F26522`, Yashil LED ship `#24D970`
-* **Hovli bruschatkasi:** Kulrang-oq sakkizburchak plitka (`#B8BCBF` / `#4A4F55`)
+| Bino / Qavat | Xona / Zona | 3D v2 O‘lcham / Sath | Holati |
+| :--- | :--- | :--- | :--- |
+| **`B blok` · Tsokol** | Taekwondo / Sport zali (`+X`), 500 o‘rinli Oshxona (`-X`) | `Y = -1.52 m`, `±21.8 m` ichki zina orqali kirish | ✅ |
+| **`B blok` · 1-qavat** | Foye (Kema `-X`, Resepshn & to‘q sariq devor `+X`), 6+ vitraj sinf | `Y = +1.50 m`, ochiq `B blok` eshigi va orqa hovli chiqishi | ✅ |
+| **`B blok` · 2-qavat** | Markaziy Kutubxona, `macOS / Apple` & `ChatGPT / SMM` IT xonalari | `Y = +5.60 m`, `±21.8 m` ichki zina bilan bog‘langan | ✅ |
+| **`Innovation Hub`** | Konferens-zal + Reception (`1F`), Metall zina, Antresol IT vitraj xona (`2F`) | `1F +0.22 m` ↔ `2F +3.65 m`, `A-376` ko‘chasiga qaragan | ✅ |
+| **`Orqa Yotoqxona`** | 2 qavatli korpus, L-shaklida 2 tadan ikki qavatli firuza karavotli 4 o‘rinli xonalar | `46.0 × 11.0 × 8.1 m`, `1F +0.45 m`, `2F +3.96 m` | ✅/📐 |
+
+---
+
+## 5. Materiallar va Ranglar Palitrasi
+
+* **Fasad oqish suvoq:** `#EDEBE4` · **Kulrang deraza romi:** `#9EA4AC`
+* **To‘q grafit parapet va ustunlar:** `#363B40` · **Qora granit (`Tsokol`):** `#1E2126`
+* **Innovation Hub:** Qizil alyukobond `#B81D24`, To‘q grafit gofra `#2A2E33`, G‘isht plitka `#8E5B43`
+* **Yotoqxona:** Qaymoqrang tashqi suvoq `#F0E1B9`, Firuza ichki devor `#81D8D0`, To‘q firuza karavotlar `#2C7A8F`

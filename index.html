@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Turon Odob-Ilm (Furqat) — 1:1 Interaktiv 3D Loyiha</title>
+<title>Turon Odob-Ilm (Furqat) — Kengaytirilgan 3D Majmua v2</title>
 <script type="importmap">
 {
   "imports": {
@@ -21,17 +21,17 @@
   }
   .panel {
     pointer-events: auto;
-    background: rgba(15, 23, 34, 0.86);
+    background: rgba(15, 23, 34, 0.88);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(148, 163, 184, 0.22);
+    border: 1px solid rgba(148, 163, 184, 0.24);
     border-radius: 12px;
     padding: 12px 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.42);
   }
   .brand h1 { font-size: 16px; font-weight: 700; color: #fff; }
   .brand p { font-size: 11.5px; color: #94a3b8; margin-top: 2px; }
   .controls-col {
-    position: fixed; left: 14px; top: 96px; bottom: 14px; width: 270px;
+    position: fixed; left: 14px; top: 96px; bottom: 14px; width: 282px;
     overflow-y: auto; z-index: 10; display: flex; flex-direction: column; gap: 10px;
     pointer-events: none;
   }
@@ -48,7 +48,7 @@
   button.active { background: #38bdf8; color: #08121c; border-color: #38bdf8; }
   button.walk-on { background: #10b981; color: #052e16; border-color: #10b981; }
   .info-box {
-    position: fixed; right: 14px; bottom: 14px; width: 320px; z-index: 10;
+    position: fixed; right: 14px; bottom: 14px; width: 340px; z-index: 10;
   }
   .info-box h3 { font-size: 14px; color: #fff; margin-bottom: 4px; }
   .info-box .dims { font-size: 12px; color: #fbbf24; font-weight: 700; margin-bottom: 6px; }
@@ -56,20 +56,37 @@
   .hint { font-size: 11px; color: #94a3b8; margin-top: 6px; }
   .top-actions { display: flex; gap: 8px; flex-wrap: wrap; }
   a.btn-link.primary { background: #0ea5e9; color: #06131f; border-color: #0ea5e9; text-align: center; }
+
+  /* Walkthrough HUD & Quick Room Teleport */
+  #walk-hud {
+    display: none; position: fixed; top: 96px; right: 14px; width: 320px; z-index: 15;
+  }
+  #walk-hud.visible { display: block; }
+  .walk-stats { font-size: 12px; color: #34d399; font-weight: 700; margin-bottom: 8px; }
+  .tp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 8px; }
+  .tp-grid button { font-size: 11px; padding: 6px 7px; background: #0f172a; border-color: #1e3a5f; }
+  #crosshair {
+    display: none; position: fixed; top: 50%; left: 50%; width: 10px; height: 10px;
+    margin: -5px 0 0 -5px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.85);
+    box-shadow: 0 0 6px rgba(0,0,0,0.65); pointer-events: none; z-index: 14;
+  }
+  #crosshair.visible { display: block; }
+
   @media (max-width: 780px) {
     .controls-col { width: 220px; }
-    .info-box { width: 240px; }
+    .info-box, #walk-hud { width: 250px; }
   }
 </style>
 </head>
 <body>
 
 <div id="canvas-wrap"></div>
+<div id="crosshair"></div>
 
 <div class="hud-top">
   <div class="panel brand">
-    <h1>TURON ODOB-ILM (FURQAT) — 1:1 3D ARXITEKTURA</h1>
-    <p>1 birlik = 1 metr · B blok (43.37×18.94×11.35 m) + Innovation Hub (16.2×11.0×7.2 m)</p>
+    <h1>TURON ODOB-ILM (FURQAT) — 3D ARXITEKTURA v2</h1>
+    <p>B blok (48.0×21.0×12.3 m) · Innovation Hub (+X darvoza yonida, ko‘chaga qarab) · Orqa Yotoqxona (46.0×11.0×8.1 m)</p>
   </div>
   <div class="panel top-actions">
     <button id="btn-walk" onclick="toggleWalk()">🚶 Ichkarida yurish (WASD)</button>
@@ -85,24 +102,28 @@
     <div class="btn-grid">
       <button class="slice-btn active" onclick="setSlice('all', this)">To‘liq majmua</button>
       <button class="slice-btn" onclick="setSlice('noroof', this)">Tomni yechish</button>
-      <button class="slice-btn" onclick="setSlice('floor2', this)">2-qavat (+5.25m)</button>
-      <button class="slice-btn" onclick="setSlice('floor1', this)">1-qavat (+1.45m)</button>
-      <button class="slice-btn" onclick="setSlice('tsokol', this)">Tsokol (-1.70m)</button>
+      <button class="slice-btn" onclick="setSlice('floor2', this)">2-qavat (+5.60m)</button>
+      <button class="slice-btn" onclick="setSlice('floor1', this)">1-qavat (+1.50m)</button>
+      <button class="slice-btn" onclick="setSlice('tsokol', this)">Tsokol (-1.52m)</button>
       <button class="slice-btn" onclick="setSlice('hub', this)">Innovation Hub</button>
+      <button class="slice-btn" style="grid-column: span 2;" onclick="setSlice('dorm', this)">🛏️ Orqa Yotoqxona kesimi</button>
     </div>
   </div>
 
   <div class="panel">
     <div class="sec-title">Kamera nuqtalari</div>
     <div class="btn-col">
-      <button onclick="goCam('overview')">1. Umumiy ko‘rinish (Qush parvozi)</button>
-      <button onclick="goCam('front')">2. Old fasad (1-rasm rakursi)</button>
-      <button onclick="goCam('west')">3. G‘arbiy yon va 3 bayroq (5-rasm)</button>
-      <button onclick="goCam('hubExt')">4. Innovation Hub tashqi (6-rasm)</button>
-      <button onclick="goCam('hubInt')">5. Innovation Hub zal (7-rasm)</button>
-      <button onclick="goCam('lobby')">6. 1-qavat Foye va Kema (10-rasm)</button>
-      <button onclick="goCam('corridor')">7. 1-qavat Koridor va Sinflar (11-rasm)</button>
-      <button onclick="goCam('tsokol')">8. Tsokol: Taekwondo &amp; Oshxona</button>
+      <button onclick="goCam('overview')">1. Umumiy ko‘rinish (A-376 tarafdan)</button>
+      <button onclick="goCam('front')">2. B blok old fasad (1-rasm rakursi)</button>
+      <button onclick="goCam('east')">3. Sharqiy yon: Tashna &amp; 1-qavat qanot (2-rasm)</button>
+      <button onclick="goCam('west')">4. G‘arbiy darvoza va Bannerlar (4–5-rasm)</button>
+      <button onclick="goCam('hubExt')">5. Innovation Hub tashqi, ko‘chaga qarab (6-rasm)</button>
+      <button onclick="goCam('hubInt')">6. Innovation Hub ichki zal &amp; 2F IT (7-rasm)</button>
+      <button onclick="goCam('lobby')">7. 1-qavat Foye, Kema va Resepshn (10-rasm)</button>
+      <button onclick="goCam('corridor')">8. 1-qavat Koridor va Sinflar (11-rasm)</button>
+      <button onclick="goCam('b2')">9. 2-qavat Kutubxona &amp; IT Xonalar</button>
+      <button onclick="goCam('tsokol')">10. Tsokol: Taekwondo zali &amp; Oshxona</button>
+      <button onclick="goCam('dorm')">11. Orqa Yotoqxona binosi va Xonalar</button>
     </div>
   </div>
 
@@ -113,14 +134,32 @@
       <button class="light-btn" onclick="setLight('golden', this)">🌅 Oqshom</button>
       <button class="light-btn" onclick="setLight('night', this)">🌙 Tungi LED</button>
     </div>
-    <p class="hint">Boshqaruv: Chap tugma — aylantirish · O‘ng tugma — siljitish · G‘ildirak — yaqinlashtirish · Binoga bosing — o‘lchamlarni ko‘rish.</p>
+    <p class="hint">Orbit: Chap tugma — aylantirish · O‘ng tugma — siljitish · Binoga bosing — o‘lchamlarni ko‘rish.</p>
   </div>
 </div>
 
+<div class="panel" id="walk-hud">
+  <div class="sec-title">🚶 Ichki sayr (FPS Boshqaruv)</div>
+  <div class="walk-stats" id="walk-loc">Joylashuv: Tashqi hovli (Y = 0.00 m)</div>
+  <div class="tp-grid">
+    <button onclick="tpWalk(0, 0.0, 22.5, 0, 'Hovli (Old zina)')">🏛️ B blok oldi</button>
+    <button onclick="tpWalk(0, 1.50, 11.0, 0, '1-qavat Foye')">🚢 Foye &amp; Kema</button>
+    <button onclick="tpWalk(2.0, 1.50, 0.0, Math.PI/2, '1-qavat G‘arbiy koridor')">🚪 1F Sinflar</button>
+    <button onclick="tpWalk(21.8, 1.50, 2.0, Math.PI, 'Zina (1F → 2F)')">🪜 2-qavatga zina</button>
+    <button onclick="tpWalk(12.0, 5.60, 0.0, 0, '2-qavat IT &amp; Kutubxona')">💻 2-qavat (IT/Kutubxona)</button>
+    <button onclick="tpWalk(0, -1.52, -4.0, Math.PI, 'Tsokol (Oshxona/Sport)')">🥋 Tsokol (-1.52m)</button>
+    <button onclick="tpWalk(41.6, 0.22, 34.5, 0, 'Innovation Hub kirish')">🚀 Innovation Hub</button>
+    <button onclick="tpWalk(42.5, 3.65, 22.8, Math.PI, 'Hub 2F Antresol IT')">🖥️ Hub 2-qavat</button>
+    <button onclick="tpWalk(0, 0.45, -37.5, 0, 'Orqa Yotoqxona 1F')">🛏️ Yotoqxona 1F</button>
+    <button onclick="tpWalk(0, 3.96, -37.5, 0, 'Orqa Yotoqxona 2F')">🛌 Yotoqxona 2F</button>
+  </div>
+  <p class="hint" id="walk-hint"><b>W/A/S/D</b> — yurish · <b>Shift</b> — tez yugurish · Ekranga bir marta bosing — sichqoncha bilan erkin qarash (<b>Esc</b> — bo‘shatish).</p>
+</div>
+
 <div class="panel info-box" id="info-box">
-  <h3 id="info-title">Asosiy majmua (1:1 Masshtab)</h3>
-  <div class="dims" id="info-dims">B blok: 43.37 × 18.94 × 11.35 m | Hub: 16.2 × 11.0 × 7.2 m</div>
-  <p id="info-desc">Xona yoki binoni ustiga bosing — aniq o‘lchami, maydoni va rasmiy manbalarga asoslangan tavsifi chiqadi. “Ichkarida yurish” tugmasini bossangiz W/A/S/D bilan zinadan chiqib foye va koridorda yurishingiz mumkin.</p>
+  <h3 id="info-title">Turon Odob-Ilm Majmuasi (v2 Kengaytirilgan)</h3>
+  <div class="dims" id="info-dims">B blok: 48.0 × 21.0 × 12.3 m | Hub: 18.0 × 12.5 × 7.8 m | Yotoqxona: 46.0 × 11.0 × 8.1 m</div>
+  <p id="info-desc">Asl o‘lchovlar (OSM: 43.37×18.94 m) asosida ichkarida erkin yurish uchun kengaytirilgan 3D loyiha. O‘ng tarafdagi (+X) darvozadan chiqishda ko‘chaga qarab turgan Innovation Hub va orqa hovlida 2 qavatli Yotoqxona joylashgan.</p>
 </div>
 
 <script type="module">
@@ -136,41 +175,41 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
+renderer.toneMappingExposure = 1.06;
 container.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xcce2f2);
-scene.fog = new THREE.FogExp2(0xcce2f2, 0.0038);
+scene.fog = new THREE.FogExp2(0xcce2f2, 0.0032);
 
-const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.2, 400);
-camera.position.set(-28, 22, 52);
+const camera = new THREE.PerspectiveCamera(54, window.innerWidth / window.innerHeight, 0.15, 450);
+camera.position.set(22, 24, 58);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.07;
-controls.target.set(-4, 4, 8);
+controls.target.set(8, 3, 8);
 controls.maxPolarAngle = Math.PI / 2 + 0.06;
 
 // Lights
-const hemiLight = new THREE.HemisphereLight(0xeef6ff, 0x4b5563, 0.78);
+const hemiLight = new THREE.HemisphereLight(0xeef6ff, 0x4b5563, 0.80);
 scene.add(hemiLight);
 const sunLight = new THREE.DirectionalLight(0xfff7e6, 1.9);
-sunLight.position.set(-38, 48, 42);
+sunLight.position.set(-42, 52, 46);
 sunLight.castShadow = true;
 sunLight.shadow.mapSize.set(2048, 2048);
 sunLight.shadow.camera.near = 5;
-sunLight.shadow.camera.far = 160;
-sunLight.shadow.camera.left = -55;
-sunLight.shadow.camera.right = 55;
-sunLight.shadow.camera.top = 55;
-sunLight.shadow.camera.bottom = -55;
+sunLight.shadow.camera.far = 190;
+sunLight.shadow.camera.left = -65;
+sunLight.shadow.camera.right = 65;
+sunLight.shadow.camera.top = 65;
+sunLight.shadow.camera.bottom = -65;
 scene.add(sunLight);
 
 const tex = createTextures();
 const { groups, interactiveZones, animatedFlags, interiorLights } = buildTuronCampus(scene, tex);
 
-// 3D Dimension Guides
+// 3D Dimension Guides matching v2 geometry
 const guidesGroup = new THREE.Group();
 scene.add(guidesGroup);
 function addDimLine(p1, p2, col = 0x38bdf8) {
@@ -178,40 +217,38 @@ function addDimLine(p1, p2, col = 0x38bdf8) {
   const mat = new THREE.LineBasicMaterial({ color: col });
   guidesGroup.add(new THREE.Line(geo, mat));
 }
-addDimLine([-21.685, 12.2, 9.47], [21.685, 12.2, 9.47], 0x38bdf8);   // 43.37 m width
-addDimLine([23.0, 0, -9.47], [23.0, 0, 9.47], 0xf59e0b);             // 18.94 m depth
-addDimLine([5.6, 0, 13.8], [5.6, 11.35, 13.8], 0xef4444);           // 11.35 m height
-addDimLine([-26.5, 0, 13.4], [-26.5, 7.2, 13.4], 0xef4444);         // 7.2 m Hub height
+addDimLine([-24.0, 12.8, 10.5], [24.0, 12.8, 10.5], 0x38bdf8);     // B blok 48.0 m width
+addDimLine([24.8, 0, -10.5], [24.8, 0, 10.5], 0xf59e0b);           // B blok 21.0 m depth
+addDimLine([6.5, 0, 15.1], [6.5, 12.3, 15.1], 0xef4444);           // B blok 12.3 m portal height
+addDimLine([34.0, 8.2, 32.6], [52.0, 8.2, 32.6], 0x38bdf8);        // Hub 18.0 m width
+addDimLine([52.5, 0, 32.6], [52.5, 7.8, 32.6], 0xef4444);          // Hub 7.8 m height
+addDimLine([-23.0, 8.5, -35.0], [23.0, 8.5, -35.0], 0x10b981);     // Yotoqxona 46.0 m width
+addDimLine([23.5, 0, -35.0], [23.5, 8.1, -35.0], 0xef4444);        // Yotoqxona 8.1 m height
 
 // Slicer logic
 window.setSlice = (mode, btn) => {
   document.querySelectorAll('.slice-btn').forEach((b) => b.classList.remove('active'));
   btn.classList.add('active');
   const g = groups;
-  g.site.visible = true;
-  g.bExterior.visible = true;
-  g.bTsokol.visible = true;
-  g.bFloor1.visible = true;
-  g.bFloor2.visible = true;
-  g.bRoof.visible = true;
-  g.hubShell.visible = true;
-  g.hubFloor1.visible = true;
-  g.hubFloor2.visible = true;
-  g.hubRoof.visible = true;
+  Object.keys(g).forEach((k) => { if (k !== 'cars') g[k].visible = true; });
 
   if (mode === 'noroof') {
     g.bRoof.visible = false;
     g.hubRoof.visible = false;
+    g.dormRoof.visible = false;
   } else if (mode === 'floor2') {
     g.bRoof.visible = false;
     g.bExterior.visible = false;
     g.hubRoof.visible = false;
+    g.dormRoof.visible = false;
   } else if (mode === 'floor1') {
     g.bRoof.visible = false;
     g.bFloor2.visible = false;
     g.bExterior.visible = false;
     g.hubRoof.visible = false;
     g.hubFloor2.visible = false;
+    g.dormRoof.visible = false;
+    g.dormFloor2.visible = false;
   } else if (mode === 'tsokol') {
     g.bRoof.visible = false;
     g.bFloor2.visible = false;
@@ -222,19 +259,26 @@ window.setSlice = (mode, btn) => {
     g.hubRoof.visible = false;
     g.hubShell.visible = false;
     goCam('hubInt');
+  } else if (mode === 'dorm') {
+    g.dormRoof.visible = false;
+    g.dormExterior.visible = false;
+    goCam('dorm');
   }
 };
 
-// Camera presets matching user's 12 uploaded photos!
+// Camera presets matching non-mirrored v2 campus (-X = East, +X = West/Gate/Hub, +Z = North A-376, -Z = South/Yotoqxona)
 const PRESETS = {
-  overview: { pos: [-28, 22, 52], target: [-4, 4, 8] },
-  front: { pos: [0.5, 2.2, 34.5], target: [0, 5.2, 8] },
-  west: { pos: [-34, 2.2, 26], target: [-4, 4.5, 6] },
-  hubExt: { pos: [-19, 2.2, 32], target: [-31.5, 3.6, 22] },
-  hubInt: { pos: [-29.5, 2.1, 28.0], target: [-32.5, 2.6, 15.5] },
-  lobby: { pos: [0, 3.1, 13.2], target: [0, 3.1, 2.5] },
-  corridor: { pos: [-4.0, 3.1, 0.0], target: [-20.0, 3.0, 0.0] },
-  tsokol: { pos: [-11.5, 8.5, 16], target: [0, -1.0, -3.5] },
+  overview: { pos: [26, 26, 62], target: [8, 3, 6] },
+  front:    { pos: [0.5, 2.4, 34.5], target: [0, 5.2, 10] },
+  east:     { pos: [-26.0, 2.6, 28.0], target: [-6.0, 4.0, 10.0] },
+  west:     { pos: [33.5, 2.4, 37.5], target: [16.0, 4.5, 16.0] },
+  hubExt:   { pos: [30.5, 2.5, 42.5], target: [43.5, 4.0, 29.0] },
+  hubInt:   { pos: [41.5, 2.2, 31.2], target: [44.0, 2.8, 21.5] },
+  lobby:    { pos: [0, 3.2, 13.8], target: [0, 3.1, 2.5] },
+  corridor: { pos: [3.0, 3.2, 0.0], target: [20.5, 3.1, 0.0] },
+  b2:       { pos: [2.0, 7.3, 0.0], target: [15.5, 7.1, 4.5] },
+  tsokol:   { pos: [-11.5, 8.5, 16.0], target: [0, -1.0, -4.0] },
+  dorm:     { pos: [-14.0, 9.5, -24.0], target: [0, 2.5, -40.5] },
 };
 
 let camTween = null;
@@ -257,19 +301,19 @@ window.setLight = (mode, btn) => {
   btn.classList.add('active');
   if (mode === 'day') {
     scene.background.set(0xcce2f2); scene.fog.color.set(0xcce2f2);
-    sunLight.color.set(0xfff7e6); sunLight.intensity = 1.9; sunLight.position.set(-38, 48, 42);
-    hemiLight.intensity = 0.78;
-    interiorLights.forEach((l) => (l.intensity = 0.8));
+    sunLight.color.set(0xfff7e6); sunLight.intensity = 1.9; sunLight.position.set(-42, 52, 46);
+    hemiLight.intensity = 0.80;
+    interiorLights.forEach((l) => (l.intensity = 0.9));
   } else if (mode === 'golden') {
     scene.background.set(0xf5c89e); scene.fog.color.set(0xf5c89e);
-    sunLight.color.set(0xff9b42); sunLight.intensity = 2.1; sunLight.position.set(-55, 14, 30);
-    hemiLight.intensity = 0.55;
-    interiorLights.forEach((l) => (l.intensity = 1.8));
+    sunLight.color.set(0xff9b42); sunLight.intensity = 2.1; sunLight.position.set(-60, 16, 32);
+    hemiLight.intensity = 0.56;
+    interiorLights.forEach((l) => (l.intensity = 1.9));
   } else {
     scene.background.set(0x0b1220); scene.fog.color.set(0x0b1220);
     sunLight.color.set(0x64748b); sunLight.intensity = 0.35;
-    hemiLight.intensity = 0.25;
-    interiorLights.forEach((l) => (l.intensity = 3.2));
+    hemiLight.intensity = 0.28;
+    interiorLights.forEach((l) => (l.intensity = 3.4));
   }
 };
 
@@ -282,40 +326,82 @@ window.toggleCars = () => {
   document.getElementById('btn-cars').classList.toggle('active', groups.cars.visible);
 };
 
-// Walkthrough Mode (WASD + Mouse drag look)
+// =========================================================
+// WALKTHROUGH MODE (PointerLock FPS + Multi-Building Stair Tracking)
+// =========================================================
+const EYE_HEIGHT = 1.68;
 let walkMode = false;
+let walkFloorY = 0.0;
 const keys = {};
-let yaw = Math.PI, pitch = 0;
+let yaw = 0, pitch = 0;
 let draggingWalk = false, lastMX = 0, lastMY = 0;
+
+function updateWalkStatus(label) {
+  const el = document.getElementById('walk-loc');
+  if (el) el.textContent = `Joylashuv: ${label} (Y = ${walkFloorY.toFixed(2)} m)`;
+}
+
+window.tpWalk = (x, floorY, z, targetYaw, label) => {
+  if (!walkMode) toggleWalk();
+  walkFloorY = floorY;
+  camera.position.set(x, floorY + EYE_HEIGHT, z);
+  yaw = targetYaw;
+  pitch = 0;
+  updateWalkStatus(label || 'Ichki hudud');
+};
 
 window.toggleWalk = () => {
   walkMode = !walkMode;
   const btn = document.getElementById('btn-walk');
+  const walkHud = document.getElementById('walk-hud');
+  const crosshair = document.getElementById('crosshair');
   btn.classList.toggle('walk-on', walkMode);
+  walkHud.classList.toggle('visible', walkMode);
+  crosshair.classList.toggle('visible', walkMode);
   controls.enabled = !walkMode;
   if (walkMode) {
-    camera.position.set(0, 1.75, 22.0);
+    camTween = null;
+    walkFloorY = 0.0;
+    camera.position.set(0, EYE_HEIGHT, 23.0);
     yaw = 0; pitch = 0;
     btn.textContent = '🛑 Yurishdan chiqish';
+    updateWalkStatus('Hovli (Old zina qarshisi)');
   } else {
+    if (document.pointerLockElement === renderer.domElement) {
+      document.exitPointerLock();
+    }
     btn.textContent = '🚶 Ichkarida yurish (WASD)';
   }
 };
 
 window.addEventListener('keydown', (e) => { keys[e.code] = true; });
 window.addEventListener('keyup', (e) => { keys[e.code] = false; });
+
 renderer.domElement.addEventListener('mousedown', (e) => {
-  if (walkMode) { draggingWalk = true; lastMX = e.clientX; lastMY = e.clientY; }
+  if (walkMode) {
+    draggingWalk = true;
+    lastMX = e.clientX;
+    lastMY = e.clientY;
+    if (document.pointerLockElement !== renderer.domElement && renderer.domElement.requestPointerLock) {
+      try { renderer.domElement.requestPointerLock(); } catch (_) {}
+    }
+  }
 });
 window.addEventListener('mouseup', () => { draggingWalk = false; });
 window.addEventListener('mousemove', (e) => {
-  if (!walkMode || !draggingWalk) return;
-  yaw -= (e.clientX - lastMX) * 0.004;
-  pitch = Math.max(-1.2, Math.min(1.2, pitch - (e.clientY - lastMY) * 0.004));
-  lastMX = e.clientX; lastMY = e.clientY;
+  if (!walkMode) return;
+  if (document.pointerLockElement === renderer.domElement) {
+    yaw -= e.movementX * 0.0024;
+    pitch = Math.max(-1.25, Math.min(1.25, pitch - e.movementY * 0.0024));
+  } else if (draggingWalk) {
+    yaw -= (e.clientX - lastMX) * 0.004;
+    pitch = Math.max(-1.25, Math.min(1.25, pitch - (e.clientY - lastMY) * 0.004));
+    lastMX = e.clientX;
+    lastMY = e.clientY;
+  }
 });
 
-// Click Raycast Zone Inspector
+// Click Raycast Zone Inspector (when not in walkMode)
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 renderer.domElement.addEventListener('click', (e) => {
@@ -338,7 +424,88 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+function computeWalkFloorHeight(x, z, curFloor) {
+  let targetFloor = curFloor;
+  let locLabel = 'Tashqi hovli';
+
+  // 1. Innovation Hub (X in [34, 52], Z in [20, 32.5])
+  if (x >= 34.0 && x <= 52.0 && z >= 20.0 && z <= 32.5) {
+    // Black steel mezzanine stairs along West wall (X in [49.7, 51.6], Z from 28.5 to 23.7)
+    if (x >= 49.7 && z >= 23.3 && z <= 28.9) {
+      const t = Math.max(0, Math.min(1, (28.5 - z) / 4.8));
+      targetFloor = 0.22 + t * (3.65 - 0.22);
+      locLabel = 'Innovation Hub zinapoyasi';
+    } else if (curFloor > 2.2) {
+      targetFloor = 3.65;
+      locLabel = 'Innovation Hub 2F Antresol IT';
+    } else {
+      targetFloor = 0.22;
+      locLabel = 'Innovation Hub Konferens zali (1F)';
+    }
+    return { floorY: targetFloor, label: locLabel };
+  }
+
+  // 2. Rear Dormitory Yotoqxona (X in [-23, 23], Z in [-46, -35])
+  if (x >= -23.0 && x <= 23.0 && z >= -46.0 && z <= -35.0) {
+    if (curFloor > 2.4) {
+      targetFloor = 3.96;
+      locLabel = 'Yotoqxona 2-qavat';
+    } else {
+      targetFloor = 0.45;
+      locLabel = 'Yotoqxona 1-qavat (4 o‘rinli xonalar)';
+    }
+    return { floorY: targetFloor, label: locLabel };
+  }
+
+  // 3. B blok Front Stairs & Ramp (|X| <= 5.6, Z in [18.80, 21.68])
+  if (Math.abs(x) <= 5.6 && z <= 21.68 && z >= 18.80 && curFloor < 3.6) {
+    const t = Math.max(0, Math.min(1, (21.68 - z) / (21.68 - 18.80)));
+    return { floorY: t * 1.50, label: x > 4.1 ? 'Nogironlar pandusi' : 'B blok bosh zinasi' };
+  }
+  // B blok Front Porch Deck (|X| <= 6.0, Z in [15.10, 18.80])
+  if (Math.abs(x) <= 6.0 && z >= 15.10 && z < 18.80 && curFloor < 3.6) {
+    return { floorY: 1.50, label: 'B blok kirish ayvoni' };
+  }
+  // B blok Rear Exit Steps to Courtyard (|X| <= 2.2, Z in [-13.4, -10.5])
+  if (Math.abs(x) <= 2.2 && z <= -10.5 && z >= -13.4 && curFloor >= 0.0 && curFloor < 3.6) {
+    const t = Math.max(0, Math.min(1, (z - (-13.4)) / 2.9));
+    return { floorY: t * 1.50, label: 'Orqa hovliga chiqish zinasi' };
+  }
+
+  // 4. Inside B blok Footprint (X in [-24.0, 24.0], Z in [-10.5, 15.1])
+  const inPortal = Math.abs(x) <= 6.0 && z > 10.5 && z <= 15.1;
+  const inMainBody = Math.abs(x) <= 24.0 && z >= -10.5 && z <= 10.5;
+  if (inPortal || inMainBody) {
+    const onStairX = Math.abs(x) >= 20.2 && Math.abs(x) <= 23.4;
+    // 1F <-> 2F Stairs (Z in [2.0, 8.8])
+    if (onStairX && z >= 2.0 && z <= 8.8 && curFloor > 0.2) {
+      const t = Math.max(0, Math.min(1, (z - 2.2) / 6.4));
+      return { floorY: 1.50 + t * (5.60 - 1.50), label: 'Ichki zina (1-qavat ↔ 2-qavat)' };
+    }
+    // 1F <-> Tsokol Stairs (Z in [-7.6, -2.0])
+    if (onStairX && z >= -7.6 && z <= -2.0 && curFloor < 3.5) {
+      const t = Math.max(0, Math.min(1, (-2.2 - z) / 5.2));
+      return { floorY: 1.50 - t * (1.50 - (-1.52)), label: 'Ichki zina (1-qavat ↔ Tsokol)' };
+    }
+    if (curFloor > 3.6) {
+      return { floorY: 5.60, label: 'B blok 2-qavat (IT / Kutubxona)' };
+    }
+    if (curFloor < 0.0) {
+      return { floorY: -1.52, label: x >= 0 ? 'Tsokol: Taekwondo zali' : 'Tsokol: Oshxona' };
+    }
+    if (z > 4.0) return { floorY: 1.50, label: 'B blok 1-qavat Foye (Kema & Resepshn)' };
+    if (z >= -1.6) return { floorY: 1.50, label: 'B blok 1-qavat Markaziy koridor' };
+    return { floorY: 1.50, label: 'B blok 1-qavat Sinf xonasi' };
+  }
+
+  // 5. Default outside yard
+  if (z < -10.5 && z > -35.0) locLabel = 'Orqa hovli (Yotoqxona yo‘lagi)';
+  else if (z > 33.0) locLabel = 'A-376 ko‘cha bo‘yi';
+  return { floorY: 0.0, label: locLabel };
+}
+
 const clock = new THREE.Clock();
+let hudTick = 0;
 function animate() {
   requestAnimationFrame(animate);
   const dt = Math.min(clock.getDelta(), 0.05);
@@ -348,8 +515,8 @@ function animate() {
   animatedFlags.forEach((f, idx) => {
     const pos = f.geometry.attributes.position;
     for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i);
-      const wave = Math.sin(elapsed * 3.5 + x * 2.5 + idx) * 0.08 * ((x + 0.95) / 1.9);
+      const fx = pos.getX(i);
+      const wave = Math.sin(elapsed * 3.5 + fx * 2.5 + idx) * 0.08 * ((fx + 0.95) / 1.9);
       pos.setZ(i, wave);
     }
     pos.needsUpdate = true;
@@ -366,20 +533,27 @@ function animate() {
   if (walkMode) {
     const fwd = new THREE.Vector3(-Math.sin(yaw), 0, -Math.cos(yaw));
     const right = new THREE.Vector3(Math.cos(yaw), 0, -Math.sin(yaw));
-    const spd = (keys['ShiftLeft'] ? 9.0 : 4.5) * dt;
+    const spd = (keys['ShiftLeft'] || keys['ShiftRight'] ? 10.5 : 4.8) * dt;
     if (keys['KeyW'] || keys['ArrowUp']) camera.position.addScaledVector(fwd, spd);
     if (keys['KeyS'] || keys['ArrowDown']) camera.position.addScaledVector(fwd, -spd);
     if (keys['KeyA'] || keys['ArrowLeft']) camera.position.addScaledVector(right, -spd);
     if (keys['KeyD'] || keys['ArrowRight']) camera.position.addScaledVector(right, spd);
-    // Auto climb stairs into B blok!
-    const z = camera.position.z, x = camera.position.x;
-    let targetY = 1.75;
-    if (Math.abs(x) < 6 && z <= 19.6 && z >= 16.8) {
-      targetY = 1.75 + ((19.6 - z) / 2.8) * 1.45;
-    } else if (Math.abs(x) < 22 && z < 16.8 && z > -9.5) {
-      targetY = 3.20;
+
+    // Keep within campus bounds
+    camera.position.x = Math.max(-44, Math.min(55, camera.position.x));
+    camera.position.z = Math.max(-45.5, Math.min(48, camera.position.z));
+
+    const surf = computeWalkFloorHeight(camera.position.x, camera.position.z, walkFloorY);
+    walkFloorY = surf.floorY;
+    const targetEyeY = walkFloorY + EYE_HEIGHT;
+    camera.position.y += (targetEyeY - camera.position.y) * 0.22;
+
+    hudTick += dt;
+    if (hudTick > 0.2) {
+      hudTick = 0;
+      updateWalkStatus(surf.label);
     }
-    camera.position.y += (targetY - camera.position.y) * 0.15;
+
     const lookDir = new THREE.Vector3(
       -Math.sin(yaw) * Math.cos(pitch),
       Math.sin(pitch),
