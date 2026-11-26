@@ -362,5 +362,102 @@ export function createTextures() {
   tex.macWall = signTex(512, 256, '#16a34a', '#ffffff', 'Apple macOS', 'IT LABORATORIYA #1');
   tex.gptWall = signTex(512, 256, '#eab308', '#1e293b', 'ChatGPT · SMM', 'IT LABORATORIYA #2');
 
+  // --- REAR CAMPUS TEXTURES (From Videos 1-4) ---
+  // 12. Shirin Kulcha Bufet Bakery Glass Panel (Video 2 00:13 & Video 4 00:00)
+  {
+    const [c, g] = makeCanvas(512, 512);
+    g.fillStyle = '#e7dfd3';
+    g.fillRect(0, 0, 512, 512);
+    g.strokeStyle = '#334155'; g.lineWidth = 10; g.strokeRect(10, 10, 492, 492);
+    // Decorative swirling kulcha / patir bread sketches
+    g.fillStyle = '#d4b483'; g.strokeStyle = '#6b4f2a'; g.lineWidth = 4;
+    [[165, 165, 72], [350, 185, 65], [190, 315, 62]].forEach(([bx, by, br]) => {
+      g.beginPath(); g.arc(bx, by, br, 0, Math.PI * 2); g.fill(); g.stroke();
+      g.beginPath(); g.arc(bx, by, br * 0.45, 0, Math.PI * 2); g.stroke();
+    });
+    g.fillStyle = '#1f2937';
+    g.fillRect(24, 385, 290, 96);
+    g.fillStyle = '#f8fafc';
+    g.font = '900 36px Arial, sans-serif';
+    g.textAlign = 'left';
+    g.fillText('SHIRIN', 42, 428);
+    g.fillText('KULCHA', 42, 468);
+    tex.shirinKulcha = asTex(c, 1, 1);
+  }
+
+  // 13. Red 2-Door Fire Cabinet on Boiler House (Video 1 00:01)
+  {
+    const [c, g] = makeCanvas(256, 320);
+    g.fillStyle = '#7f1d1d'; g.fillRect(0, 0, 256, 320);
+    g.strokeStyle = '#450a0a'; g.lineWidth = 8; g.strokeRect(6, 6, 244, 308);
+    g.fillStyle = '#1e293b';
+    g.fillRect(22, 24, 96, 170);
+    g.fillRect(138, 24, 96, 170);
+    g.fillStyle = '#991b1b';
+    g.fillRect(18, 212, 220, 90);
+    g.fillStyle = '#fca5a5'; g.font = 'bold 20px Arial'; g.textAlign = 'center';
+    g.fillText('01 · PK', 128, 265);
+    tex.fireCabinet = asTex(c, 1, 1);
+  }
+
+  // 14. Precast Concrete Panel Fence / Evrozabor (Video 2 00:02)
+  {
+    const [c, g] = makeCanvas(512, 256);
+    g.fillStyle = '#9ca3af'; g.fillRect(0, 0, 512, 256);
+    g.strokeStyle = '#6b7280'; g.lineWidth = 6;
+    for (let x = 0; x < 512; x += 256) {
+      g.fillStyle = '#b4bac2';
+      g.fillRect(x + 12, 16, 232, 68); g.strokeRect(x + 12, 16, 232, 68);
+      g.fillRect(x + 12, 94, 232, 68); g.strokeRect(x + 12, 94, 232, 68);
+      g.fillRect(x + 12, 172, 232, 68); g.strokeRect(x + 12, 172, 232, 68);
+    }
+    tex.evrozabor = asTex(c, 10, 1);
+  }
+
+  // 15. Sports Hall Vertical Ribbed Gray Cladding (Video 2 00:00 & Video 4 00:00)
+  {
+    const [c, g] = makeCanvas(256, 256);
+    g.fillStyle = '#6b7280'; g.fillRect(0, 0, 256, 256);
+    for (let x = 0; x < 256; x += 16) {
+      g.fillStyle = '#4b5563'; g.fillRect(x, 0, 6, 256);
+      g.fillStyle = '#9ca3af'; g.fillRect(x + 6, 0, 3, 256);
+    }
+    tex.sportRibbed = asTex(c, 14, 2);
+  }
+
+  // 16. Compacted Dirt / Sand Sports Field (Video 2 & Video 4)
+  {
+    const [c, g] = makeCanvas(512, 512);
+    g.fillStyle = '#8b7355'; g.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 4000; i++) {
+      const d = Math.random();
+      g.fillStyle = d > 0.6 ? '#766147' : d > 0.25 ? '#9c8364' : '#5e6b48';
+      g.fillRect(Math.random() * 512, Math.random() * 512, 3, 3);
+    }
+    tex.dirtField = asTex(c, 8, 8);
+  }
+
+  // 17. Corrugated Gray Metal Roof Sheets for 1-Story Wings & Gazebos
+  {
+    const [c, g] = makeCanvas(256, 256);
+    g.fillStyle = '#717882'; g.fillRect(0, 0, 256, 256);
+    for (let x = 0; x < 256; x += 16) {
+      g.fillStyle = '#525861'; g.fillRect(x, 0, 5, 256);
+      g.fillStyle = '#9ca3af'; g.fillRect(x + 5, 0, 4, 256);
+    }
+    tex.slateRoof = asTex(c, 16, 4);
+  }
+
+  // 18. White Mesh Volleyball Net (Video 2 00:02)
+  {
+    const [c, g] = makeCanvas(256, 128);
+    g.clearRect(0, 0, 256, 128);
+    g.fillStyle = '#f8fafc'; g.fillRect(0, 0, 256, 12);
+    g.strokeStyle = 'rgba(248,250,252,0.85)'; g.lineWidth = 2;
+    for (let x = 0; x <= 256; x += 16) { g.beginPath(); g.moveTo(x, 12); g.lineTo(x, 128); g.stroke(); }
+    for (let y = 12; y <= 128; y += 16) { g.beginPath(); g.moveTo(0, y); g.lineTo(256, y); g.stroke(); }
+    tex.volleyballNet = asTex(c, 8, 1);
+  }
+
   return tex;
 }

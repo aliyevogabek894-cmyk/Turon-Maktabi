@@ -1,23 +1,15 @@
-# “Turon Odob-Ilm” Xususiy Maktabi (Furqat) — 3D Arxitektura Loyihasi (v2)
+# “Turon Odob-Ilm” Xususiy Maktabi (Furqat) — 1:1 Old & Orqa 3D Loyihasi (v2.1)
 
-Farg‘ona viloyati, Furqat tumani (Navbahor / Surpa, **A-376** magistrali) da joylashgan **“Turon odob-ilm” xususiy maktabi**, **“Innovation Hub”** IT markazi hamda **Orqa Yotoqxona** majmuasining interaktiv 3D modeli va 2D arxitektura chizmalari.
+Farg‘ona viloyati, Furqat tumani (Navbahor / Surpa, **A-376** magistrali) da joylashgan **“Turon odob-ilm” xususiy maktabi** majmuasining **old va orqa tomonlari** 1:1 aniqlikda qurilgan interaktiv 3D modeli hamda 2D chizmalari.
 
-## v2 yangilanishlari
-- **To‘g‘ri joylashuv va orientatsiya:** Innovation Hub maktabning G‘arbiy (`+X`, darvoza ortidagi) tarafida va **A-376 ko‘chasiga (`+Z`) qarab** joylashtirildi; Sharq (`-X`) va G‘arb (`+X`) bino qismlari haqiqiy rasmlar bilan 100% moslashtirildi.
-- **Kengaytirilgan hajm va ichki sayr (`WASD` + PointerLock FPS):** `B blok` (`48.0 × 21.0 × 12.3 m`), `Innovation Hub` (`18.0 × 12.5 × 7.8 m`) va `Orqa Yotoqxona` (`46.0 × 11.0 × 8.1 m`) ochiq eshiklar hamda ishlaydigan zinapoyalar (old zina/pandus, 1F↔2F, 1F↔Tsokol, Hub antresol zinasi) bilan qurildi.
-- **Haqiqiy foto teksturalar:** `assets/` papkasida 4- va 6-rasmlardan to‘g‘rilab qirqilgan real bannerlar ishlatildi.
-
-## Loyiha tarkibi
-- `index.html` — Three.js 3D sahifasi (FPS yurish, tezkor xonalarga o‘tish, qavat kesimlari, 11 kamera rakursi).
-- `js/textures.js` & `js/scene_builder.js` — Teksturalar va 3 binoli 3D sahna moduli.
-- `qavat_rejalari.html` — 7 varaqli 2D SVG chizmalar (Masterplan, Old fasad, Tsokol, 1-qavat, 2-qavat, Innovation Hub, Yotoqxona).
-- `ARXITEKTURA_PASPORTI.md` — Texnik spetsifikatsiya va foto-o‘lchovlar pasporti.
-- `turon_odob_ilm_3d.glb` / `.obj` / `.mtl` va `export_3d_models.py` — glTF 2.0 / OBJ 3D eksport fayllari.
-- `ISHGA_TUSHIRISH.bat` — Windows’da `http://localhost:8765/index.html` serverini ochish.
+## v2.1 yangilanishlari (Orqa hudud 4 ta video asosida)
+- **B blok orqa va g‘arbiy fasadi:** 3 qator to‘liq derazalar (`Tsokol`, `1-qavat`, `2-qavat`), konditsionerlar, tashqi qora temir zinapoya va sariq gaz trubasi.
+- **Orqa bog‘ va Qozonxona:** Panjarali bog‘dagi **3 ta yashil besedka**, 2 ta baland mo‘rili **Qozonxona** va **qizil o‘t o‘chirish shiti**, temir arkali orqa darvoza hamda sariq xo‘jalik xonasi.
+- **Sport va Yotoqxona hududi:** Zarg‘aldoq **Turnik/Brusya** majmuasi, **“SHIRIN KULCHA”** bufeti, o‘rtasida yashil yo‘lak va **ko‘k Damas** turgan **2 ta parallel 1-qavatli Yotoqxona/O‘quv qanoti** (ichida firuza 4 o‘rinli xonalar), voleybol to‘rli tuproq maydon, sharqiy `Evrozabor`, vertikal panelli **Katta Sport zali** va **Suv minorasi**.
 
 ## Ishga tushirish
-Windows’da `ISHGA_TUSHIRISH.bat` faylini ishga tushiring yoki terminalda:
+Windows’da [ISHGA_TUSHIRISH.bat](ISHGA_TUSHIRISH.bat) faylini oching yoki:
 ```bash
 python -m http.server 8765
 ```
-So‘ng brauzerda `http://localhost:8765/index.html` sahifasini oching.
+Jonli sayt: https://aliyevogabek894-cmyk.github.io/Turon-Maktabi/

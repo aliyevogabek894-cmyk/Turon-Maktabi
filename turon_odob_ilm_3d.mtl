@@ -39,9 +39,14 @@ d 1.000
 Ns 130
 
 newmtl Paving_Courtyard
-Kd 0.700 0.720 0.740
+Kd 0.660 0.680 0.710
 d 1.000
 Ns 24
+
+newmtl Dirt_Field
+Kd 0.550 0.450 0.330
+d 1.000
+Ns 10
 
 newmtl Asphalt_Road
 Kd 0.160 0.180 0.200
@@ -83,8 +88,28 @@ Kd 0.170 0.480 0.560
 d 1.000
 Ns 80
 
-newmtl Orange_Lada
-Kd 0.900 0.390 0.090
+newmtl Slate_Roof
+Kd 0.440 0.470 0.510
 d 1.000
-Ns 140
+Ns 100
+
+newmtl Orange_Metal
+Kd 0.920 0.350 0.050
+d 1.000
+Ns 124
+
+newmtl Yellow_Gas
+Kd 0.980 0.820 0.100
+d 1.000
+Ns 110
+
+newmtl Gazebo_Green
+Kd 0.080 0.330 0.180
+d 0.780
+Ns 30
+
+newmtl Damas_Blue
+Kd 0.110 0.310 0.850
+d 1.000
+Ns 130
 
