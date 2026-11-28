@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Turon Odob-Ilm (Furqat) — 1:1 Old, Ichki va Orqa 3D Loyihasi v2.5</title>
+<title>Turon Odob-Ilm (Furqat) — 1:1 DJI Dron Video & Foto-Mos 3D Loyihasi v2.6</title>
 <script type="importmap">
 {
   "imports": {
@@ -85,8 +85,8 @@
 
 <div class="hud-top">
   <div class="panel brand">
-    <h1>TURON ODOB-ILM (FURQAT) — 1:1 FOTO-MOS 3D MODEL (v2.5)</h1>
-    <p>Old fasad + Ichki qavatlar (Podvol Oshxona/Taekwondo, 2F Koridor/Sinflar, Zinapoya) + Orqa majmua (Turnik, Shirin Kulcha, 4 Yotoqxona)</p>
+    <h1>TURON ODOB-ILM (FURQAT) — 1:1 DRON VIDEO &amp; FOTO-MOS 3D MODEL (v2.6)</h1>
+    <p>DJI dron videosi 1:1 mosligi: B blok kumush qiya tom + 4 ta fonar, tabiiy daraxtlar va osmon gumbazi, old Batut, 4 ta avtobus, Podvol Oshxona/Taekwondo va 4 ta Yotoqxona</p>
   </div>
   <div class="panel top-actions">
     <button id="btn-walk" onclick="toggleWalk()">🚶 Ichkarida yurish (WASD)</button>
@@ -111,8 +111,9 @@
   </div>
 
   <div class="panel">
-    <div class="sec-title">Kamera nuqtalari (Foto-mos rakurslar)</div>
+    <div class="sec-title">Kamera nuqtalari (Dron &amp; Foto rakurslar)</div>
     <div class="btn-col">
+      <button onclick="goCam('drone')">0. DJI Dron ko‘rinishi (1:1 Video rakursi)</button>
       <button onclick="goCam('overview')">1. Umumiy ko‘rinish (Old + Orqa majmua)</button>
       <button onclick="goCam('front')">2. B blok old fasad</button>
       <button onclick="goCam('hubExt')">3. Innovation Hub (ko‘chaga qarab)</button>
@@ -160,9 +161,9 @@
 </div>
 
 <div class="panel info-box" id="info-box">
-  <h3 id="info-title">Turon Odob-Ilm Majmuasi (1:1 Foto-Mos v2.5)</h3>
-  <div class="dims" id="info-dims">B blok: 48×21×12.3m | Podvol: Oshxona + Taekwondo | 4 ta Yotoqxona qanoti</div>
-  <p id="info-desc">Taqdim etilgan 15+ tashqi va ichki rasmlar asosida 1:1 bezatildi: diagonal chiziqli zinapoya, olovrang-yashil 2F sinfxonalar, origami koridor, podvol shaxmat polli koridori, chapda nerjaveyka razdachali Oshxona va o‘ngda havorang-pushti Taekwondo sport zali.</p>
+  <h3 id="info-title">Turon Odob-Ilm Majmuasi (1:1 DJI Dron Video v2.6)</h3>
+  <div class="dims" id="info-dims">B blok: 48×21×12.4m (Kumush tom + 4 fonar) | Batut &amp; 4 ta mikroavtobus | 4 ta Yotoqxona</div>
+  <p id="info-desc">DJI dron videosi (DJI_20260709114303_0427_D) asosida 1:1 va tabiiy ko‘rinishda qurildi: kumushrang qiya B blok va yotoqxona tomlari, 6 ta tom fonari, old Batut va 4 ta oq mikroavtobus, qo‘shni 37-maktab maydoni hamda tabiiy osmon aks-sadoli yoritish.</p>
 </div>
 
 <script type="module">
@@ -178,35 +179,74 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.06;
+renderer.toneMappingExposure = 1.04;
 container.appendChild(renderer.domElement);
 
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xcce2f2);
-scene.fog = new THREE.FogExp2(0xcce2f2, 0.0022);
+function buildSkyEnvTexture(topCol, midCol, horCol, groundCol, sunGlow = '#fff9eb') {
+  const c = document.createElement('canvas');
+  c.width = 512; c.height = 256;
+  const g = c.getContext('2d');
+  const grad = g.createLinearGradient(0, 0, 0, 256);
+  grad.addColorStop(0.0, topCol);
+  grad.addColorStop(0.36, midCol);
+  grad.addColorStop(0.50, horCol);
+  grad.addColorStop(0.535, groundCol);
+  grad.addColorStop(1.0, groundCol);
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 512, 256);
+  const sunG = g.createRadialGradient(130, 68, 4, 130, 68, 56);
+  sunG.addColorStop(0.0, sunGlow);
+  sunG.addColorStop(1.0, 'rgba(255,255,255,0)');
+  g.fillStyle = sunG;
+  g.fillRect(0, 0, 512, 135);
+  const t = new THREE.CanvasTexture(c);
+  t.mapping = THREE.EquirectangularReflectionMapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
 
-const camera = new THREE.PerspectiveCamera(54, window.innerWidth / window.innerHeight, 0.15, 560);
-camera.position.set(58, 44, 34);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xd8e8f4);
+scene.fog = new THREE.FogExp2(0xd8e8f4, 0.0014);
+
+const pmrem = new THREE.PMREMGenerator(renderer);
+pmrem.compileEquirectangularShader();
+const skyTexDay = buildSkyEnvTexture('#3b7ac4', '#86bde8', '#dbeaf5', '#6e765e');
+const envDay = pmrem.fromEquirectangular(skyTexDay);
+scene.environment = envDay.texture;
+const skyDome = new THREE.Mesh(
+  new THREE.SphereGeometry(280, 32, 16),
+  new THREE.MeshBasicMaterial({ map: skyTexDay, side: THREE.BackSide, depthWrite: false, fog: false })
+);
+scene.add(skyDome);
+
+const camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight, 0.15, 620);
+camera.position.set(-2, 46, 66);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.07;
-controls.target.set(6, 2, -40);
-controls.maxPolarAngle = Math.PI / 2 + 0.06;
+controls.target.set(4, 2, -22);
+controls.maxPolarAngle = Math.PI / 2 + 0.04;
 
-const hemiLight = new THREE.HemisphereLight(0xeef6ff, 0x4b5563, 0.82);
+const hemiLight = new THREE.HemisphereLight(0xdbeafe, 0x7c6f5b, 0.88);
 scene.add(hemiLight);
-const sunLight = new THREE.DirectionalLight(0xfff7e6, 1.9);
-sunLight.position.set(-55, 68, 48);
+const sunLight = new THREE.DirectionalLight(0xfff5e4, 2.15);
+sunLight.position.set(-52, 74, 52);
 sunLight.castShadow = true;
-sunLight.shadow.mapSize.set(2048, 2048);
+sunLight.shadow.mapSize.set(4096, 4096);
+sunLight.shadow.bias = -0.0003;
+sunLight.shadow.normalBias = 0.02;
 sunLight.shadow.camera.near = 5;
-sunLight.shadow.camera.far = 270;
-sunLight.shadow.camera.left = -95;
-sunLight.shadow.camera.right = 95;
-sunLight.shadow.camera.top = 75;
-sunLight.shadow.camera.bottom = -120;
+sunLight.shadow.camera.far = 280;
+sunLight.shadow.camera.left = -100;
+sunLight.shadow.camera.right = 100;
+sunLight.shadow.camera.top = 80;
+sunLight.shadow.camera.bottom = -125;
 scene.add(sunLight);
+const fillLight = new THREE.DirectionalLight(0xbfdfff, 0.48);
+fillLight.position.set(45, 36, -30);
+scene.add(fillLight);
 
 const tex = createTextures();
 const { groups, interactiveZones, animatedFlags, interiorLights } = buildTuronCampus(scene, tex);
@@ -249,7 +289,8 @@ window.setSlice = (mode, btn) => {
 };
 
 const PRESETS = {
-  overview:    { pos: [58, 44, 34], target: [6, 2, -40] },
+  drone:       { pos: [0, 34, 52], target: [2, 5, -8] },
+  overview:    { pos: [-2, 46, 66], target: [4, 2, -22] },
   front:       { pos: [0.5, 2.4, 34.5], target: [0, 5.2, 10] },
   hubExt:      { pos: [30.5, 2.5, 42.5], target: [43.5, 4.0, 29.0] },
   lobby:       { pos: [0, 3.2, 13.8], target: [0, 3.1, 2.5] },
@@ -281,17 +322,23 @@ window.setLight = (mode, btn) => {
   document.querySelectorAll('.light-btn').forEach((b) => b.classList.remove('active'));
   btn.classList.add('active');
   if (mode === 'day') {
-    scene.background.set(0xcce2f2); scene.fog.color.set(0xcce2f2);
-    sunLight.color.set(0xfff7e6); sunLight.intensity = 1.9; sunLight.position.set(-55, 68, 48);
-    hemiLight.intensity = 0.82; interiorLights.forEach((l) => (l.intensity = 1.0));
+    scene.background.set(0xd8e8f4); scene.fog.color.set(0xd8e8f4);
+    skyDome.material.color.set(0xffffff);
+    sunLight.color.set(0xfff5e4); sunLight.intensity = 2.15; sunLight.position.set(-52, 74, 52);
+    fillLight.intensity = 0.48; hemiLight.intensity = 0.88;
+    interiorLights.forEach((l) => (l.intensity = 1.0));
   } else if (mode === 'golden') {
     scene.background.set(0xf5c89e); scene.fog.color.set(0xf5c89e);
-    sunLight.color.set(0xff9b42); sunLight.intensity = 2.1; sunLight.position.set(-65, 18, 25);
-    hemiLight.intensity = 0.56; interiorLights.forEach((l) => (l.intensity = 2.0));
+    skyDome.material.color.set(0xffb57a);
+    sunLight.color.set(0xff9b42); sunLight.intensity = 2.25; sunLight.position.set(-65, 18, 25);
+    fillLight.intensity = 0.25; hemiLight.intensity = 0.56;
+    interiorLights.forEach((l) => (l.intensity = 2.0));
   } else {
     scene.background.set(0x0b1220); scene.fog.color.set(0x0b1220);
+    skyDome.material.color.set(0x162238);
     sunLight.color.set(0x64748b); sunLight.intensity = 0.35;
-    hemiLight.intensity = 0.28; interiorLights.forEach((l) => (l.intensity = 3.5));
+    fillLight.intensity = 0.12; hemiLight.intensity = 0.28;
+    interiorLights.forEach((l) => (l.intensity = 3.5));
   }
 };
 

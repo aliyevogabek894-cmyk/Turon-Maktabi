@@ -1,9 +1,9 @@
 """
-Exports the v2.5 1:1 3D architectural model of Turon Odob-Ilm (Furqat branch)
-incorporating all exterior & interior photographic details:
-  - B blok (11-bay rear facade, interior Podvol Oshxona/Taekwondo, 2F classrooms/corridor)
-  - Innovation Hub (+X beyond gate, facing street)
-  - Detailed Turnik, Shirin Kulcha, 4 Golden-Ochre Yotoqxona Wings + 2 Gulzor alleys
+Exports the v2.6 1:1 3D architectural model of Turon Odob-Ilm (Furqat branch)
+matching the DJI drone footage (DJI_20260709114303_0427_D) + 15+ interior/exterior photos:
+  - B blok (kumush qiya profnastil tom + 4 ta fonar, 11-bay orqa fasad, Podvol, 2F)
+  - Innovation Hub (tom HVAC bloklari + ko'chaga qaragan fasad)
+  - Front Batut, 4 ta Turon mikroavtobusi, 37-maktab yashil maydoni, 4 Yotoqxona + 2 Gulzor
 """
 import json
 import math
@@ -178,6 +178,8 @@ def build_model():
     mb.add_mat("Tk_Mat_Blue", (0.36, 0.72, 0.86, 1.0), 0.05, 0.65)
     mb.add_mat("Slate_Roof", (0.44, 0.47, 0.51, 1.0), 0.35, 0.50)
     mb.add_mat("Orange_Metal", (0.92, 0.35, 0.05, 1.0), 0.45, 0.38)
+    mb.add_mat("Silver_Roof", (0.81, 0.84, 0.87, 1.0), 0.52, 0.34)
+    mb.add_mat("Batut_Blue", (0.01, 0.52, 0.78, 1.0), 0.05, 0.42)
     mb.add_mat("Gazebo_Green", (0.08, 0.33, 0.18, 0.78), 0.05, 0.85)
     mb.add_mat("Damas_Blue", (0.11, 0.31, 0.85, 1.0), 0.25, 0.35)
 
@@ -218,9 +220,14 @@ def build_model():
             mb.add_box("Bronze_Glass", rx, 0.92, -10.28, 1.68, 0.68, 0.52)
             for ry in (4.0, 7.45):
                 mb.add_box("Bronze_Glass", rx, ry, -10.28, 1.75, 1.66, 0.52)
-    mb.add_box("White_Trim", 0.0, 9.70, 0.0, 48.0, 0.26, 21.0)
+    mb.add_box("White_Trim", 0.0, 9.72, 0.0, 48.0, 0.22, 21.0)
+    for tier in range(5):
+        t = tier / 4.0
+        mb.add_box("Silver_Roof", 0.0, 10.12 + t * 2.15, 0.0, 47.6 - t * 15.2, 0.38, 20.6 - t * 19.6)
+    for dx in (-15.6, -5.8, 5.8, 15.6):
+        mb.add_box("Silver_Roof", dx, 11.48, 3.7, 1.45, 0.65, 1.75)
 
-    # 3. Innovation Hub
+    # 3. Innovation Hub (+ rooftop HVAC units)
     hx, hz = 43.0, 26.25
     mb.add_box("Brick_Plinth", 36.4, 0.36, 32.35, 4.8, 0.72, 0.42)
     mb.add_box("Charcoal_Parapet", 36.4, 3.76, 32.35, 4.8, 6.08, 0.38)
@@ -230,11 +237,15 @@ def build_model():
         if b < 3:
             mb.add_box("Clear_Glass", rx + 2.125, 3.4, 32.35, 3.55, 6.0, 0.20)
     mb.add_box("Charcoal_Parapet", hx, 7.28, hz, 18.1, 1.05, 12.6)
+    mb.add_box("White_Trim", 39.8, 7.62, 25.0, 1.85, 0.78, 1.25)
+    mb.add_box("White_Trim", 46.2, 7.62, 25.0, 1.85, 0.78, 1.25)
     mb.add_box("Charcoal_Parapet", 34.18, 3.4, hz, 0.38, 6.8, 12.5)
     mb.add_box("Charcoal_Parapet", 51.82, 3.4, hz, 0.38, 6.8, 12.5)
     mb.add_box("Charcoal_Parapet", hx, 3.4, 20.18, 18.0, 6.8, 0.38)
 
-    # 4. Rear Campus (Turnik, Shirin Kulcha, 4 Golden-Ochre Yotoqxona Wings + 2 Gulzor alleys!)
+    # 4. Rear Campus + Batut + 37-Maktab Turf Pitch + 4 Street Vans
+    mb.add_box("Batut_Blue", -20.5, 0.65, 25.0, 7.0, 1.3, 4.6)
+    mb.add_box("Lawn_Green", -40.5, 0.01, -55.0, 16.0, 0.06, 32.0)
     mb.add_box("Stucco_Cream", 18.15, 1.625, -15.0, 6.7, 3.25, 4.8)
     mb.add_box("Steel_Poles", 16.5, 4.1, -14.2, 0.5, 8.2, 0.5)
     mb.add_box("Steel_Poles", 19.9, 4.1, -14.2, 0.5, 8.2, 0.5)
@@ -247,20 +258,22 @@ def build_model():
     mb.add_box("Golden_Ochre", 37.2, 1.275, -20.8, 4.8, 2.55, 3.6)
 
     mb.add_box("White_Trim", 14.8, 1.4, -32.75, 4.4, 2.55, 4.5)
-    mb.add_box("Slate_Roof", 14.8, 3.0, -32.75, 4.8, 0.55, 4.9)
+    mb.add_box("Silver_Roof", 14.8, 3.0, -32.75, 4.8, 0.55, 4.9)
     for cx in (20.5, 36.0):
         mb.add_box("Golden_Ochre", cx, 1.80, -48.5, 7.0, 2.9, 36.0)
-        mb.add_box("Slate_Roof", cx, 3.68, -48.5, 7.9, 0.55, 36.0)
+        mb.add_box("Silver_Roof", cx, 3.68, -48.5, 7.9, 0.55, 36.0)
     for cz in (-70.0, -85.5):
         mb.add_box("Golden_Ochre", 6.15, 1.80, cz, 66.7, 2.9, 7.0)
-        mb.add_box("Slate_Roof", 6.15, 3.68, cz, 67.3, 0.55, 7.9)
+        mb.add_box("Silver_Roof", 6.15, 3.68, cz, 67.3, 0.55, 7.9)
     mb.add_box("Damas_Blue", 25.4, 1.04, -34.5, 1.40, 1.58, 3.48)
     mb.add_box("Steel_Poles", -2.8, 6.0, -93.05, 2.8, 12.0, 2.8)
     mb.add_box("Orange_Metal", -7.3, 0.56, 18.8, 1.61, 0.62, 4.10)
+    for vx in (-22.0, -11.5, -1.5, 12.5):
+        mb.add_box("White_Trim", vx, 1.15, 37.2, 1.85, 1.80, 4.65, -0.28)
 
     mb.export_glb(os.path.join(OUT_DIR, "turon_odob_ilm_3d.glb"))
     mb.export_obj(os.path.join(OUT_DIR, "turon_odob_ilm_3d.obj"), os.path.join(OUT_DIR, "turon_odob_ilm_3d.mtl"))
-    print("EXPORT_V25_SUCCESS")
+    print("EXPORT_V26_SUCCESS")
 
 
 if __name__ == "__main__":

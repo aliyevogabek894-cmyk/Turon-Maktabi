@@ -103,6 +103,16 @@ Kd 0.920 0.350 0.050
 d 1.000
 Ns 124
 
+newmtl Silver_Roof
+Kd 0.810 0.840 0.870
+d 1.000
+Ns 131
+
+newmtl Batut_Blue
+Kd 0.010 0.520 0.780
+d 1.000
+Ns 116
+
 newmtl Gazebo_Green
 Kd 0.080 0.330 0.180
 d 0.780

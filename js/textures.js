@@ -41,16 +41,16 @@ function loadImgTex(url, fallbackTex) {
 export function createTextures() {
   const tex = {};
 
-  // 1. Octagonal & diamond courtyard pavers (Photo 1 & 5)
+  // 1. Octagonal & diamond sun-lit courtyard pavers (DJI Drone 00:06-00:09 & Photos)
   {
     const [c, g] = makeCanvas(512, 512);
-    g.fillStyle = '#aeb3b8';
+    g.fillStyle = '#c4bfb6';
     g.fillRect(0, 0, 512, 512);
     const step = 128;
     for (let y = 0; y < 512; y += step) {
       for (let x = 0; x < 512; x += step) {
         const cx = x + step / 2, cy = y + step / 2, r = 56;
-        g.fillStyle = '#c5c9cd';
+        g.fillStyle = ((x + y) / step) % 2 === 0 ? '#d2cdc4' : '#c6c0b6';
         g.beginPath();
         for (let i = 0; i < 8; i++) {
           const a = (i * Math.PI) / 4 + Math.PI / 8;
@@ -59,18 +59,18 @@ export function createTextures() {
         }
         g.closePath();
         g.fill();
-        g.strokeStyle = '#686e75';
+        g.strokeStyle = '#7b7871';
         g.lineWidth = 3;
         g.stroke();
 
-        g.strokeStyle = '#9aa0a6';
+        g.strokeStyle = '#aba59b';
         g.lineWidth = 2;
         g.beginPath();
         g.arc(cx, cy, 34, 0, Math.PI * 2);
         g.stroke();
       }
     }
-    g.fillStyle = '#333840';
+    g.fillStyle = '#383d44';
     for (let y = 0; y <= 512; y += step) {
       for (let x = 0; x <= 512; x += step) {
         g.beginPath();
@@ -99,15 +99,15 @@ export function createTextures() {
     tex.granite = asTex(c, 10, 2);
   }
 
-  // 3. Cream travertine / stucco facade
+  // 3. Natural sunlit warm ivory travertine stucco facade
   {
     const [c, g] = makeCanvas(256, 256);
-    g.fillStyle = '#eeebe2';
+    g.fillStyle = '#f3efe6';
     g.fillRect(0, 0, 256, 256);
-    for (let i = 0; i < 2000; i++) {
-      const d = Math.random() > 0.5 ? 245 : 225;
-      g.fillStyle = `rgba(${d},${d - 3},${d - 10},0.25)`;
-      g.fillRect(Math.random() * 256, Math.random() * 256, 3, 2);
+    for (let i = 0; i < 2200; i++) {
+      const d = Math.random() > 0.5 ? 248 : 228;
+      g.fillStyle = `rgba(${d},${d - 4},${d - 12},0.24)`;
+      g.fillRect(Math.random() * 256, Math.random() * 256, 4, 2);
     }
     tex.stucco = asTex(c, 4, 4);
   }
@@ -500,30 +500,80 @@ export function createTextures() {
     tex.sportRibbed = asTex(c, 14, 2);
   }
 
-  // 16. Compacted Dirt / Sand Sports Field (Video 2 & Video 4)
+  // 16. Natural Sunlit Compacted Earth / Dry Turf Field (DJI Drone 00:00-00:06)
   {
     const [c, g] = makeCanvas(512, 512);
-    g.fillStyle = '#8b7355'; g.fillRect(0, 0, 512, 512);
-    for (let i = 0; i < 4000; i++) {
+    g.fillStyle = '#a58d6b'; g.fillRect(0, 0, 512, 512);
+    for (let p = 0; p < 36; p++) {
+      g.fillStyle = p % 2 === 0 ? 'rgba(196,174,140,0.22)' : 'rgba(130,108,78,0.18)';
+      g.beginPath();
+      g.ellipse(Math.random() * 512, Math.random() * 512, 30 + Math.random() * 65, 20 + Math.random() * 45, Math.random() * 3, 0, Math.PI * 2);
+      g.fill();
+    }
+    for (let i = 0; i < 4500; i++) {
       const d = Math.random();
-      g.fillStyle = d > 0.6 ? '#766147' : d > 0.25 ? '#9c8364' : '#5e6b48';
-      g.fillRect(Math.random() * 512, Math.random() * 512, 3, 3);
+      g.fillStyle = d > 0.65 ? '#bfa988' : d > 0.30 ? '#8c7456' : '#737f57';
+      g.fillRect(Math.random() * 512, Math.random() * 512, 2 + (d > 0.8 ? 2 : 0), 2);
     }
     tex.dirtField = asTex(c, 8, 8);
   }
 
-  // 17. Corrugated Gray Metal Roof Sheets for 1-Story Wings & Gazebos
+  // 17. Bright Silver-Zinc Standing-Seam Metal Profnastil Roof (DJI Drone 00:00-00:09)
   {
-    const [c, g] = makeCanvas(256, 256);
-    g.fillStyle = '#717882'; g.fillRect(0, 0, 256, 256);
-    for (let x = 0; x < 256; x += 16) {
-      g.fillStyle = '#525861'; g.fillRect(x, 0, 5, 256);
-      g.fillStyle = '#9ca3af'; g.fillRect(x + 5, 0, 4, 256);
+    const [c, g] = makeCanvas(512, 512);
+    g.fillStyle = '#cfd5dc'; g.fillRect(0, 0, 512, 512);
+    for (let x = 0; x < 512; x += 16) {
+      g.fillStyle = '#aeb6c1'; g.fillRect(x, 0, 4, 512);
+      g.fillStyle = '#eaedf2'; g.fillRect(x + 4, 0, 3, 512);
     }
-    tex.slateRoof = asTex(c, 16, 4);
+    g.strokeStyle = 'rgba(155, 163, 175, 0.35)';
+    g.lineWidth = 2;
+    for (let y = 0; y < 512; y += 128) { g.beginPath(); g.moveTo(0, y); g.lineTo(512, y); g.stroke(); }
+    tex.silverRoof = asTex(c, 18, 6);
   }
 
-  // 18. White Mesh Volleyball Net (Video 2 00:02)
+  // 18. Light Daylight Silver-Gray Corrugated Roof Sheets for Cottages & Gazebos
+  {
+    const [c, g] = makeCanvas(256, 256);
+    g.fillStyle = '#b9c0c8'; g.fillRect(0, 0, 256, 256);
+    for (let x = 0; x < 256; x += 16) {
+      g.fillStyle = '#9aa2ac'; g.fillRect(x, 0, 4, 256);
+      g.fillStyle = '#d8dde4'; g.fillRect(x + 4, 0, 4, 256);
+    }
+    tex.slateRoof = asTex(c, 18, 4);
+  }
+
+  // 19. Natural Variegated Lawn Grass Texture (front lawns & gulzors)
+  {
+    const [c, g] = makeCanvas(256, 256);
+    g.fillStyle = '#2d6c2c'; g.fillRect(0, 0, 256, 256);
+    for (let i = 0; i < 3200; i++) {
+      const r = Math.random();
+      g.fillStyle = r > 0.65 ? '#3a8235' : r > 0.3 ? '#245924' : '#4a8f41';
+      g.fillRect(Math.random() * 256, Math.random() * 256, 2, 3);
+    }
+    tex.grassTex = asTex(c, 6, 4);
+  }
+
+  // 20. Neighboring 37-Maktab Green Artificial Turf Pitch (DJI Drone 00:00-00:04 Left)
+  {
+    const [c, g] = makeCanvas(512, 1024);
+    g.fillStyle = '#2d7a36'; g.fillRect(0, 0, 512, 1024);
+    for (let y = 0; y < 1024; y += 64) {
+      if ((y / 64) % 2 === 0) {
+        g.fillStyle = '#368a40'; g.fillRect(0, y, 512, 64);
+      }
+    }
+    g.strokeStyle = 'rgba(248,250,252,0.85)'; g.lineWidth = 6;
+    g.strokeRect(24, 24, 464, 976);
+    g.beginPath(); g.moveTo(24, 512); g.lineTo(488, 512); g.stroke();
+    g.beginPath(); g.arc(256, 512, 64, 0, Math.PI * 2); g.stroke();
+    g.strokeRect(136, 24, 240, 120);
+    g.strokeRect(136, 880, 240, 120);
+    tex.neighborPitch = asTex(c, 1, 1);
+  }
+
+  // 21. White Mesh Volleyball Net (Video 2 00:02)
   {
     const [c, g] = makeCanvas(256, 128);
     g.clearRect(0, 0, 256, 128);
@@ -534,7 +584,7 @@ export function createTextures() {
     tex.volleyballNet = asTex(c, 8, 1);
   }
 
-  // 19. Outdoor Basketball Court Surface with White Markings
+  // 22. Outdoor Basketball Court Surface with White Markings
   {
     const [c, g] = makeCanvas(512, 256);
     g.fillStyle = '#3b4d63';
