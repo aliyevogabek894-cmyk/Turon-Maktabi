@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Turon Odob-Ilm (Furqat) — 1:1 DJI Dron Video & Foto-Mos 3D Loyihasi v2.6</title>
+<title>Turon Odob-Ilm (Furqat) — 1:1 DJI Dron Videolari & Foto-Mos 3D Loyihasi v2.7</title>
 <script type="importmap">
 {
   "imports": {
@@ -85,8 +85,8 @@
 
 <div class="hud-top">
   <div class="panel brand">
-    <h1>TURON ODOB-ILM (FURQAT) — 1:1 DRON VIDEO &amp; FOTO-MOS 3D MODEL (v2.6)</h1>
-    <p>DJI dron videosi 1:1 mosligi: B blok kumush qiya tom + 4 ta fonar, tabiiy daraxtlar va osmon gumbazi, old Batut, 4 ta avtobus, Podvol Oshxona/Taekwondo va 4 ta Yotoqxona</p>
+    <h1>TURON ODOB-ILM (FURQAT) — 1:1 DRON VIDEOLARI &amp; FOTO-MOS 3D MODEL (v2.7)</h1>
+    <p>2 ta DJI dron videosi 1:1 mosligi: B blok kumush tom + 4 ta fonar + tom baki, 2 ta ping-pong stoli, ochiq darvoza, atirgullar, elektr ustuni, uzoq ufq daraxtlari va Podvol/2F ichi</p>
   </div>
   <div class="panel top-actions">
     <button id="btn-walk" onclick="toggleWalk()">🚶 Ichkarida yurish (WASD)</button>
@@ -113,7 +113,8 @@
   <div class="panel">
     <div class="sec-title">Kamera nuqtalari (Dron &amp; Foto rakurslar)</div>
     <div class="btn-col">
-      <button onclick="goCam('drone')">0. DJI Dron ko‘rinishi (1:1 Video rakursi)</button>
+      <button onclick="goCam('drone')">0a. Dron: Tepadan umumiy (1-video)</button>
+      <button onclick="goCam('frontDrone')">0b. Dron: Old fasad &amp; Ping-pong (2-video)</button>
       <button onclick="goCam('overview')">1. Umumiy ko‘rinish (Old + Orqa majmua)</button>
       <button onclick="goCam('front')">2. B blok old fasad</button>
       <button onclick="goCam('hubExt')">3. Innovation Hub (ko‘chaga qarab)</button>
@@ -161,9 +162,9 @@
 </div>
 
 <div class="panel info-box" id="info-box">
-  <h3 id="info-title">Turon Odob-Ilm Majmuasi (1:1 DJI Dron Video v2.6)</h3>
-  <div class="dims" id="info-dims">B blok: 48×21×12.4m (Kumush tom + 4 fonar) | Batut &amp; 4 ta mikroavtobus | 4 ta Yotoqxona</div>
-  <p id="info-desc">DJI dron videosi (DJI_20260709114303_0427_D) asosida 1:1 va tabiiy ko‘rinishda qurildi: kumushrang qiya B blok va yotoqxona tomlari, 6 ta tom fonari, old Batut va 4 ta oq mikroavtobus, qo‘shni 37-maktab maydoni hamda tabiiy osmon aks-sadoli yoritish.</p>
+  <h3 id="info-title">Turon Odob-Ilm Majmuasi (1:1 DJI Dron Videolari v2.7)</h3>
+  <div class="dims" id="info-dims">B blok: 48×21×12.7m (4 fonar + bak) | 2 ta Ping-Pong | Ochiq darvoza &amp; Batut</div>
+  <p id="info-desc">Har ikkala DJI dron videosi (0427_D &amp; 0425_D) hamda 15+ fotosurat asosida 1:1 va tabiiy qurildi: erkin joylashgan qizil TURON ODOB-ILM yozuvi, 2 ustunli ayvon, oq yon qanotlar, 2 ta ko‘k tennis stoli, SAT banneri, atirgulli klumba va ufq daraxtzorlari.</p>
 </div>
 
 <script type="module">
@@ -290,6 +291,7 @@ window.setSlice = (mode, btn) => {
 
 const PRESETS = {
   drone:       { pos: [0, 34, 52], target: [2, 5, -8] },
+  frontDrone:  { pos: [-7, 13, 52], target: [0, 6.2, 12] },
   overview:    { pos: [-2, 46, 66], target: [4, 2, -22] },
   front:       { pos: [0.5, 2.4, 34.5], target: [0, 5.2, 10] },
   hubExt:      { pos: [30.5, 2.5, 42.5], target: [43.5, 4.0, 29.0] },

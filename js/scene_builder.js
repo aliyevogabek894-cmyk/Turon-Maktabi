@@ -103,6 +103,7 @@ export function buildTuronCampus(scene, tex) {
     parkWood: new THREE.MeshStandardMaterial({ color: 0x8a5a36, roughness: 0.7 }),
     gazeboRoof: new THREE.MeshStandardMaterial({ color: 0x5c3a21, roughness: 0.6 }),
     gazeboMesh: new THREE.MeshStandardMaterial({ color: 0x14532d, roughness: 0.85, transparent: true, opacity: 0.72, side: THREE.DoubleSide }),
+    pingPongMat: new THREE.MeshStandardMaterial({ map: tex.pingPong, roughness: 0.45 }),
     shirinKulcha: new THREE.MeshStandardMaterial({ map: tex.shirinKulcha, roughness: 0.35 }),
     fireCabinet: new THREE.MeshStandardMaterial({ map: tex.fireCabinet, roughness: 0.4 }),
     concretePath: new THREE.MeshStandardMaterial({ color: 0xa6acb2, roughness: 0.86 }),
@@ -218,28 +219,48 @@ export function buildTuronCampus(scene, tex) {
   }
   box(groups.site, 240, 0.05, 12.0, new THREE.MeshStandardMaterial({ map: tex.road, roughness: 0.85 }), 8, -0.02, 46.2, 0, 0, 0, false);
 
-  // Front Fence along Z = +33.0
+  // Front Fence, Stone Klumba with Roses, Open Driveway Gate & Utility Pole (DJI Video #2: 00:08-00:19!)
   const klumbaMat = new THREE.MeshStandardMaterial({ map: tex.stoneBrick, roughness: 0.8 });
-  box(groups.site, 59.5, 0.58, 0.58, klumbaMat, -2.25, 0.29, 33.8);
-  for (let sx = -30.5; sx <= 26.5; sx += 2.3) {
+  box(groups.site, 20.8, 0.58, 0.58, klumbaMat, -21.2, 0.29, 33.8);
+  box(groups.site, 31.5, 0.58, 0.58, klumbaMat, 11.4, 0.29, 33.8);
+  for (let sx = -30.5; sx <= 26.5; sx += 2.2) {
+    if (sx > -10.8 && sx < -4.2) continue;
     const bush = new THREE.Mesh(new THREE.DodecahedronGeometry(0.42, 1), sx % 2 === 0 ? M.treeMid : M.treeLight);
     bush.position.set(sx, 0.78, 33.8);
     bush.castShadow = true;
     groups.site.add(bush);
+    const rose = new THREE.Mesh(new THREE.SphereGeometry(0.18, 7, 6), M.flowerPink);
+    rose.position.set(sx + 0.55, 0.74, 34.02);
+    groups.site.add(rose);
   }
   const bMat1 = new THREE.MeshStandardMaterial({ map: tex.fenceBanner1, roughness: 0.55 });
   const bMat2 = new THREE.MeshStandardMaterial({ map: tex.fenceBanner2, roughness: 0.55 });
+  const bMatSAT = new THREE.MeshStandardMaterial({ map: tex.fenceBannerSAT, roughness: 0.55 });
   for (let i = 0; i <= 11; i++) {
     const px = -31.5 + i * 5.3;
     box(groups.site, 0.48, 2.35, 0.48, M.stucco, px, 1.18, 33.0);
     box(groups.site, 0.58, 0.15, 0.58, M.charcoal, px, 2.38, 33.0);
     if (i < 11) {
+      if (i === 4) {
+        // Open driveway gate leaves folded inside courtyard (dji2_19s center-left!)
+        box(groups.site, 0.10, 2.05, 2.45, M.blackSteel, px + 0.25, 1.05, 31.8);
+        box(groups.site, 0.10, 2.05, 2.45, M.blackSteel, px + 5.05, 1.05, 31.8);
+        continue;
+      }
       box(groups.site, 4.82, 0.36, 0.25, M.stucco, px + 2.65, 0.18, 33.0);
       box(groups.site, 4.82, 0.06, 0.06, M.blackSteel, px + 2.65, 2.02, 33.0);
       box(groups.site, 4.82, 0.06, 0.06, M.blackSteel, px + 2.65, 0.90, 33.0);
-      if (i >= 7) box(groups.site, 4.5, 1.55, 0.06, i % 2 === 0 ? bMat1 : bMat2, px + 2.65, 1.25, 33.04);
+      if (i >= 6) {
+        const bm = i === 9 ? bMatSAT : (i % 2 === 0 ? bMat1 : bMat2);
+        box(groups.site, 4.5, 1.55, 0.06, bm, px + 2.65, 1.25, 33.04);
+      }
     }
   }
+  // Street Utility Pole + Overhead Power Lines along Z = 34.4 (dji2_15s/dji2_19s)
+  box(groups.site, 0.28, 7.6, 0.28, M.cinder, -9.5, 3.8, 34.4);
+  box(groups.site, 1.6, 0.12, 0.12, M.blackSteel, -9.5, 7.2, 34.4);
+  box(groups.site, 76.0, 0.025, 0.025, M.blackSteel, 4.0, 7.25, 34.4, 0, 0, 0, false);
+  box(groups.site, 76.0, 0.025, 0.025, M.blackSteel, 4.0, 6.85, 34.4, 0, 0, 0, false);
   box(groups.site, 0.48, 2.5, 0.48, M.stucco, 32.8, 1.25, 33.0);
   box(groups.site, 0.12, 2.2, 4.2, M.charcoal, 32.8, 1.1, 30.8);
 
@@ -264,8 +285,13 @@ export function buildTuronCampus(scene, tex) {
     addPoplar(groups.site, -29.2, tz, 11.8 + (popIdx % 3) * 0.9, popIdx);
     popIdx++;
   }
-  // Street sidewalk shade trees outside entrance (-X..+X, Z = 39.2)
-  [-28.5, -2.5, 29.0, 54.0].forEach((tx, idx) => addBroadTree(groups.site, tx, 39.2, 1.15, idx));
+  // Distant Fergana Valley Tree Windbreak Belt across Back Horizon (dji2_0s-19s background!)
+  for (let hx = -75, hIdx = 0; hx <= 85; hx += 13.5, hIdx++) {
+    addPoplar(groups.site, hx, -135 - (hIdx % 2) * 14, 15.0 + (hIdx % 3) * 2.0, hIdx + 3);
+    addBroadTree(groups.site, hx + 6.5, -142 - (hIdx % 3) * 12, 1.85, hIdx);
+  }
+  // Street sidewalk deciduous trees outside entrance (-X..+X, Z = 39.8)
+  [-30.0, -17.0, -5.0, 8.0, 21.0, 34.0, 54.0].forEach((tx, idx) => addBroadTree(groups.site, tx, 39.8, 1.25, idx));
 
   // Front Ornamental Lawns (Granite curb borders, tubular steel rails, 6 organic cypresses each, rose bushes & benches!)
   [-16.8, 16.8].forEach((lx, sideIdx) => {
@@ -335,6 +361,16 @@ export function buildTuronCampus(scene, tex) {
   tagZone(kTable, 'Old Hovli Soyaboni va Axborot Nuqtasi', '2.6 × 2.6 × 3.0 m', 'Dron videosida o‘ng old maydonchada ko‘ringan havorang soyabon.');
   frontKiosk.position.set(20.8, 0, 20.6);
   groups.site.add(frontKiosk);
+
+  // 2 Outdoor Blue Ping-Pong Tables (Visible in Drone Video #2: dji2_15s & dji2_19s!)
+  [18.2, 20.8].forEach((pz, pIdx) => {
+    const ppTop = box(groups.site, 2.74, 0.06, 1.52, M.pingPongMat, 15.2, 0.76, pz);
+    box(groups.site, 0.04, 0.15, 1.54, M.whiteTrim, 15.2, 0.86, pz);
+    [[-1.0, -0.55], [1.0, -0.55], [-1.0, 0.55], [1.0, 0.55]].forEach(([lx, lz]) => {
+      box(groups.site, 0.06, 0.74, 0.06, M.blackSteel, 15.2 + lx, 0.37, pz + lz);
+    });
+    if (pIdx === 0) tagZone(ppTop, 'Stol tennisi maydonchasi (2 ta Ping-Pong stoli)', '2 × (2.74 × 1.52 m)', '2-dron videosida (15–19s) o‘ng old hovlida ko‘ringan ko‘k tennis stollari.');
+  });
 
   [tex.flagUZ, tex.flagUK, tex.flagRU].forEach((ft, idx) => {
     const fx = 11.8 + idx * 2.3, fz = 17.6;
@@ -624,8 +660,6 @@ export function buildTuronCampus(scene, tex) {
     }
     box(groups.bExterior, 1.6, 7.0, 0.44, M.stucco, startX + dir * 14.0, 5.0, 10.28);
     box(groups.bExterior, 14.85, 1.80, 0.54, M.parapet, startX + dir * 7.4, 10.60, 10.32);
-    box(groups.bExterior, 14.95, 0.16, 0.60, M.whiteTrim, startX + dir * 7.4, 11.54, 10.32);
-    box(groups.bExterior, 14.95, 0.14, 0.58, M.whiteTrim, startX + dir * 7.4, 9.72, 10.32);
     box(groups.bExterior, 0.82, 0.55, 0.34, M.acWhite, startX + dir * 3.85, 7.2, 10.62);
     box(groups.bExterior, 0.82, 0.55, 0.34, M.acWhite, startX + dir * 3.85, 5.0, 10.62);
     box(groups.bExterior, 0.82, 0.55, 0.34, M.acWhite, startX + dir * 11.2, 7.2, 10.62);
@@ -648,34 +682,34 @@ export function buildTuronCampus(scene, tex) {
   box(groups.bExterior, 0.08, 2.9, 0.30, M.charcoal, -0.60, 7.85, 14.96);
   box(groups.bExterior, 0.08, 2.9, 0.30, M.charcoal, 0.60, 7.85, 14.96);
   box(groups.bExterior, 12.1, 2.60, 0.54, M.parapet, 0, 11.00, 14.90);
-  box(groups.bExterior, 12.2, 0.16, 0.62, M.whiteTrim, 0, 12.34, 14.90);
 
   [-1, 1].forEach((s) => {
     const ang = -s * Math.atan2(4.6, 3.2);
-    box(groups.bExterior, 5.65, 8.2, 0.46, M.charcoal, s * 7.6, 5.6, 12.8, 0, ang, 0);
+    box(groups.bExterior, 5.65, 8.2, 0.46, M.stucco, s * 7.6, 5.6, 12.8, 0, ang, 0);
     box(groups.bExterior, 5.70, 2.60, 0.54, M.parapet, s * 7.6, 11.00, 12.8, 0, ang, 0);
-    box(groups.bExterior, 5.75, 0.16, 0.62, M.whiteTrim, s * 7.6, 12.34, 12.8, 0, ang, 0);
     [-0.82, 0.82].forEach((off) => {
       const lx = s * 7.6 + off * Math.cos(ang);
       const lz = 12.8 - off * Math.sin(ang);
-      box(groups.bExterior, 0.92, 7.4, 0.50, M.bronzeGlass, lx, 5.3, lz, 0, ang, 0);
+      box(groups.bExterior, 1.06, 7.6, 0.48, M.grayTrim, lx, 5.3, lz, 0, ang, 0);
+      box(groups.bExterior, 0.90, 7.4, 0.52, M.bronzeGlass, lx, 5.3, lz, 0, ang, 0);
     });
   });
 
-  const portico = box(groups.bExterior, 12.2, 1.25, 3.85, M.whiteTrim, 0, 5.55, 17.02);
-  tagZone(portico, 'Markaziy kirish portali (B blok)', '12.0 m eni · +12.30 m balandlik', '9 ta oq chiziqli granit zina, o‘ngda pandus, 4 ta oq ustun va ochiq B blok eshigi.');
-  box(groups.bExterior, 12.25, 0.28, 3.90, M.charcoal, 0, 6.28, 17.02);
+  const portico = box(groups.bExterior, 12.2, 1.02, 3.85, M.whiteTrim, 0, 5.45, 17.02);
+  tagZone(portico, 'Markaziy kirish portali (B blok)', '12.0 m eni · +12.30 m balandlik', '9 ta oq chiziqli granit zina, o‘ngda pandus, 2 ta oq ustun va ochiq B blok eshigi.');
+  box(groups.bExterior, 12.25, 0.34, 3.90, M.charcoal, 0, 6.13, 17.02);
   box(groups.bExterior, 0.48, 3.5, 0.48, M.whiteTrim, -5.45, 3.25, 18.68);
   box(groups.bExterior, 0.48, 3.5, 0.48, M.whiteTrim, 5.45, 3.25, 18.68);
-  [-2.15, 2.15].forEach((colX) => {
-    const col = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.20, 3.5, 14), M.whiteTrim);
-    col.position.set(colX, 3.25, 18.68);
-    col.castShadow = true;
-    groups.bExterior.add(col);
+  // Porch plant pots & metal corner rails (dji2_19s!)
+  [-4.7, 4.7].forEach((px) => {
+    box(groups.bExterior, 0.55, 0.48, 0.55, M.charcoal, px, 1.74, 17.9);
+    const bush = new THREE.Mesh(new THREE.DodecahedronGeometry(0.45, 1), M.treeMid);
+    bush.position.set(px, 2.25, 17.9);
+    groups.bExterior.add(bush);
   });
-  box(groups.bExterior, 9.6, 0.78, 0.08, new THREE.MeshStandardMaterial({ map: tex.signSub }), 0, 5.55, 18.98);
-  box(groups.bExterior, 7.8, 0.88, 0.14, new THREE.MeshStandardMaterial({ map: tex.signMain }), 1.2, 6.92, 18.68);
-  box(groups.bExterior, 1.6, 0.88, 0.12, new THREE.MeshStandardMaterial({ map: tex.emblem }), -4.1, 6.92, 18.68);
+  box(groups.bExterior, 9.6, 0.78, 0.08, new THREE.MeshStandardMaterial({ map: tex.signSub }), 0, 5.45, 18.98);
+  box(groups.bExterior, 8.2, 0.96, 0.06, new THREE.MeshStandardMaterial({ map: tex.signMain, transparent: true, alphaTest: 0.3 }), 1.2, 6.72, 18.78);
+  box(groups.bExterior, 1.6, 0.88, 0.12, new THREE.MeshStandardMaterial({ map: tex.emblem }), -4.1, 6.72, 18.78);
 
   box(groups.bExterior, 12.0, 1.50, 3.70, M.granite, 0, 0.75, 16.95);
   [-5.72, 5.72].forEach((cx) => box(groups.bExterior, 0.46, 1.15, 2.9, M.granite, cx, 0.575, 20.2));
@@ -700,7 +734,6 @@ export function buildTuronCampus(scene, tex) {
   box(groups.bExterior, 0.44, 9.15, 9.4, M.stucco, 23.78, 5.12, -5.8);
   box(groups.bExterior, 0.44, 1.2, 21.0, M.charcoal, 23.78, 9.1, 0);
   box(groups.bExterior, 0.46, 1.8, 21.0, M.parapet, 23.78, 10.6, 0);
-  box(groups.bExterior, 0.52, 0.16, 21.1, M.whiteTrim, 23.78, 11.54, 0);
   box(groups.bExterior, 0.25, 7.6, 1.85, M.bronzeGlass, 23.78, 5.4, 0);
   [-4.2, -8.2].forEach((wz) => {
     [1.45, 4.35, 7.35].forEach((wy) => {
@@ -716,15 +749,16 @@ export function buildTuronCampus(scene, tex) {
   }
   box(groups.bExterior, 0.08, 1.0, 4.5, M.blackSteel, 25.02, 1.6, -7.8, Math.atan2(1.8, 4.4), 0, 0);
 
-  // East (-X) Side Wall + 1F Annex (Image 4 right!)
+  // East (-X) Side Wall + 1F Annex (Windows on BOTH Front +Z & Rear -Z: dji2_19s left!)
   box(groups.bExterior, 0.44, 9.15, 21.0, M.stucco, -23.78, 5.12, 0);
   box(groups.bExterior, 0.46, 1.8, 21.0, M.parapet, -23.78, 10.6, 0);
-  box(groups.bExterior, 0.52, 0.16, 21.1, M.whiteTrim, -23.78, 11.54, 0);
   const eastAnnex = box(groups.bExterior, 6.2, 4.1, 10.0, M.stucco, -27.1, 2.05, -3.5);
-  tagZone(eastAnnex, 'Sharqiy 1-qavatli qanot', '6.2 × 10.0 × 4.1 m (~62 m²)', '4-rasm o‘ng chetidagi 1-qavatli qanot (2 ta oq deraza va konditsioner bilan).');
+  tagZone(eastAnnex, 'Sharqiy 1-qavatli qanot', '6.2 × 10.0 × 4.1 m (~62 m²)', '4-rasm va 2-dron videosi chap chetidagi 1-qavatli qanot.');
   box(groups.bExterior, 6.3, 0.5, 10.1, M.charcoal, -27.1, 4.25, -3.5);
-  box(groups.bExterior, 1.4, 1.3, 0.15, M.bronzeGlass, -26.0, 2.35, -8.52);
-  box(groups.bExterior, 1.4, 1.3, 0.15, M.bronzeGlass, -28.2, 2.35, -8.52);
+  [-8.52, 1.52].forEach((az) => {
+    box(groups.bExterior, 1.4, 1.3, 0.15, M.bronzeGlass, -26.0, 2.35, az);
+    box(groups.bExterior, 1.4, 1.3, 0.15, M.bronzeGlass, -28.2, 2.35, az);
+  });
   box(groups.bExterior, 0.80, 0.52, 0.34, M.acWhite, -29.4, 3.0, -8.62);
 
   // South (Rear) Facade of B blok — 11 Bays + Stepped Pilasters + Slim White Roof Cornice (Image 4!)
@@ -759,10 +793,10 @@ export function buildTuronCampus(scene, tex) {
     const sh = 1.50 - st * (1.50 / 7);
     box(groups.bExterior, 4.2, sh, 0.36, M.granite, 0, sh / 2, -10.65 - st * 0.36);
   }
-  // B blok Base Deck + Bright Silver Ribbed Pitched Roof & 4 Triangular Attic Dormers (DJI Drone 00:05-00:09!)
+  // B blok Base Deck + Bright Silver Ribbed Pitched Roof & 4 Triangular Attic Dormers + Tank (DJI Drone Videos!)
   extrudePlan(groups.bRoof, 0.22, 9.72, new THREE.MeshStandardMaterial({ color: 0xbec5cd, roughness: 0.85 }));
   {
-    const yE = 9.96, yR = 12.36;
+    const yE = 10.02, yR = 12.70;
     const verts = [], uvs = [];
     const pushTri = (a, b, c) => {
       verts.push(...a, ...b, ...c);
@@ -775,9 +809,9 @@ export function buildTuronCampus(scene, tex) {
     pushTri([-23.85, yE, 10.35], [-23.85, yE, -10.35], [-16.2, yR, 0]);
     pushTri([23.85, yE, -10.35], [23.85, yE, 10.35], [16.2, yR, 0]);
     // Central Projection Hipped Roof
-    pushQuad([-9.1, yE, 10.35], [-5.9, yE, 14.8], [0, 12.05, 11.2], [0, yR, 0]);
-    pushQuad([5.9, yE, 14.8], [9.1, yE, 10.35], [0, yR, 0], [0, 12.05, 11.2]);
-    pushTri([-5.9, yE, 14.8], [5.9, yE, 14.8], [0, 12.05, 11.2]);
+    pushQuad([-9.1, yE, 10.35], [-5.9, yE, 14.8], [0, 12.25, 11.2], [0, yR, 0]);
+    pushQuad([5.9, yE, 14.8], [9.1, yE, 10.35], [0, yR, 0], [0, 12.25, 11.2]);
+    pushTri([-5.9, yE, 14.8], [5.9, yE, 14.8], [0, 12.25, 11.2]);
 
     const rGeo = new THREE.BufferGeometry();
     rGeo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
@@ -787,24 +821,29 @@ export function buildTuronCampus(scene, tex) {
     bSilverRoof.castShadow = true;
     bSilverRoof.receiveShadow = true;
     groups.bRoof.add(bSilverRoof);
-    tagZone(bSilverRoof, 'B blok Kumush Profnastil Tomi', '48.0 × 21.0 m · 4 ta uchburchak fonar', 'Dron videosidagi och kumushrang qiya profnastil tom va 4 ta uchburchak shamollatish fonarchasi.');
+    tagZone(bSilverRoof, 'B blok Kumush Profnastil Tomi', '48.0 × 21.0 m · 4 ta uchburchak fonar', 'Dron videolari asosidagi och kumushrang qiya profnastil tom, 4 ta uchburchak fonarcha va tom baki.');
 
     // Main Ridge Cap (Konyok) & Portal Ridge Cap
     box(groups.bRoof, 32.6, 0.14, 0.28, M.steel, 0, yR + 0.04, 0);
-    box(groups.bRoof, 0.28, 0.14, 11.4, M.steel, 0, 12.22, 5.6, 0.028, 0, 0);
+    box(groups.bRoof, 0.28, 0.14, 11.4, M.steel, 0, 12.48, 5.6, 0.04, 0, 0);
 
-    // 4 Triangular Silver Attic Dormer Vents on Front Slope (DJI Drone 00:06-00:09!)
+    // Rooftop cylindrical white water tank seen peeking in Drone Video #2 (dji2_5s, dji2_15s!)
+    const roofTank = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.65, 1.45, 14), M.whiteTrim);
+    roofTank.position.set(14.5, 11.95, -5.8);
+    groups.bRoof.add(roofTank);
+
+    // 4 Triangular Silver Attic Dormer Vents on Front Slope (DJI Drone 00:00-00:19!)
     [-15.6, -5.8, 5.8, 15.6].forEach((dx) => {
       const dGrp = new THREE.Group();
-      dGrp.position.set(dx, 11.48, 3.7);
-      const lSlope = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.08, 1.75), M.silverRoof);
-      lSlope.position.set(-0.42, 0.22, 0); lSlope.rotation.z = 0.56;
-      const rSlope = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.08, 1.75), M.silverRoof);
-      rSlope.position.set(0.42, 0.22, 0); rSlope.rotation.z = -0.56;
-      const ventFace = new THREE.Mesh(new THREE.ConeGeometry(0.75, 0.78, 3), M.charcoal);
+      dGrp.position.set(dx, 11.82, 3.7);
+      const lSlope = new THREE.Mesh(new THREE.BoxGeometry(1.25, 0.08, 1.85), M.silverRoof);
+      lSlope.position.set(-0.46, 0.28, 0); lSlope.rotation.z = 0.60;
+      const rSlope = new THREE.Mesh(new THREE.BoxGeometry(1.25, 0.08, 1.85), M.silverRoof);
+      rSlope.position.set(0.46, 0.28, 0); rSlope.rotation.z = -0.60;
+      const ventFace = new THREE.Mesh(new THREE.ConeGeometry(0.84, 0.90, 3), M.charcoal);
       ventFace.rotation.x = Math.PI / 2; ventFace.rotation.y = Math.PI / 6;
-      ventFace.scale.set(1.2, 0.15, 0.72);
-      ventFace.position.set(0, -0.02, 0.85);
+      ventFace.scale.set(1.2, 0.15, 0.78);
+      ventFace.position.set(0, 0.02, 0.90);
       dGrp.add(lSlope, rSlope, ventFace);
       groups.bRoof.add(dGrp);
     });
@@ -1164,8 +1203,8 @@ export function buildTuronCampus(scene, tex) {
   tagZone(damas.children[0], 'Daewoo Damas (40 T 038 QA)', '3.48 × 1.40 × 1.92 m', '2 ta yotoqxona qanoti orasidagi yo‘lakda turgan ko‘k Damas.');
   groups.cars.add(damas);
 
-  // 4 White Turon School Minibuses Parked Along A-376 Apron (Visible in DJI Drone 00:00-00:03!)
-  [-22.0, -11.5, -1.5, 12.5].forEach((vx, vIdx) => {
+  // White Turon Minibuses + Parked Sedans & SUV Along A-376 Apron (Visible in Both DJI Drone Videos!)
+  [-25.0, 19.5].forEach((vx, vIdx) => {
     const van = new THREE.Group();
     box(van, 1.85, 1.80, 4.65, M.whiteTrim, 0, 1.15, 0);
     box(van, 1.88, 0.62, 3.90, M.bronzeGlass, 0, 1.45, -0.15);
@@ -1177,9 +1216,26 @@ export function buildTuronCampus(scene, tex) {
       van.add(wh);
     });
     van.position.set(vx, 0, 37.2);
-    van.rotation.y = vIdx % 2 === 0 ? -0.32 : -0.24;
-    if (vIdx === 1) tagZone(van.children[0], 'Maktab Mikroavtobuslari (4 dona)', '4.65 × 1.85 m', 'Dron videosida old ko‘cha bo‘ylab tizilib turgan oq o‘quvchi mikroavtobuslari.');
+    van.rotation.y = vIdx === 0 ? -0.35 : 0.25;
+    if (vIdx === 0) tagZone(van.children[0], 'Maktab Mikroavtobuslari', '4.65 × 1.85 m', 'Har ikki dron videosida old ko‘cha bo‘ylab turgan oq o‘quvchi mikroavtobuslari.');
     groups.cars.add(van);
+  });
+  // Black SUV + Classic White Sedan + Silver Car parked side-by-side at A-376 curb (dji2_19s!)
+  [[-7.8, 0x1e2126, true], [-2.2, 0xf3f4f6, false], [3.4, 0x9ca3af, false]].forEach(([cx, col, isSuv]) => {
+    const car = new THREE.Group();
+    const carMat = new THREE.MeshStandardMaterial({ color: col, roughness: 0.28, metalness: 0.32 });
+    box(car, 1.72, isSuv ? 0.82 : 0.64, 4.2, carMat, 0, isSuv ? 0.68 : 0.56, 0);
+    box(car, 1.54, isSuv ? 0.66 : 0.56, isSuv ? 2.8 : 2.1, carMat, 0, isSuv ? 1.35 : 1.12, -0.1);
+    box(car, 1.46, 0.50, isSuv ? 2.5 : 1.85, M.bronzeGlass, 0, isSuv ? 1.34 : 1.10, -0.1);
+    [[-0.80, 1.25], [0.80, 1.25], [-0.80, -1.25], [0.80, -1.25]].forEach(([wx, wz]) => {
+      const wh = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.18, 14), M.blackSteel);
+      wh.rotation.z = Math.PI / 2;
+      wh.position.set(wx, 0.28, wz);
+      car.add(wh);
+    });
+    car.position.set(cx, 0, 37.2);
+    car.rotation.y = 0.25;
+    groups.cars.add(car);
   });
 
   // =========================================================

@@ -1,9 +1,9 @@
 """
-Exports the v2.6 1:1 3D architectural model of Turon Odob-Ilm (Furqat branch)
-matching the DJI drone footage (DJI_20260709114303_0427_D) + 15+ interior/exterior photos:
-  - B blok (kumush qiya profnastil tom + 4 ta fonar, 11-bay orqa fasad, Podvol, 2F)
+Exports the v2.7 1:1 3D architectural model of Turon Odob-Ilm (Furqat branch)
+matching both DJI drone videos (0427_D & 0425_D) + 15+ photos:
+  - B blok (kumush qiya profnastil tom + 4 ta fonar + tom baki, 2 ustunli ayvon, 11-bay orqa fasad)
   - Innovation Hub (tom HVAC bloklari + ko'chaga qaragan fasad)
-  - Front Batut, 4 ta Turon mikroavtobusi, 37-maktab yashil maydoni, 4 Yotoqxona + 2 Gulzor
+  - Front Batut, 2 ta ko'k Ping-Pong stoli, A-376 mashina va mikroavtobuslar, 37-maktab maydoni
 """
 import json
 import math
@@ -245,6 +245,9 @@ def build_model():
 
     # 4. Rear Campus + Batut + 37-Maktab Turf Pitch + 4 Street Vans
     mb.add_box("Batut_Blue", -20.5, 0.65, 25.0, 7.0, 1.3, 4.6)
+    mb.add_box("Tk_Mat_Blue", 15.2, 0.76, 18.2, 2.74, 0.08, 1.52)
+    mb.add_box("Tk_Mat_Blue", 15.2, 0.76, 20.8, 2.74, 0.08, 1.52)
+    mb.add_box("White_Trim", 14.5, 11.95, -5.8, 1.3, 1.45, 1.3)
     mb.add_box("Lawn_Green", -40.5, 0.01, -55.0, 16.0, 0.06, 32.0)
     mb.add_box("Stucco_Cream", 18.15, 1.625, -15.0, 6.7, 3.25, 4.8)
     mb.add_box("Steel_Poles", 16.5, 4.1, -14.2, 0.5, 8.2, 0.5)
@@ -268,12 +271,12 @@ def build_model():
     mb.add_box("Damas_Blue", 25.4, 1.04, -34.5, 1.40, 1.58, 3.48)
     mb.add_box("Steel_Poles", -2.8, 6.0, -93.05, 2.8, 12.0, 2.8)
     mb.add_box("Orange_Metal", -7.3, 0.56, 18.8, 1.61, 0.62, 4.10)
-    for vx in (-22.0, -11.5, -1.5, 12.5):
-        mb.add_box("White_Trim", vx, 1.15, 37.2, 1.85, 1.80, 4.65, -0.28)
+    for vx, col in ((-25.0, "White_Trim"), (-7.8, "Charcoal_Parapet"), (-2.2, "White_Trim"), (3.4, "Gray_Trim"), (19.5, "White_Trim")):
+        mb.add_box(col, vx, 1.05, 37.2, 1.75, 1.45, 4.35, 0.25)
 
     mb.export_glb(os.path.join(OUT_DIR, "turon_odob_ilm_3d.glb"))
     mb.export_obj(os.path.join(OUT_DIR, "turon_odob_ilm_3d.obj"), os.path.join(OUT_DIR, "turon_odob_ilm_3d.mtl"))
-    print("EXPORT_V26_SUCCESS")
+    print("EXPORT_V27_SUCCESS")
 
 
 if __name__ == "__main__":

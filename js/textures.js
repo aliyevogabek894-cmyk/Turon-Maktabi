@@ -247,11 +247,29 @@ export function createTextures() {
     return asTex(c, 1, 1);
   }
 
-  tex.signMain = signTex(1024, 160, '#2c3137', '#d9262e', 'TURON ODOB-ILM');
-  tex.signSub = signTex(1024, 160, '#f3f4f6', '#d9262e', 'XUSUSIY MAKTABI');
+  {
+    const [c, g] = makeCanvas(1024, 160);
+    g.clearRect(0, 0, 1024, 160);
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.font = '900 94px Arial, sans-serif';
+    g.lineWidth = 10; g.strokeStyle = '#ffffff';
+    g.strokeText('TURON ODOB-ILM', 512, 84);
+    g.fillStyle = '#cf1b26';
+    g.fillText('TURON ODOB-ILM', 512, 84);
+    tex.signMain = asTex(c, 1, 1);
+  }
+  tex.signSub = signTex(1024, 160, '#f4f5f7', '#cf1b26', 'XUSUSIY MAKTABI');
   tex.signHub = signTex(1024, 160, '#282c32', '#f8fafc', 'INNOVATION HUB');
   tex.glassStripe = signTex(1024, 128, '#14171a', '#facc15', 'TURON ODOB-ILM', 'XUSUSIY MAKTABI', '#facc15');
   tex.doorB = signTex(256, 256, '#1c242b', '#e2e8f0', 'B', 'blok');
+  tex.fenceBannerSAT = signTex(512, 256, '#17191d', '#f8fafc', 'SAT', 'TURON ODOB-ILM · XALQARO TAYYORLOV', '#ef4444');
+  {
+    const [c, g] = makeCanvas(512, 256);
+    g.fillStyle = '#0369a1'; g.fillRect(0, 0, 512, 256);
+    g.strokeStyle = '#ffffff'; g.lineWidth = 10; g.strokeRect(10, 10, 492, 236);
+    g.fillStyle = '#f8fafc'; g.fillRect(253, 10, 6, 236);
+    tex.pingPong = asTex(c, 1, 1);
+  }
 
   // Oval winged emblem (Photo 1)
   {
